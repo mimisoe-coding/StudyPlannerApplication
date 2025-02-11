@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudyPlannerApplication.App", "StudyPlannerApplication.App\StudyPlannerApplication.App.csproj", "{160A314A-3DE7-44A9-888E-23480B1AC2C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudyPlannerApplication.App", "StudyPlannerApplication.App\StudyPlannerApplication.App.csproj", "{160A314A-3DE7-44A9-888E-23480B1AC2C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudyPlannerApplication.Domain", "StudyPlannerApplication.Domain\StudyPlannerApplication.Domain.csproj", "{22D8C6B5-CE8C-45A3-BE39-289451EA8B80}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudyPlannerApplication.Domain", "StudyPlannerApplication.Domain\StudyPlannerApplication.Domain.csproj", "{22D8C6B5-CE8C-45A3-BE39-289451EA8B80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudyPlannerApplication.Shared", "StudyPlannerApplication.Shared\StudyPlannerApplication.Shared.csproj", "{E307FDDC-910D-4BC2-B615-982BECDB1A88}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudyPlannerApplication.Shared", "StudyPlannerApplication.Shared\StudyPlannerApplication.Shared.csproj", "{E307FDDC-910D-4BC2-B615-982BECDB1A88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudyPlannerApplication.Database", "StudyPlannerApplication.Database\StudyPlannerApplication.Database.csproj", "{7760E1EA-F962-4915-AF83-901B7231AEEE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudyPlannerApplication.Database", "StudyPlannerApplication.Database\StudyPlannerApplication.Database.csproj", "{7760E1EA-F962-4915-AF83-901B7231AEEE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

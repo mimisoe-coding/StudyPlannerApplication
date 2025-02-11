@@ -1,0 +1,37 @@
+﻿@page "/"
+@using StudyPlannerApplication.Domain.Features.UserManagement.Login
+@inject LogInService _logInService
+@inject NavigationManager Navigation
+@rendermode RenderMode.InteractiveServer
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow-sm p-4" style="width: 100%; max-width: 400px;">
+        <div class="card-body">
+            <h1 class="h3 mb-3 fw-normal text-center">PleaseSignIn</h1>
+            <div class="form-floating mb-3">
+                <div class="mb-3">
+                    <label class="form-label">UserName</label>
+                    <input class="form-control" type="text"
+                           placeholder="UserName" @bind-value="_reqModel.UserName" maxlength="11" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input class="form-control" type="text"
+                           placeholder="Password" @bind-value="_reqModel.Password" maxlength="11" />
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary w-100 py-2" @onclick=LogIn>SignIn</button>
+
+            @* <div>
+            <a href="javascript:void(0);" @onclick='() => ChangeLanguage("en-US")'>
+            ENG
+            </a>
+
+            <a href="javascript:void(0);" @onclick='() => ChangeLanguage("my-MM")'>
+            MYA
+            </a>
+            </div> *@
+        </div>
+    </div>
+
+</div>
+

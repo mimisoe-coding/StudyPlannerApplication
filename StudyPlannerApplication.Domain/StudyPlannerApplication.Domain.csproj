@@ -7,7 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Features\UserManagement\" />
+    <Folder Include="Features\Dashboard\" />
+    <Folder Include="Features\UserManagement\Profile\" />
+    <Folder Include="Features\UserManagement\UserRegistration\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\StudyPlannerApplication.Database\StudyPlannerApplication.Database.csproj" />
   </ItemGroup>
 
 </Project>
