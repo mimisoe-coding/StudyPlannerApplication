@@ -1,4 +1,5 @@
 ﻿@page "/subject"
+@using MudBlazor
 @using StudyPlannerApplication.App.Components.Layout
 @using StudyPlannerApplication.Domain.Features.Subject
 @layout MainLayout
@@ -22,69 +23,55 @@
     <RadzenButton Click="() => Search()" Text="Search" ButtonStyle="ButtonStyle.Info"/>
     </div>
     </div> *@
-        @* @if (lst != null && lst.Count() > 0)
-    {
-    <div>
-    <MudSimpleTable Style="overflow-x: auto;">
-    <thead>
-    <tr>
-    <th>Sr No.</th>
-    <th>Image Name</th>
-    <th>Image Redirect Link</th>
-    <th>Order No</th>
-    <th>Action</th>
-    </tr>
-    </thead>
-    <tbody>
-    @{
-    int count = (ps.PageNo - 1) * ps.PageSize;
-    foreach (var item in lst)
-    {
-    <tr>
-    <td>@(++count)</td>
-    <td>@item.ImageName</td>
-    <td>
-    <MudChip T="string" Color="Color.Transparent">
-    <a href="@item.ImageRedirectLink" target="_blank">@item.ImageName</a>
-    </MudChip>
-    </td>
-    <td>@item.OrderNo</td>
-    <td>
-    @{
-    if (_permissionMenuModel.IsEditEnable)
-    {
-    <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Primary" Click="(args) => Edit(item.AdsPhotoId)"/>
-    }
-    if (_permissionMenuModel.IsDetailEnable)
-    {
-    <RadzenButton Icon="pageview" ButtonStyle="ButtonStyle.Info" Click="(args) => Detail(item.AdsPhotoId)"/>
-    }
-    if (_permissionMenuModel.IsDeleteEnable)
-    {
-    <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Secondary" Click="(args) => Delete(item.AdsPhotoId)"/>
-    }
-    }
-    </td>
-    </tr>
-    }
-    }
+        @if (_resModel.SubjectList != null && _resModel.SubjectList.Count() > 0)
+        {
+            <div class="flex-container mt-3" style="display: flex;">
+                <div class="container-sm">
 
-    </tbody>
-    </MudSimpleTable>
-    <div class="d-flex flex-column align-center mb-4">
-    <MudPagination BoundaryCount="2" MiddleCount="5" SelectedChanged="PageChanged" Count="@count" Class="mt-4"/>
-    </div>
-    </div>
-    }
-    else
-    {
-    <div class="col-sm-3 ml-6" style="margin-right: -8px;">
-    <p>No Record To Show</p>
-    </div>
-    } *@
+                    <table class="tb table align-middle table-nowrap table-hover dataTable no-footer table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Sr No.</th>
+                                <th>Subject Name</th>
+                                <th>Description</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int no = (ps.PageNo - 1) * ps.PageSize;
+                                foreach (var item in _resModel.SubjectList)
+                                {
+                                    <tr>
+                                        <td>@(++no)</td>
+                                        <td>@item.SubjectName</td>
+                                        <td>@item.Description</td>
+                                        <td>
+                                            <button class="btn btn-primary btn-sm mb-0" type="button" @onclick="() => Edit(item.SubjectId)">Edit</button>
+                                            <button class="btn btn-success btn-sm mb-0" type="button" @onclick="() => Delete(item.SubjectId)">Delete</button>
+                                            <button class="btn btn-danger btn-sm mb-0" type="button" @onclick="() => Detail(item.SubjectId)">Detail</button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                    <div class="d-flex flex-column align-center mb-4">
+                        <MudPagination BoundaryCount="2" MiddleCount="5" SelectedChanged="PageChanged" Count="@count" Class="mt-4" />
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="col-sm-3 ml-6" style="margin-right: -8px;">
+                <p>No Record To Show</p>
+            </div>
+        }
     </div>
 }
-@if (_formType == EnumFormType.Register)
+@if (_formType == EnumFormType.Register || _formType == EnumFormType.Edit || _formType == EnumFormType.Detail)
 {
     <div class="card">
         <div class="card-body">
@@ -92,16 +79,20 @@
             <div class="row">
                 <div class="mb-3">
                     <label for="exampleFormControlInput1" class="form-label">Subject Name</label>
-                    <input type="email" class="form-control" @bind-value="_reqModel.SubjectName" >
+                    <input type="email" disabled=@visible class="form-control" @bind-value="_reqModel.SubjectName">
                 </div>
                 <div class="mb-3">
                     <label for="exampleFormControlTextarea1" class="form-label">Description</label>
-                    <textarea class="form-control" @bind="_reqModel.Description"></textarea>
+                    <textarea class="form-control" disabled=@visible @bind="_reqModel.Description"></textarea>
                 </div>
                 <div class="col-12 mt-4">
                     <div class="d-flex">
                         <button @onclick=Back class="btn btn-outline-dark btn-sm mb-0 me-2" type="button">Back</button>
-                        <button class="btn btn-success btn-sm mb-0" type="button" @onclick=Save>@_formType.ToString()</button>
+                        @if (_formType != EnumFormType.Detail)
+                        {
+                            <button class="btn btn-success btn-sm mb-0" type="button" @onclick=Save>@_formType.ToString()</button>
+                        }
+
                     </div>
                 </div>
             </div>

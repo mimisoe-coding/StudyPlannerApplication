@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using MudBlazor.Services;
 using StudyPlannerApplication.App.Components;
 using StudyPlannerApplication.App.Services;
 using StudyPlannerApplication.App.Services.Security;
@@ -13,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 //builder.Services.AddServerSideBlazor();
+builder.Services.AddMudServices();
 
 #region DbService
 var connectionString = builder.Configuration.GetConnectionString("DbConnection");

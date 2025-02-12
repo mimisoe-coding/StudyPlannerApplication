@@ -43,6 +43,114 @@ public class SubjectService
         return model;
     }
 
+    public async Task<SubjectResponseModel> List(SubjectRequestModel reqModel)
+    {
+        SubjectResponseModel model = new SubjectResponseModel();
+        PageSettingResponseModel pageSetting = new();
+        try
+        {
+            var lst = await _db.TblSubjects.AsNoTracking().
+                Where(x => x.CreatedUserId == reqModel.CurrentUserId).
+                Select(x => new SubjectDataModel
+                {
+                    SubjectId = x.SubjectId,
+                    SubjectCode = x.SubjectCode,
+                    SubjectName = x.SubjectName
+                }).ToListAsync();
+            if (lst.Count > 0)
+            {
+                pageSetting.TotalRowCount = lst.Count;
+                model.PageSetting = pageSetting;
+                model.SubjectList = lst.Skip(reqModel.PageSetting.SkipRowCount)
+                    .Take(reqModel.PageSetting.PageSize).ToList();
+            }
+            model.Response = SubResponseModel.GetResponseMsg("Your subject is successfully added.", true);
+        }
+        catch (Exception ex)
+        {
+            model.Response = SubResponseModel.GetResponseMsg(ex.ToString(), false);
+        }
+        return model;
+    }
+
+    public async Task<SubjectResponseModel> Delete(SubjectRequestModel reqModel)
+    {
+        SubjectResponseModel model = new SubjectResponseModel();
+        try
+        {
+            var item = await _db.TblSubjects.AsNoTracking()
+                .FirstOrDefaultAsync(x => x.SubjectId == reqModel.SubjectId
+                && x.CreatedUserId == reqModel.CurrentUserId);
+            if (item == null)
+            {
+                model.Response = SubResponseModel.GetResponseMsg("No Subject Found", false);
+                return model;
+            }
+            _db.Remove(item);
+            await _db.SaveChangesAsync();
+            model.Response = SubResponseModel.GetResponseMsg("Your subject is successfully deleted", true);
+        }
+        catch (Exception ex)
+        {
+            model.Response = SubResponseModel.GetResponseMsg(ex.ToString(), false);
+        }
+        return model;
+    }
+
+    public async Task<SubjectResponseModel> Update(SubjectRequestModel reqModel)
+    {
+        SubjectResponseModel model = new SubjectResponseModel();
+        try
+        {
+            var item = await _db.TblSubjects.AsNoTracking()
+                .FirstOrDefaultAsync(x => x.SubjectId == reqModel.SubjectId
+                && x.CreatedUserId == reqModel.CurrentUserId);
+            if (item == null)
+            {
+                model.Response = SubResponseModel.GetResponseMsg("No Subject Found", false);
+                return model;
+            }
+            item.SubjectName = reqModel.SubjectName;
+            item.Description = reqModel.Description;
+            _db.Entry(item).State = EntityState.Modified;
+            _db.TblSubjects.Update(item);
+            await _db.SaveChangesAsync();
+            model.Response = SubResponseModel.GetResponseMsg("Your subject is successfully updated.", true);
+        }
+        catch (Exception ex)
+        {
+            model.Response = SubResponseModel.GetResponseMsg(ex.ToString(), false);
+        }
+        return model;
+    }
+
+    public async Task<SubjectResponseModel> Edit(int id)
+    {
+        SubjectResponseModel model = new SubjectResponseModel();
+        SubjectDataModel subjectData = new SubjectDataModel();
+        try
+        {
+            var item = await _db.TblSubjects.AsNoTracking()
+                .FirstOrDefaultAsync(x => x.SubjectId == id);
+            if (item == null)
+            {
+                model.Response = SubResponseModel.GetResponseMsg("No Subject Found", false);
+                return model;
+            }
+            subjectData.SubjectId = item.SubjectId;
+            subjectData.SubjectCode = item.SubjectCode;
+            subjectData.SubjectName = item.SubjectName;
+            subjectData.Description = item.Description;
+            model.Subject = subjectData;
+            model.Response = SubResponseModel.GetResponseMsg("Your subject is successfully retrieved.", true);
+        }
+        catch (Exception ex)
+        {
+            model.Response = SubResponseModel.GetResponseMsg(ex.ToString(), false);
+        }
+        return model;
+    }
+
     private string GenerateCode(string subjectName)
     {
         string prefix = subjectName.Trim().Substring(0, 3).ToUpper();

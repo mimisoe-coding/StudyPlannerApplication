@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MudBlazor" Version="8.2.0" />
+    <PackageReference Include="Radzen.Blazor" Version="5.9.9" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\StudyPlannerApplication.Database\StudyPlannerApplication.Database.csproj" />
     <ProjectReference Include="..\StudyPlannerApplication.Domain\StudyPlannerApplication.Domain.csproj" />
     <ProjectReference Include="..\StudyPlannerApplication.Shared\StudyPlannerApplication.Shared.csproj" />

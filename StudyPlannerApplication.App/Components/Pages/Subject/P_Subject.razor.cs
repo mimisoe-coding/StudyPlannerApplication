@@ -1,14 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.IdentityModel.Tokens;
-using StudyPlannerApplication.Domain.Features.Subject;
-
-namespace StudyPlannerApplication.App.Components.Pages.Subject;
+﻿namespace StudyPlannerApplication.App.Components.Pages.Subject;
 
 public partial class P_Subject
 {
     private EnumFormType _formType = EnumFormType.List;
     private SubjectRequestModel _reqModel = new();
     private UserSessionModel _userSession = new();
+    private SubjectResponseModel _resModel = new();
+    private PageSettingModel ps = new();
+    private int count;
+    bool visible = false;
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -21,6 +21,7 @@ public partial class P_Subject
                 return;
             }
             _userSession = await customAuthStateProvider.GetUserData();
+            await List(ps);
             StateHasChanged();
         }
     }
@@ -31,31 +32,100 @@ public partial class P_Subject
         _reqModel = new SubjectRequestModel();
     }
 
+    private async Task Edit(int id)
+    {
+        _reqModel.SubjectId = id;
+        var data = await _subjectService.Edit(id);
+        if (!data.Response.IsSuccess)
+        {
+            await _injectService.ErrorMessage(data.Response.Message);
+            return;
+        }
+        _reqModel.SubjectName = data.Subject.SubjectName;
+        _reqModel.Description = data.Subject.Description;
+        _formType = EnumFormType.Edit;
+    }
+
+    private async Task Detail(int id)
+    {
+        _reqModel.SubjectId = id;
+        var data = await _subjectService.Edit(id);
+        if (!data.Response.IsSuccess)
+        {
+            await _injectService.ErrorMessage(data.Response.Message);
+            return;
+        }
+        _reqModel.SubjectName = data.Subject.SubjectName;
+        _reqModel.Description = data.Subject.Description;
+        visible = true;
+        _formType = EnumFormType.Detail;
+    }
+
+    private async Task Delete(int id)
+    {
+        bool isConfirm = await _injectService.ConfirmMessageBox("Are you sure you want to delete");
+        if (!isConfirm) return;
+        _reqModel.CurrentUserId = _userSession.UserId;
+        _reqModel.SubjectId = id;
+        var data = await _subjectService.Delete(_reqModel);
+        if (!data.Response.IsSuccess)
+        {
+            await _injectService.ErrorMessage(data.Response.Message);
+            return;
+        }
+        await _injectService.SuccessMessage(data.Response.Message);
+        ps = new();
+        await List(ps);
+        StateHasChanged();
+    }
+
     async Task Back()
     {
-        _formType = EnumFormType.List;
         _reqModel = new SubjectRequestModel();
-        await List();
+        visible = false;
+        ps = new PageSettingModel(1, 10);
+        await List(ps);
+        _formType = EnumFormType.List;
         StateHasChanged();
     }
 
     async Task Save()
     {
         if (!await CheckRequiredFields(_reqModel)) return;
+
         _reqModel.CurrentUserId = _userSession.UserId;
-        var model = await _subjectService.Create(_reqModel);
-        if (!model.Response.IsSuccess)
+        if (_reqModel.SubjectId > 0)
         {
-            await _injectService.ErrorMessage(model.Response.Message);
+            _resModel = await _subjectService.Update(_reqModel);
+        }
+        else
+        {
+            _resModel = await _subjectService.Create(_reqModel);
+        }
+
+        if (!_resModel.Response.IsSuccess)
+        {
+            await _injectService.ErrorMessage(_resModel.Response.Message);
             return;
         }
-        await _injectService.SuccessMessage(model.Response.Message);
-        await List();   
+        await _injectService.SuccessMessage(_resModel.Response.Message);
+        ps = new PageSettingModel(1, 10);
+        await List(ps);
     }
 
-    async Task List()
+    async Task List(PageSettingModel ps)
     {
-        _formType=EnumFormType.List;
+        _reqModel.PageSetting = ps;
+        _reqModel.CurrentUserId = _userSession.UserId;
+        _resModel = await _subjectService.List(_reqModel);
+        if (!_resModel.Response.IsSuccess)
+        {
+            await _injectService.ErrorMessage(_resModel.Response.Message);
+            return;
+        }
+        count = _resModel.PageSetting.TotalPageNo;
+        _formType = EnumFormType.List;
+        StateHasChanged();
     }
 
     async Task<bool> CheckRequiredFields(SubjectRequestModel _reqModel)
@@ -66,5 +136,11 @@ public partial class P_Subject
             return false;
         }
         return true;
+    }
+
+    private async Task PageChanged(int i)
+    {
+        ps.PageNo = i;
+        await List(ps);
     }
 }

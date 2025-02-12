@@ -6,5 +6,6 @@ public enum EnumFormType
     Create,
     Edit,
     Register,
+    Detail,
     List
 }

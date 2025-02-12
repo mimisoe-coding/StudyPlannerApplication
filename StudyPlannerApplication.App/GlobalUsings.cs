@@ -6,4 +6,4 @@ global using System.Security.Claims;
 global using StudyPlannerApplication.App.Services.Security;
 global using StudyPlannerApplication.Shared.Enums;
 global using Microsoft.EntityFrameworkCore;
- 
+global using StudyPlannerApplication.Domain.Features.Subject;

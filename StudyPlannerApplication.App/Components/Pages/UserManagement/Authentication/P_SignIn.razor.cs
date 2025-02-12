@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Components;
-using StudyPlannerApplication.App.Services.Security;
-using StudyPlannerApplication.Domain.Features.Common;
-
-namespace StudyPlannerApplication.App.Components.Pages.UserManagement.Authentication;
+﻿namespace StudyPlannerApplication.App.Components.Pages.UserManagement.Authentication;
 
 public partial class P_SignIn
 {
