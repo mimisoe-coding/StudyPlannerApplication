@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using StudyPlannerApplication.App.Components;
 using StudyPlannerApplication.App.Services;
+using StudyPlannerApplication.App.Services.Security;
 using StudyPlannerApplication.Database.EFAppDbContextModels;
 using StudyPlannerApplication.Domain.Features.UserManagement.Login;
 
@@ -21,7 +23,12 @@ ServiceLifetime.Transient,
 ServiceLifetime.Transient);
 
 #endregion
+
+//builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
 builder.Services.AddScoped<IInjectService, InjectService>();
+//builder.Services.AddAuthenticationCore();
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+
 builder.Services.AddScoped<LogInService>();
 var app = builder.Build();
 

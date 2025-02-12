@@ -24,6 +24,8 @@ public class LogInService
         }
         model.UserName = user!.UserName;
         model.Phone = user.PhoneNo;
+        model.UserId = user.UserId;
+        model.Role = user.RoleCode;
         model.Response = SubResponseModel.GetResponseMsg("Welcome to your account.", true);
         return model;
     }
