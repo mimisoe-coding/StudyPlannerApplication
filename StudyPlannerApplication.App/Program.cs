@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using StudyPlannerApplication.App.Components;
+using StudyPlannerApplication.App.Services;
 using StudyPlannerApplication.Database.EFAppDbContextModels;
 using StudyPlannerApplication.Domain.Features.UserManagement.Login;
 
@@ -8,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+//builder.Services.AddServerSideBlazor();
 
 #region DbService
 var connectionString = builder.Configuration.GetConnectionString("DbConnection");
@@ -19,7 +21,7 @@ ServiceLifetime.Transient,
 ServiceLifetime.Transient);
 
 #endregion
-
+builder.Services.AddScoped<IInjectService, InjectService>();
 builder.Services.AddScoped<LogInService>();
 var app = builder.Build();
 

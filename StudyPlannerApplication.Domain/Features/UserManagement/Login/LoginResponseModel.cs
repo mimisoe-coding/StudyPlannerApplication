@@ -1,8 +1,10 @@
-﻿namespace StudyPlannerApplication.Domain.Features.UserManagement.Login;
+﻿using StudyPlannerApplication.Domain.Features.Common;
 
-public class LoginResponseModel
-{
+namespace StudyPlannerApplication.Domain.Features.UserManagement.Login;
+
+public class LoginResponseModel { 
     public int UserId { get; set; }
     public string? UserName { get; set; }
     public string? Phone { get; set; }
+    public ResponseModel Response { get; set; }
 }

@@ -12,11 +12,13 @@
                     <label class="form-label">UserName</label>
                     <input class="form-control" type="text"
                            placeholder="UserName" @bind-value="_reqModel.UserName" maxlength="11" />
+                    @* <ValidationMessage class="validation-message text-danger" For="@(() => _reqModel.UserName)" /> *@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Password</label>
                     <input class="form-control" type="text"
                            placeholder="Password" @bind-value="_reqModel.Password" maxlength="11" />
+                   @*  <ValidationMessage class="validation-message text-danger" For="@(() => _reqModel.Password)" /> *@
                 </div>
             </div>
             <button type="button" class="btn btn-primary w-100 py-2" @onclick=LogIn>SignIn</button>

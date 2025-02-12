@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StudyPlannerApplication.Database.EFAppDbContextModels;
+using StudyPlannerApplication.Domain.Features.Common;
 
 namespace StudyPlannerApplication.Domain.Features.UserManagement.Login;
 
@@ -15,12 +16,16 @@ public class LogInService
     public async Task<LoginResponseModel> LogIn(LogInRequestModel reqModel)
     {
         LoginResponseModel model = new LoginResponseModel();
-        var user = await _db.TblUsers.AsNoTracking().FirstOrDefaultAsync(x => x.UserName == reqModel.UserName && x.Password == reqModel.Password);
-        if(user is not null)
+        TblUser? user = await _db.TblUsers.AsNoTracking().FirstOrDefaultAsync(x => x.UserName == reqModel.UserName && x.Password == reqModel.Password);
+        if(user is null)
         {
-            model.UserName = user.UserName;
-            model.Phone = user.PhoneNo;
+            model.Response = SubResponseModel.GetResponseMsg("UserName and Password is wrong", false);
+            return model;
         }
+        model.UserName = user!.UserName;
+        model.Phone = user.PhoneNo;
+        model.Response = SubResponseModel.GetResponseMsg("Welcome to your account.", true);
         return model;
     }
+
 }
