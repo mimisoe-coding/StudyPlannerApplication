@@ -1,8 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using StudyPlannerApplication.Database.EFAppDbContextModels;
-using StudyPlannerApplication.Domain.Features.Common;
-
-namespace StudyPlannerApplication.Domain.Features.UserManagement.Login;
+﻿namespace StudyPlannerApplication.Domain.Features.UserManagement.Login;
 
 public class LogInService
 {

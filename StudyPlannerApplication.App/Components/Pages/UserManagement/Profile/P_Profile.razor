@@ -1,8 +1,63 @@
 ﻿@page "/profile"
 @using StudyPlannerApplication.App.Components.Layout
+@using StudyPlannerApplication.Domain.Features.UserManagement.Profile
 @layout MainLayout
-<h3>P_Profile</h3>
+@rendermode RenderMode.InteractiveServer
+@inject ProfileService _profileService;
+<h3>Profile</h3>
 
-@code {
-
+@if (_resModel != null)
+{
+    <div class="card">
+        <div class="card-body">
+            <div class="avatar-upload">
+                <div class="avatar-edit">
+                    @* <InputFile id="ProfileImage" OnChange="UploadImage" accept=".jpg, .jpeg, .png" /> *@
+                    <label for="ProfileImage">
+                        <i class="bx bx-camera" title="Change Profile"
+                           style="padding: 0 !important;color: #fff;margin: 4px;margin-top: 4px; font-size: 1.8em">
+                        </i>
+                    </label>
+                </div>
+                <div class="avatar-preview" style="margin: auto;">
+                    @* @if (_imageBase64Str.IsNullOrEmpty() || _imageBase64Str.Equals("data:image;base64,"))
+                { *@
+                    <div id="imagePreview" style="background-image: url('@_defaultProfileImage');"></div>
+                    @* } *@
+                    @*  else
+                {
+                <div id="imagePreview" style="background-image: url('@_imageBase64Str');"></div>
+                } *@
+                </div>
+            </div>
+            <div class="row pb-2">
+                <div class="mb-3 row">
+                    <b class="col-md-2">User Name</b>
+                    <div class="col-md-10">
+                        @_resModel.UserName
+                    </div>
+                </div>
+            </div>
+            <div class="row pb-2">
+                <div class="mb-3 row">
+                    <b class="col-md-2">Phone</b>
+                    <div class="col-md-10">
+                        @_resModel.Phone
+                    </div>
+                </div>
+            </div>
+            <div class="row pb-2">
+                <div class="mb-3 row">
+                    <b class="col-md-2">Email</b>
+                    <div class="col-md-10">
+                        @_resModel.Email
+                    </div>
+                </div>
+            </div>
+            <div>
+                @* <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="Clear">@_loc["f_Clear"]</button>
+            <button type="submit" class="btn btn-primary" @onclick="Save" disabled="@btnSaveDisabled">@_loc["f_Save"]</button> *@
+            </div>
+        </div>
+    </div>
 }

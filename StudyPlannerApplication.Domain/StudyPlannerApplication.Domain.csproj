@@ -10,7 +10,6 @@
     <Folder Include="Features\Course\CourseList\" />
     <Folder Include="Features\Course\CourseData\" />
     <Folder Include="Features\Dashboard\" />
-    <Folder Include="Features\UserManagement\Profile\" />
     <Folder Include="Features\UserManagement\UserRegistration\" />
   </ItemGroup>
 
