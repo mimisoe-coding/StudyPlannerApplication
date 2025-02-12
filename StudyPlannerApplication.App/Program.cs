@@ -4,6 +4,7 @@ using StudyPlannerApplication.App.Components;
 using StudyPlannerApplication.App.Services;
 using StudyPlannerApplication.App.Services.Security;
 using StudyPlannerApplication.Database.EFAppDbContextModels;
+using StudyPlannerApplication.Domain.Features.Subject;
 using StudyPlannerApplication.Domain.Features.UserManagement.Login;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,6 +31,7 @@ builder.Services.AddScoped<IInjectService, InjectService>();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 
 builder.Services.AddScoped<LogInService>();
+builder.Services.AddScoped<SubjectService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

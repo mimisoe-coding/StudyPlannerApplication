@@ -17,6 +17,8 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<TblRole> TblRoles { get; set; }
 
+    public virtual DbSet<TblSubject> TblSubjects { get; set; }
+
     public virtual DbSet<TblUser> TblUsers { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -34,6 +36,23 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.RoleCode).HasMaxLength(50);
             entity.Property(e => e.RoleId).ValueGeneratedOnAdd();
             entity.Property(e => e.RoleName).HasMaxLength(50);
+        });
+
+        modelBuilder.Entity<TblSubject>(entity =>
+        {
+            entity.HasKey(e => e.SubjectId);
+
+            entity.ToTable("Tbl_Subject");
+
+            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+            entity.Property(e => e.Description).IsUnicode(false);
+            entity.Property(e => e.SubjectCode)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.SubjectName)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
         });
 
         modelBuilder.Entity<TblUser>(entity =>

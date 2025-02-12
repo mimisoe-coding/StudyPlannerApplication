@@ -6,7 +6,6 @@ namespace StudyPlannerApplication.App.Components.Pages.UserManagement.Authentica
 
 public partial class P_SignIn
 {
-    [Inject] private AuthenticationStateProvider authStateProvider { get; set; }
     private LogInRequestModel _reqModel = new();
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
