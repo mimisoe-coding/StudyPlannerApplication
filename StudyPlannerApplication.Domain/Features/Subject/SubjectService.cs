@@ -55,7 +55,8 @@ public class SubjectService
                 {
                     SubjectId = x.SubjectId,
                     SubjectCode = x.SubjectCode,
-                    SubjectName = x.SubjectName
+                    SubjectName = x.SubjectName,
+                    Description = x.Description
                 }).ToListAsync();
             if (lst.Count > 0)
             {
@@ -150,6 +151,31 @@ public class SubjectService
         }
         return model;
     }
+
+    public async Task<SubjectResponseModel> GetSubjectList(int id)
+    {
+        SubjectResponseModel model = new SubjectResponseModel();
+        PageSettingResponseModel pageSetting = new();
+        try
+        {
+            var lst = await _db.TblSubjects.AsNoTracking().
+                Where(x => x.CreatedUserId == id).
+                Select(x => new SubjectDataModel
+                {
+                    SubjectId = x.SubjectId,
+                    SubjectCode = x.SubjectCode,
+                    SubjectName = x.SubjectName
+                }).ToListAsync();
+            model.SubjectList = lst;
+            model.Response = SubResponseModel.GetResponseMsg("Your subject is successfully added.", true);
+        }
+        catch (Exception ex)
+        {
+            model.Response = SubResponseModel.GetResponseMsg(ex.ToString(), false);
+        }
+        return model;
+    }
+
 
     private string GenerateCode(string subjectName)
     {

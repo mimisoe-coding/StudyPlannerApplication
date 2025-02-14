@@ -1,8 +1,8 @@
-﻿namespace StudyPlannerApplication.Domain.Features.Common;
+﻿namespace StudyPlannerApplication.Domain.Models;
 
 public class ResponseModel
 {
-    
+
     public string Message { get; set; }
     public bool IsSuccess { get; set; }
 }
@@ -14,7 +14,7 @@ public static class SubResponseModel
         return new ResponseModel()
         {
             Message = message,
-            IsSuccess = isSuccess   
+            IsSuccess = isSuccess
         };
     }
 }

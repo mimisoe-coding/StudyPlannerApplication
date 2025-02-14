@@ -9,6 +9,7 @@ public partial class P_Subject
     private PageSettingModel ps = new();
     private int count;
     bool visible = false;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)

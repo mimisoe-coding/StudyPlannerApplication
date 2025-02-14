@@ -1,4 +1,4 @@
-﻿namespace StudyPlannerApplication.Domain.Features.Common;
+﻿namespace StudyPlannerApplication.Domain.Models;
 
 public class PageSettingResponseModel
 {

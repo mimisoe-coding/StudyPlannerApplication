@@ -15,6 +15,8 @@ public partial class AppDbContext : DbContext
     {
     }
 
+    public virtual DbSet<TblCourse> TblCourses { get; set; }
+
     public virtual DbSet<TblRole> TblRoles { get; set; }
 
     public virtual DbSet<TblSubject> TblSubjects { get; set; }
@@ -27,6 +29,30 @@ public partial class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<TblCourse>(entity =>
+        {
+            entity.HasKey(e => e.CourseId);
+
+            entity.ToTable("Tbl_Course");
+
+            entity.Property(e => e.CourseDescription).IsUnicode(false);
+            entity.Property(e => e.CourseName)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+            entity.Property(e => e.Description)
+                .HasMaxLength(10)
+                .IsFixedLength();
+            entity.Property(e => e.DueDate).HasColumnType("datetime");
+            entity.Property(e => e.Status)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.SubjectCode)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
+        });
+
         modelBuilder.Entity<TblRole>(entity =>
         {
             entity
