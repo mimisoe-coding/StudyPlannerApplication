@@ -54,6 +54,24 @@ public partial class P_SignIn
             await _injectService.ErrorMessage("Password Field is Required.");
             return false;
         }
+        if (_isRegister)
+        {
+            if (string.IsNullOrEmpty(_reqModel.Email))
+            {
+                await _injectService.ErrorMessage("Email Field is Required.");
+                return false;
+            }
+            if (string.IsNullOrEmpty(_reqModel.PhoneNo))
+            {
+                await _injectService.ErrorMessage("Email Field is Required.");
+                return false;
+            }
+            if (_reqModel.Password!=_reqModel.ConfirmPassword)
+            {
+                await _injectService.ErrorMessage("Password and Confirm Password must be the same.");
+                return false;
+            }
+        }
         return true;
     }
 
