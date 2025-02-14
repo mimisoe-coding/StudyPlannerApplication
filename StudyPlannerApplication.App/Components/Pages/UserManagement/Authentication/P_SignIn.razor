@@ -1,39 +1,79 @@
 ﻿@page "/"
 @using StudyPlannerApplication.Domain.Features.UserManagement.Login
+@* @using StudyPlannerApplication.Domain.Features.UserManagement.Register *@
 @inject LogInService _logInService
+@* @inject RegisterService _registerService *@
 @inject NavigationManager Navigation
 @rendermode RenderMode.InteractiveServer
+
 <div class="d-flex justify-content-center align-items-center vh-100">
     <div class="card shadow-sm p-4" style="width: 100%; max-width: 400px;">
         <div class="card-body">
-            <h1 class="h3 mb-3 fw-normal text-center">PleaseSignIn</h1>
-            <div class="form-floating mb-3">
-                <div class="mb-3">
-                    <label class="form-label">UserName</label>
-                    <input class="form-control" type="text"
-                           placeholder="UserName" @bind-value="_reqModel.UserName" maxlength="11" />
-                    @* <ValidationMessage class="validation-message text-danger" For="@(() => _reqModel.UserName)" /> *@
+            @if (!_isRegister)
+            {
+                <h1 class="h3 mb-3 fw-normal text-center">Sign In</h1>
+                <div class="form-floating mb-3">
+                    <div class="mb-3">
+                        <label class="form-label">UserName</label>
+                        <input class="form-control" type="text" placeholder="UserName" @bind-value="_reqModel.UserName" maxlength="11" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <div class="input-group">
+                            <input class="form-control" type=@password placeholder="Password" @bind-value="_reqModel.Password" maxlength="11" />
+                            <button type="button" class="btn btn-outline-secondary" @onclick="PasswordVisibility">
+                                <i class="@passwordIcon"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Password</label>
-                    <input class="form-control" type="text"
-                           placeholder="Password" @bind-value="_reqModel.Password" maxlength="11" />
-                   @*  <ValidationMessage class="validation-message text-danger" For="@(() => _reqModel.Password)" /> *@
+                <button type="button" class="btn btn-primary w-100 py-2" @onclick=LogIn>Sign In</button>
+                <div class="text-center mt-3">
+                    <a href="javascript:void(0);" @onclick="() => ChangePage()">Don't have an account? Sign Up</a>
                 </div>
-            </div>
-            <button type="button" class="btn btn-primary w-100 py-2" @onclick=LogIn>SignIn</button>
-
-            @* <div>
-            <a href="javascript:void(0);" @onclick='() => ChangeLanguage("en-US")'>
-            ENG
-            </a>
-
-            <a href="javascript:void(0);" @onclick='() => ChangeLanguage("my-MM")'>
-            MYA
-            </a>
-            </div> *@
+            }
+            else
+            {
+                <h1 class="h3 mb-3 fw-normal text-center">Register</h1>
+                <div class="form-floating mb-3">
+                    <div class="mb-3">
+                        <label class="form-label">UserName</label>
+                        <input class="form-control" type="text" placeholder="UserName" @bind-value="_reqModel.UserName" maxlength="11" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input class="form-control" type="email" placeholder="Email" @bind-value="_reqModel.Email" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Phone No</label>
+                        <input class="form-control" type="text" placeholder="Phone Number" @bind-value="_reqModel.PhoneNo" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <div class="input-group">
+                            <input class="form-control" type=@password placeholder="Password" @bind-value="_reqModel.Password" maxlength="11" />
+                            <button type="button" class="btn btn-outline-secondary" @onclick="PasswordVisibility">
+                                <i class="@passwordIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Confirm Password</label>
+                        <div class="input-group">
+                            <input class="form-control" type=@cPassword placeholder="Confirm Password" @bind-value="_reqModel.ConfirmPassword" maxlength="11" />
+                            <button type="button" class="btn btn-outline-secondary" @onclick="ConfirmPasswordVisibility">
+                                <i class="@cPasswordIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary w-100 py-2" @onclick=Register>Sign Up</button>
+                <div class="text-center mt-3">
+                    <a href="javascript:void(0);" @onclick="() => ChangePage()">Already have an account? Sign In</a>
+                </div>
+            }
         </div>
     </div>
-
 </div>
+
 
