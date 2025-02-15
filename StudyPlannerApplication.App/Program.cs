@@ -17,9 +17,7 @@ builder.Services.AddMudServices();
 #region DbService
 var connectionString = builder.Configuration.GetConnectionString("DbConnection");
 builder.Services.AddDbContext<AppDbContext>(opt =>
-{
-    opt.UseSqlServer(connectionString);
-},
+    opt.UseSqlServer(connectionString),
 ServiceLifetime.Transient,
 ServiceLifetime.Transient);
 

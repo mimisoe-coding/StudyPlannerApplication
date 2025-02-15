@@ -58,14 +58,11 @@ public class SubjectService
                     SubjectName = x.SubjectName,
                     Description = x.Description
                 }).ToListAsync();
-            if (lst.Count > 0)
-            {
-                pageSetting.TotalRowCount = lst.Count;
-                model.PageSetting = pageSetting;
-                model.SubjectList = lst.Skip(reqModel.PageSetting.SkipRowCount)
-                    .Take(reqModel.PageSetting.PageSize).ToList();
-            }
-            model.Response = SubResponseModel.GetResponseMsg("Your subject is successfully added.", true);
+            pageSetting.TotalRowCount = lst.Count;
+            model.PageSetting = pageSetting;
+            model.SubjectList = lst.Skip(reqModel.PageSetting.SkipRowCount)
+                .Take(reqModel.PageSetting.PageSize).ToList();
+            model.Response = SubResponseModel.GetResponseMsg("Your subjects are retrieved successfully.", true);
         }
         catch (Exception ex)
         {
@@ -103,7 +100,8 @@ public class SubjectService
         SubjectResponseModel model = new SubjectResponseModel();
         try
         {
-            var item = await _db.TblSubjects.AsNoTracking()
+            TblSubject? item = await _db.TblSubjects
+                .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.SubjectId == reqModel.SubjectId
                 && x.CreatedUserId == reqModel.CurrentUserId);
             if (item == null)
@@ -111,10 +109,10 @@ public class SubjectService
                 model.Response = SubResponseModel.GetResponseMsg("No Subject Found", false);
                 return model;
             }
+
             item.SubjectName = reqModel.SubjectName;
             item.Description = reqModel.Description;
             _db.Entry(item).State = EntityState.Modified;
-            _db.TblSubjects.Update(item);
             await _db.SaveChangesAsync();
             model.Response = SubResponseModel.GetResponseMsg("Your subject is successfully updated.", true);
         }
