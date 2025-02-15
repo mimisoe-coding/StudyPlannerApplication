@@ -83,17 +83,15 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<TblUser>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("Tbl_User");
+            entity.HasKey(e => e.UserId);
+
+            entity.ToTable("Tbl_User");
 
             entity.Property(e => e.CreatedDate).HasColumnType("datetime");
             entity.Property(e => e.Email)
                 .HasMaxLength(50)
                 .IsUnicode(false);
-            entity.Property(e => e.Password)
-                .HasMaxLength(50)
-                .IsUnicode(false);
+            entity.Property(e => e.Password).IsUnicode(false);
             entity.Property(e => e.PhoneNo)
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -101,7 +99,6 @@ public partial class AppDbContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
-            entity.Property(e => e.UserId).ValueGeneratedOnAdd();
             entity.Property(e => e.UserName)
                 .HasMaxLength(50)
                 .IsUnicode(false);

@@ -1,14 +1,10 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 using StudyPlannerApplication.App.Components;
 using StudyPlannerApplication.App.Services;
-using StudyPlannerApplication.App.Services.Security;
 using StudyPlannerApplication.Database.EFAppDbContextModels;
-using StudyPlannerApplication.Domain.Features.Course;
-using StudyPlannerApplication.Domain.Features.Subject;
-using StudyPlannerApplication.Domain.Features.UserManagement.Login;
 using StudyPlannerApplication.Domain.Features.UserManagement.Profile;
+using StudyPlannerApplication.Domain.Features.UserManagement.SignIn;
+using StudyPlannerApplication.Domain.Features.UserManagement.UserRegistration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,7 +30,8 @@ builder.Services.AddScoped<IInjectService, InjectService>();
 //builder.Services.AddAuthenticationCore();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 
-builder.Services.AddScoped<LogInService>();
+builder.Services.AddScoped<SignInService>();
+builder.Services.AddScoped<RegisterService>();
 builder.Services.AddScoped<SubjectService>();
 builder.Services.AddScoped<ProfileService>();
 builder.Services.AddScoped<CourseService>();

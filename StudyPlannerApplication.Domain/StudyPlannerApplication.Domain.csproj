@@ -8,11 +8,11 @@
 
   <ItemGroup>
     <Folder Include="Features\Dashboard\" />
-    <Folder Include="Features\UserManagement\UserRegistration\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\StudyPlannerApplication.Database\StudyPlannerApplication.Database.csproj" />
+    <ProjectReference Include="..\StudyPlannerApplication.Shared\StudyPlannerApplication.Shared.csproj" />
   </ItemGroup>
 
 </Project>

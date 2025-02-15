@@ -1,8 +1,9 @@
 ﻿@page "/"
-@using StudyPlannerApplication.Domain.Features.UserManagement.Login
+@using StudyPlannerApplication.Domain.Features.UserManagement.SignIn
+@using StudyPlannerApplication.Domain.Features.UserManagement.UserRegistration
 @* @using StudyPlannerApplication.Domain.Features.UserManagement.Register *@
-@inject LogInService _logInService
-@* @inject RegisterService _registerService *@
+@inject SignInService _signInService
+@inject RegisterService _registerService
 @inject NavigationManager Navigation
 @rendermode RenderMode.InteractiveServer
 
@@ -27,7 +28,7 @@
                         </div>
                     </div>
                 </div>
-                <button type="button" class="btn btn-primary w-100 py-2" @onclick=LogIn>Sign In</button>
+                <button type="button" class="btn btn-primary w-100 py-2" @onclick=SignIn>Sign In</button>
                 <div class="text-center mt-3">
                     <a href="javascript:void(0);" @onclick="() => ChangePage()">Don't have an account? Sign Up</a>
                 </div>

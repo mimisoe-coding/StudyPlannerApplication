@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Security.Cryptography;
+using System.ComponentModel;
 
 namespace StudyPlannerApplication.Shared;
 
@@ -39,5 +40,14 @@ public static partial class DevCode
         for (int i = 0; i < bytes.Length; i++)
             result.Append(bytes[i].ToString(upperCase ? "X2" : "x2"));
         return result.ToString();
+    }
+
+    public static string ToEnumDescription<T>(this T val)
+    {
+        DescriptionAttribute[] attributes = (DescriptionAttribute[])val
+            .GetType()
+            .GetField(val.ToString())
+            .GetCustomAttributes(typeof(DescriptionAttribute), false);
+        return attributes.Length > 0 ? attributes[0].Description : string.Empty;
     }
 }
