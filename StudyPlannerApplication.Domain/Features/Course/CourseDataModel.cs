@@ -1,6 +1,4 @@
-﻿using Microsoft.Identity.Client;
-
-namespace StudyPlannerApplication.Domain.Features.Course;
+﻿namespace StudyPlannerApplication.Domain.Features.Course;
 
 public class CourseDataModel
 {

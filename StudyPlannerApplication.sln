@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudyPlannerApplication.Dom
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudyPlannerApplication.Shared", "StudyPlannerApplication.Shared\StudyPlannerApplication.Shared.csproj", "{E307FDDC-910D-4BC2-B615-982BECDB1A88}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudyPlannerApplication.Database", "StudyPlannerApplication.Database\StudyPlannerApplication.Database.csproj", "{7760E1EA-F962-4915-AF83-901B7231AEEE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudyPlannerApplication.Database", "StudyPlannerApplication.Database\StudyPlannerApplication.Database.csproj", "{D9A3FCE3-C1EA-4500-87AC-D8141C4C65F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{E307FDDC-910D-4BC2-B615-982BECDB1A88}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E307FDDC-910D-4BC2-B615-982BECDB1A88}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E307FDDC-910D-4BC2-B615-982BECDB1A88}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7760E1EA-F962-4915-AF83-901B7231AEEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7760E1EA-F962-4915-AF83-901B7231AEEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7760E1EA-F962-4915-AF83-901B7231AEEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7760E1EA-F962-4915-AF83-901B7231AEEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9A3FCE3-C1EA-4500-87AC-D8141C4C65F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9A3FCE3-C1EA-4500-87AC-D8141C4C65F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9A3FCE3-C1EA-4500-87AC-D8141C4C65F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9A3FCE3-C1EA-4500-87AC-D8141C4C65F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

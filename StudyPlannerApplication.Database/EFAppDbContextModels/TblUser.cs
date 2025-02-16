@@ -11,9 +11,9 @@ public partial class TblUser
 
     public string Email { get; set; } = null!;
 
-    public string PhoneNo { get; set; } = null!;
-
     public string Password { get; set; } = null!;
+
+    public string PhoneNo { get; set; } = null!;
 
     public string RoleCode { get; set; } = null!;
 

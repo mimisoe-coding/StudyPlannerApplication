@@ -1,4 +1,6 @@
-﻿namespace StudyPlannerApplication.Domain.Features.Course;
+﻿using StudyPlannerApplication.Database.EFAppDbContextModels;
+
+namespace StudyPlannerApplication.Domain.Features.Course;
 
 public class CourseService
 {
@@ -14,16 +16,19 @@ public class CourseService
         CourseResponseModel model = new CourseResponseModel();
         try
         {
-            TblCourse course = new TblCourse();
-            course.CourseName = reqModel.CourseName;
-            course.SubjectCode = reqModel.SubjectCode;
-            course.Status = reqModel.Status;
-            course.CreatedUserId = reqModel.CurrentUserId;
-            course.Description = reqModel.Description;
-            course.CreatedDate = DateTime.Now;
-            course.DueDate = reqModel.DueDate;
+            TblCourse course = new TblCourse()
+            {
+                CourseName = reqModel.CourseName,
+                SubjectCode = reqModel.SubjectCode,
+                Status = reqModel.Status,
+                CreatedUserId = reqModel.CurrentUserId,
+                Description = reqModel.Description,
+                CreatedDate = DateTime.Now,
+                DueDate = reqModel.DueDate,
+            };
+
             await _db.AddAsync(course);
-            await _db.SaveChangesAsync();
+            await _db.SaveAndDetachAsync();
             model.Response = SubResponseModel.GetResponseMsg("Your course is successfully added.", true);
         }
         catch (Exception ex)
@@ -41,16 +46,16 @@ public class CourseService
         {
             var query = from c in _db.TblCourses
                         join sub in _db.TblSubjects
-                        on c.SubjectCode equals sub.SubjectCode 
+                        on c.SubjectCode equals sub.SubjectCode
                         select new CourseDataModel
                         {
-                          CourseId = c.CourseId,
-                          CourseName = c.CourseName,
-                          SubjectCode = c.SubjectCode,
-                          SubjectNmae = sub.SubjectName,
-                          Description = c.Description,
-                          Status = c.Status,
-                          DueDate = c.DueDate
+                            CourseId = c.CourseId,
+                            CourseName = c.CourseName,
+                            SubjectCode = c.SubjectCode,
+                            SubjectNmae = sub.SubjectName,
+                            Description = c.Description,
+                            Status = c.Status,
+                            DueDate = c.DueDate
                         };
             var lst = query.ToList();
             if (lst.Count > 0)

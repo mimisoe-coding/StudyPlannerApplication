@@ -32,7 +32,7 @@ public class SubjectService
             subject.CreatedDate = DateTime.Now;
 
             await _db.AddAsync(subject);
-            await _db.SaveChangesAsync();
+            await _db.SaveAndDetachAsync();
             model.Response = SubResponseModel.GetResponseMsg("Your subject is successfully added.", true);
         }
         catch (Exception ex)
@@ -82,7 +82,7 @@ public class SubjectService
                 return model;
             }
             _db.Remove(item);
-            await _db.SaveChangesAsync();
+            await _db.SaveAndDetachAsync();
             model.Response = SubResponseModel.GetResponseMsg("Your subject is successfully deleted", true);
         }
         catch (Exception ex)
@@ -109,7 +109,7 @@ public class SubjectService
             item.SubjectName = reqModel.SubjectName;
             item.Description = reqModel.Description;
             _db.Entry(item).State = EntityState.Modified;
-            await _db.SaveChangesAsync();
+            await _db.SaveAndDetachAsync();
             model.Response = SubResponseModel.GetResponseMsg("Your subject is successfully updated.", true);
         }
         catch (Exception ex)
