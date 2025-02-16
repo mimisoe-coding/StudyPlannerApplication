@@ -35,14 +35,12 @@ public partial class AppDbContext : DbContext
 
             entity.ToTable("Tbl_Course");
 
-            entity.Property(e => e.CourseDescription).IsUnicode(false);
+            entity.Property(e => e.CourseId).ValueGeneratedNever();
             entity.Property(e => e.CourseName)
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.CreatedDate).HasColumnType("datetime");
-            entity.Property(e => e.Description)
-                .HasMaxLength(10)
-                .IsFixedLength();
+            entity.Property(e => e.Description).IsUnicode(false);
             entity.Property(e => e.DueDate).HasColumnType("datetime");
             entity.Property(e => e.Status)
                 .HasMaxLength(50)
@@ -59,9 +57,13 @@ public partial class AppDbContext : DbContext
                 .HasNoKey()
                 .ToTable("Tbl_Role");
 
-            entity.Property(e => e.RoleCode).HasMaxLength(50);
+            entity.Property(e => e.RoleCode)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.RoleId).ValueGeneratedOnAdd();
-            entity.Property(e => e.RoleName).HasMaxLength(50);
+            entity.Property(e => e.RoleName)
+                .HasMaxLength(50)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<TblSubject>(entity =>
@@ -78,7 +80,6 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.SubjectName)
                 .HasMaxLength(50)
                 .IsUnicode(false);
-            entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
         });
 
         modelBuilder.Entity<TblUser>(entity =>

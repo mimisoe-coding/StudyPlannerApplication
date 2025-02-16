@@ -28,7 +28,6 @@ public class SubjectService
             TblSubject subject = new TblSubject();
             subject.SubjectName = reqModel.SubjectName;
             subject.SubjectCode = GenerateCode(reqModel.SubjectName);
-            subject.CreatedUserId = reqModel.CurrentUserId;
             subject.Description = reqModel.Description;
             subject.CreatedDate = DateTime.Now;
 
@@ -50,7 +49,6 @@ public class SubjectService
         try
         {
             var lst = await _db.TblSubjects.AsNoTracking().
-                Where(x => x.CreatedUserId == reqModel.CurrentUserId).
                 Select(x => new SubjectDataModel
                 {
                     SubjectId = x.SubjectId,
@@ -77,8 +75,7 @@ public class SubjectService
         try
         {
             var item = await _db.TblSubjects.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.SubjectId == reqModel.SubjectId
-                && x.CreatedUserId == reqModel.CurrentUserId);
+                .FirstOrDefaultAsync(x => x.SubjectId == reqModel.SubjectId);
             if (item == null)
             {
                 model.Response = SubResponseModel.GetResponseMsg("No Subject Found", false);
@@ -102,8 +99,7 @@ public class SubjectService
         {
             TblSubject? item = await _db.TblSubjects
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.SubjectId == reqModel.SubjectId
-                && x.CreatedUserId == reqModel.CurrentUserId);
+                .FirstOrDefaultAsync(x => x.SubjectId == reqModel.SubjectId);
             if (item == null)
             {
                 model.Response = SubResponseModel.GetResponseMsg("No Subject Found", false);
@@ -157,7 +153,6 @@ public class SubjectService
         try
         {
             var lst = await _db.TblSubjects.AsNoTracking().
-                Where(x => x.CreatedUserId == id).
                 Select(x => new SubjectDataModel
                 {
                     SubjectId = x.SubjectId,

@@ -9,13 +9,11 @@ public partial class TblCourse
 
     public string CourseName { get; set; } = null!;
 
-    public string? CourseDescription { get; set; }
+    public string? Description { get; set; }
 
     public string SubjectCode { get; set; } = null!;
 
     public int CreatedUserId { get; set; }
-
-    public string? Description { get; set; }
 
     public string Status { get; set; } = null!;
 
