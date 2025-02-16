@@ -79,7 +79,7 @@
             <div class="col-4">
                 <div class="mb-3">
                     <label for="exampleFormControlInput1" class="form-label">Subject Name</label>
-                    <input type="email" disabled=@visible class="form-control" @bind-value="_reqModel.SubjectName">
+                    <input type="email" disabled=@visible class="form-control" min="3" @bind-value="_reqModel.SubjectName">
                 </div>
                 <div class="mb-3">
                     <label for="exampleFormControlTextarea1" class="form-label">Description</label>

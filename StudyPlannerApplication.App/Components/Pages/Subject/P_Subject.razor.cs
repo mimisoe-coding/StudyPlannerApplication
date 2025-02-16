@@ -136,6 +136,11 @@ public partial class P_Subject
             await _injectService.ErrorMessage("SubjectName Field is Required.");
             return false;
         }
+        if (_reqModel.SubjectName.Length < 3)
+        {
+            await _injectService.ErrorMessage("SubjectName must contain at least 3 characters.");
+            return false;
+        }
         return true;
     }
 
