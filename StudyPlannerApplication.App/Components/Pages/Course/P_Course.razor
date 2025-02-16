@@ -56,7 +56,7 @@
                                         <td>@item.Status</td>
                                         <td>@item.DueDate</td>
                                         <td>
-                                             @*   <button class="btn btn-primary btn-sm mb-0" type="button" @onclick="() => Edit(item.SubjectId)">Edit</button>
+                                            @*   <button class="btn btn-primary btn-sm mb-0" type="button" @onclick="() => Edit(item.SubjectId)">Edit</button>
                                              <button class="btn btn-success btn-sm mb-0" type="button" @onclick="() => Delete(item.SubjectId)">Delete</button>
                                              <button class="btn btn-danger btn-sm mb-0" type="button" @onclick="() => Detail(item.SubjectId)">Detail</button>*@
                                         </td>
@@ -86,26 +86,22 @@
         <div class="card-body">
             <h5 class="font-weight-bolder">@(_formType.ToString()) Subject</h5>
             <div class="row">
-                <div class="col-sm-4 mt-3">
-                                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Subject</RadzenText>
-                                <RadzenDropDown AllowClear="true" TValue="string"
-                                                FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-                                                AllowFiltering="true" Class="w-100" Disabled="@visible"
-                                                Placeholder="Select" Data=@lstSubject
-                                                Value="@_reqModel.SubjectCode"
-                                                TextProperty="SubjectName" ValueProperty="SubjectCode"
-                                                Change=@(args => { if (args != null) _reqModel.SubjectCode = args.ToString(); else _reqModel.SubjectCode = null;}) />
-                            </div>
-                <div class="col-sm-4 mt-3">
+                <div class="col-4 mr-3 mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Subject Name</label>
+                    <RadzenDropDown AllowClear="true" TValue="string"
+                                    FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                    AllowFiltering="true" Class="w-100" Disabled="@visible"
+                                    Placeholder="Select" Data=@lstSubject
+                                    Value="@_reqModel.SubjectCode"
+                                    TextProperty="SubjectName" ValueProperty="SubjectCode"
+                                    Change=@(args => { if (args != null) _reqModel.SubjectCode = args.ToString(); else _reqModel.SubjectCode = null;}) />
+                </div>
+                <div class="col-4 mr-3 mb-3">
                     <label for="exampleFormControlInput1" class="form-label">Course Name</label>
                     <input type="email" disabled=@visible class="form-control" @bind-value="_reqModel.CourseName">
                 </div>
-                <div class="col-sm-4 mt-3">
-                    <label for="exampleFormControlTextarea1" class="form-label">Description</label>
-                    <textarea class="form-control" disabled=@visible @bind="_reqModel.Description"></textarea>
-                </div>
-                <div class="col-sm-4 mt-3">
-                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Status</RadzenText>
+                <div class="col-4 mr-3 mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Status</label>
                     <RadzenDropDown AllowClear="true" TValue="string"
                                     FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
                                     AllowFiltering="true" Class="w-100"
@@ -114,9 +110,13 @@
                                     Change=@(args => { { _reqModel.Status = args?.ToString(); } })>
                     </RadzenDropDown>
                 </div>
-                <div class="col-sm-3 ml-6 mb-4" style="margin-right: -8px;">
-                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Due Date</RadzenText>
+                <div class="col-4 mr-3 mb-3" style="margin-right: -8px;">
+                    <label for="exampleFormControlTextarea1" class="form-label">Due Date</label>
                     <RadzenDatePicker @bind-Value=@_reqModel.DueDate DateFormat="d" Min="DateTime.Today" AllowInput="false" Class="w-100" />
+                </div>
+                <div class="col-4 mr-3 mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label">Description</label>
+                    <textarea class="form-control" disabled=@visible @bind="_reqModel.Description"></textarea>
                 </div>
                 <div class="col-12 mt-4">
                     <div class="d-flex">

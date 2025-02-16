@@ -98,7 +98,7 @@ public partial class P_Course
         }
         await _injectService.SuccessMessage(_resModel.Response.Message);
         ps = new PageSettingModel(1, 10);
-        //await List(ps);
+        await List(ps);
     }
 
     async Task<bool> CheckRequiredFields(CourseRequestModel _reqModel)

@@ -13,25 +13,27 @@
             @if (!_isRegister)
             {
                 <h1 class="h3 mb-3 fw-normal text-center">Sign In</h1>
-                <div class="form-floating mb-3">
-                    <div class="mb-3">
-                        <label class="form-label">UserName</label>
-                        <input class="form-control" type="text" placeholder="UserName" @bind-value="_reqModel.UserName" maxlength="11" />
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Password</label>
-                        <div class="input-group">
-                            <input class="form-control" type=@password placeholder="Password" @bind-value="_reqModel.Password" maxlength="11" />
-                            <button type="button" class="btn btn-outline-secondary" @onclick="PasswordVisibility">
-                                <i class="@passwordIcon"></i>
-                            </button>
+                <form class="form-horizontal" id="signin-form" method="post" action="/SignIn/Index">
+                    <div class="form-floating mb-3">
+                        <div class="mb-3">
+                            <label class="form-label">UserName</label>
+                            <input class="form-control" type="text" placeholder="UserName" @bind-value="_reqModel.UserName" maxlength="11" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <div class="input-group">
+                                <input class="form-control" type=@password placeholder="Password" @bind-value="_reqModel.Password" maxlength="11" />
+                                <button type="button" class="btn btn-outline-secondary" @onclick="PasswordVisibility">
+                                    <i class="@passwordIcon"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <button type="button" class="btn btn-primary w-100 py-2" @onclick=SignIn>Sign In</button>
-                <div class="text-center mt-3">
-                    <a href="javascript:void(0);" @onclick="() => ChangePage()">Don't have an account? Sign Up</a>
-                </div>
+                    <button type="button" class="btn btn-primary w-100 py-2" @onclick=SignIn>Sign In</button>
+                    <div class="text-center mt-3">
+                        <a href="javascript:void(0);" @onclick="() => ChangePage()">Don't have an account? Sign Up</a>
+                    </div>
+                </form>
             }
             else
             {
