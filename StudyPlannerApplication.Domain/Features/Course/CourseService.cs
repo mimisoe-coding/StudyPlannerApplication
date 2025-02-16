@@ -1,4 +1,5 @@
 ﻿using StudyPlannerApplication.Database.EFAppDbContextModels;
+using StudyPlannerApplication.Domain.Features.Subject;
 
 namespace StudyPlannerApplication.Domain.Features.Course;
 
@@ -81,7 +82,7 @@ public class CourseService
         {
             var item = await _db.TblCourses.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.CourseId == reqModel.CourseId
-                && x.CreatedUserId == reqModel.CourseId);
+                && x.CreatedUserId == reqModel.CurrentUserId);
             if (item == null)
             {
                 model.Response = SubResponseModel.GetResponseMsg("No Course Found", false);
@@ -97,4 +98,65 @@ public class CourseService
         }
         return model;
     }
+
+    public async Task<CourseResponseModel> Edit(int id)
+    {
+        CourseResponseModel model = new CourseResponseModel();
+        CourseDataModel courseData = new CourseDataModel();
+        try
+        {
+            var item = await _db.TblCourses.AsNoTracking()
+                .FirstOrDefaultAsync(x => x.CourseId == id);
+            if (item == null)
+            {
+                model.Response = SubResponseModel.GetResponseMsg("No Course Found", false);
+                return model;
+            }
+            courseData.CourseId = item.CourseId;
+            courseData.SubjectCode = item.SubjectCode;
+            courseData.CourseName = item.CourseName;
+            courseData.Description = item.Description;
+            courseData.DueDate = item.DueDate;
+            courseData.Status = item.Status;
+            model.Course = courseData;
+            model.Response = SubResponseModel.GetResponseMsg("Your course is successfully retrieved.", true);
+        }
+        catch (Exception ex)
+        {
+            model.Response = SubResponseModel.GetResponseMsg(ex.ToString(), false);
+        }
+        return model;
+    }
+
+    public async Task<CourseResponseModel> Update(CourseRequestModel reqModel)
+    {
+        CourseResponseModel model = new CourseResponseModel();
+        try
+        {
+            TblCourse? item = await _db.TblCourses
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.CourseId == reqModel.CourseId && x.CreatedUserId==reqModel.CurrentUserId);
+            if (item == null)
+            {
+                model.Response = SubResponseModel.GetResponseMsg("No course Found", false);
+                return model;
+            }
+
+            item.SubjectCode = reqModel.SubjectCode;
+            item.CourseName = reqModel.CourseName;
+            item.Description = reqModel.Description;
+            item.DueDate = reqModel.DueDate;
+            item.Status = reqModel.Status;
+            item.UpdatedDate = DateTime.Now;
+            _db.Entry(item).State = EntityState.Modified;
+            await _db.SaveAndDetachAsync();
+            model.Response = SubResponseModel.GetResponseMsg("Your course is successfully updated.", true);
+        }
+        catch (Exception ex)
+        {
+            model.Response = SubResponseModel.GetResponseMsg(ex.ToString(), false);
+        }
+        return model;
+    }
+
 }

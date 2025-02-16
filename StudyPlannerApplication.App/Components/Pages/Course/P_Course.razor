@@ -56,9 +56,9 @@
                                         <td>@item.Status</td>
                                         <td>@item.DueDate</td>
                                         <td>
-                                            @*   <button class="btn btn-primary btn-sm mb-0" type="button" @onclick="() => Edit(item.SubjectId)">Edit</button>
-                                             <button class="btn btn-success btn-sm mb-0" type="button" @onclick="() => Delete(item.SubjectId)">Delete</button>
-                                             <button class="btn btn-danger btn-sm mb-0" type="button" @onclick="() => Detail(item.SubjectId)">Detail</button>*@
+                                             <button class="btn btn-primary btn-sm mb-0" type="button" @onclick="() => Edit(item.CourseId)">Edit</button>
+                                             <button class="btn btn-danger btn-sm mb-0" type="button" @onclick="() => Delete(item.CourseId)">Delete</button>
+                                            <button class="btn btn-success btn-sm mb-0" type="button" @onclick="() => Detail(item.CourseId)">Detail</button>
                                         </td>
                                     </tr>
                                 }
@@ -104,7 +104,7 @@
                     <label for="exampleFormControlInput1" class="form-label">Status</label>
                     <RadzenDropDown AllowClear="true" TValue="string"
                                     FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-                                    AllowFiltering="true" Class="w-100"
+                                    AllowFiltering="true" Class="w-100" Disabled=@visible
                                     Placeholder="Select Status" Data=@lstStatus Value="@_reqModel.Status"
                                     TextProperty="Value" ValueProperty="Value"
                                     Change=@(args => { { _reqModel.Status = args?.ToString(); } })>
@@ -112,7 +112,7 @@
                 </div>
                 <div class="col-4 mr-3 mb-3" style="margin-right: -8px;">
                     <label for="exampleFormControlTextarea1" class="form-label">Due Date</label>
-                    <RadzenDatePicker @bind-Value=@_reqModel.DueDate DateFormat="d" Min="DateTime.Today" AllowInput="false" Class="w-100" />
+                    <RadzenDatePicker @bind-Value=@_reqModel.DueDate disabled=@visible DateFormat="d" Min="DateTime.Today" AllowInput="false" Class="w-100" />
                 </div>
                 <div class="col-4 mr-3 mb-3">
                     <label for="exampleFormControlTextarea1" class="form-label">Description</label>

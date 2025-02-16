@@ -25,7 +25,7 @@ public partial class P_Course
             _userSession = await customAuthStateProvider.GetUserData();
             await GetSubjectList();
             GetStatusTypeTypeList();
-            //await List(ps);
+            await List(ps);
             StateHasChanged();
         }
     }
@@ -35,7 +35,7 @@ public partial class P_Course
         _reqModel = new CourseRequestModel();
         visible = false;
         ps = new PageSettingModel(1, 10);
-        //await List(ps);
+        await List(ps);
         _formType = EnumFormType.List;
         StateHasChanged();
     }
@@ -58,6 +58,7 @@ public partial class P_Course
             return;
         }
         count = _resModel.PageSetting.TotalPageNo;
+        visible = false;
         _formType = EnumFormType.List;
         StateHasChanged();
     }
@@ -84,7 +85,7 @@ public partial class P_Course
         _reqModel.CurrentUserId = _userSession.UserId;
         if (_reqModel.CourseId > 0)
         {
-            //_resModel = await _courseService.Update(_reqModel);
+            _resModel = await _courseService.Update(_reqModel);
         }
         else
         {
@@ -127,4 +128,58 @@ public partial class P_Course
         ps.PageNo = i;
         await List(ps);
     }
+
+    private async Task Edit(int id)
+    {
+        _reqModel.CourseId = id;
+        var data = await _courseService.Edit(id);
+        if (!data.Response.IsSuccess)
+        {
+            await _injectService.ErrorMessage(data.Response.Message);
+            return;
+        }
+        _reqModel.CourseName = data.Course.CourseName;
+        _reqModel.Description = data.Course.Description;
+        _reqModel.SubjectCode = data.Course.SubjectCode;
+        _reqModel.Status = data.Course.Status;
+        _reqModel.DueDate = data.Course.DueDate;
+        _formType = EnumFormType.Edit;
+    }
+
+    private async Task Detail(int id)
+    {
+        _reqModel.CourseId = id;
+        var data = await _courseService.Edit(id);
+        if (!data.Response.IsSuccess)
+        {
+            await _injectService.ErrorMessage(data.Response.Message);
+            return;
+        }
+        _reqModel.CourseName = data.Course.CourseName;
+        _reqModel.Description = data.Course.Description;
+        _reqModel.SubjectCode = data.Course.SubjectCode;
+        _reqModel.Status = data.Course.Status;
+        _reqModel.DueDate = data.Course.DueDate;
+        visible = true;
+        _formType = EnumFormType.Detail;
+    }
+
+    private async Task Delete(int id)
+    {
+        bool isConfirm = await _injectService.ConfirmMessageBox("Are you sure you want to delete");
+        if (!isConfirm) return;
+        _reqModel.CurrentUserId = _userSession.UserId;
+        _reqModel.CourseId = id;
+        var data = await _courseService.Delete(_reqModel);
+        if (!data.Response.IsSuccess)
+        {
+            await _injectService.ErrorMessage(data.Response.Message);
+            return;
+        }
+        await _injectService.SuccessMessage(data.Response.Message);
+        ps = new();
+        await List(ps);
+        StateHasChanged();
+    }
+
 }
