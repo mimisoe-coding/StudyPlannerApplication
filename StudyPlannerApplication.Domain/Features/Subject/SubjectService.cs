@@ -146,7 +146,7 @@ public class SubjectService
         return model;
     }
 
-    public async Task<SubjectResponseModel> GetSubjectList(int id)
+    public async Task<SubjectResponseModel> GetSubjectList(string userId)
     {
         SubjectResponseModel model = new SubjectResponseModel();
         PageSettingResponseModel pageSetting = new();

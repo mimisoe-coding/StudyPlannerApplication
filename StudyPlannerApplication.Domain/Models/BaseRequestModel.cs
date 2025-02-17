@@ -2,5 +2,5 @@
 
 public class BaseRequestModel
 {
-    public int CurrentUserId { get; set; }
+    public string CurrentUserId { get; set; }
 }

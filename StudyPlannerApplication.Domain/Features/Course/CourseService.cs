@@ -48,6 +48,7 @@ public class CourseService
             var query = from c in _db.TblCourses
                         join sub in _db.TblSubjects
                         on c.SubjectCode equals sub.SubjectCode
+                        where c.CreatedUserId == reqModel.CurrentUserId
                         select new CourseDataModel
                         {
                             CourseId = c.CourseId,
@@ -59,13 +60,11 @@ public class CourseService
                             DueDate = c.DueDate
                         };
             var lst = query.ToList();
-            if (lst.Count > 0)
-            {
-                pageSetting.TotalRowCount = lst.Count;
-                model.PageSetting = pageSetting;
-                model.CourseList = lst.Skip(reqModel.PageSetting.SkipRowCount)
-                    .Take(reqModel.PageSetting.PageSize).ToList();
-            }
+
+            pageSetting.TotalRowCount = lst.Count;
+            model.PageSetting = pageSetting;
+            model.CourseList = lst.Skip(reqModel.PageSetting.SkipRowCount)
+                .Take(reqModel.PageSetting.PageSize).ToList();
             model.Response = SubResponseModel.GetResponseMsg("Your course is successfully added.", true);
         }
         catch (Exception ex)
@@ -135,7 +134,7 @@ public class CourseService
         {
             TblCourse? item = await _db.TblCourses
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.CourseId == reqModel.CourseId && x.CreatedUserId==reqModel.CurrentUserId);
+                .FirstOrDefaultAsync(x => x.CourseId == reqModel.CourseId && x.CreatedUserId == reqModel.CurrentUserId);
             if (item == null)
             {
                 model.Response = SubResponseModel.GetResponseMsg("No course Found", false);

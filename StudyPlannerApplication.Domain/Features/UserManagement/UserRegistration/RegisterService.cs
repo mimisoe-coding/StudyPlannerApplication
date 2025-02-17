@@ -39,6 +39,7 @@ public class RegisterService
             string hashPassword =
                    reqModel.Password.ToSHA256HexHashString(reqModel.UserName);
             TblUser item = new TblUser();
+            item.UserId = System.Guid.NewGuid().ToString();
             item.UserName = reqModel.UserName;
             item.PhoneNo = reqModel.PhoneNo;
             item.Email = reqModel.Email;

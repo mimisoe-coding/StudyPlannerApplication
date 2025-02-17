@@ -17,7 +17,7 @@ public partial class TblCourse
 
     public DateTime DueDate { get; set; }
 
-    public int CreatedUserId { get; set; }
+    public string CreatedUserId { get; set; } = null!;
 
     public DateTime CreatedDate { get; set; }
 

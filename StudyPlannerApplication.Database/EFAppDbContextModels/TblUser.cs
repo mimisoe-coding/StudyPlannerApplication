@@ -5,7 +5,9 @@ namespace StudyPlannerApplication.Database.EFAppDbContextModels;
 
 public partial class TblUser
 {
-    public int UserId { get; set; }
+    public int Id { get; set; }
+
+    public string UserId { get; set; } = null!;
 
     public string UserName { get; set; } = null!;
 
