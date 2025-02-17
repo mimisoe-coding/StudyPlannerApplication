@@ -17,6 +17,8 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<TblCourse> TblCourses { get; set; }
 
+    public virtual DbSet<TblExam> TblExams { get; set; }
+
     public virtual DbSet<TblRole> TblRoles { get; set; }
 
     public virtual DbSet<TblSubject> TblSubjects { get; set; }
@@ -38,6 +40,27 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.CourseName)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+            entity.Property(e => e.CreatedUserId)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Description).IsUnicode(false);
+            entity.Property(e => e.DueDate).HasColumnType("datetime");
+            entity.Property(e => e.Status)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.SubjectCode)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
+        });
+
+        modelBuilder.Entity<TblExam>(entity =>
+        {
+            entity.HasKey(e => e.ExamId).HasName("PK__Tbl_Exam__297521C71D689494");
+
+            entity.ToTable("Tbl_Exam");
+
             entity.Property(e => e.CreatedDate).HasColumnType("datetime");
             entity.Property(e => e.CreatedUserId)
                 .HasMaxLength(50)

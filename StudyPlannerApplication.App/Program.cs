@@ -2,6 +2,7 @@ using MudBlazor.Services;
 using StudyPlannerApplication.App.Components;
 using StudyPlannerApplication.App.Services;
 using StudyPlannerApplication.Database.EFAppDbContextModels;
+using StudyPlannerApplication.Domain.Features.Exam;
 using StudyPlannerApplication.Domain.Features.UserManagement.Profile;
 using StudyPlannerApplication.Domain.Features.UserManagement.SignIn;
 using StudyPlannerApplication.Domain.Features.UserManagement.UserRegistration;
@@ -33,6 +34,7 @@ builder.Services.AddScoped<RegisterService>();
 builder.Services.AddScoped<SubjectService>();
 builder.Services.AddScoped<ProfileService>();
 builder.Services.AddScoped<CourseService>();
+builder.Services.AddScoped<ExamService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

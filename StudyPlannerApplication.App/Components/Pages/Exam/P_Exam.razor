@@ -1,8 +1,134 @@
 ﻿@page "/exam"
+@using MudBlazor
+@using Radzen.Blazor
 @using StudyPlannerApplication.App.Components.Layout
+@using StudyPlannerApplication.Domain.Features.Exam
+@rendermode InteractiveServer
 @layout MainLayout
-<h3>P_Exam</h3>
+@inject ExamService _examService
+@inject SubjectService _subjectService
+@if (_formType == EnumFormType.List)
+{
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">
+                <button class="btn btn-success btn-sm mb-0" type="button" @onclick=Create>Create</button>
+                Exam
+            </h5>
+        </div>
+        @*  <div class="row col-12">
+    <div class="col-sm-3 ml-6" style="margin-right: -8px;">
+    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Image Name</RadzenText>
+    <RadzenTextBox @bind-Value=@_reqModel Class="w-100"/>
+    </div>
+    <div class="col-sm-3 mt-4 mb-6">
+    <RadzenButton Click="() => Search()" Text="Search" ButtonStyle="ButtonStyle.Info"/>
+    </div>
+    </div> *@
+        @* @if (_resModel.CourseList != null && _resModel.CourseList.Count() > 0)
+        {
+            <div class="flex-container mt-3" style="display: flex;">
+                <div class="container-sm">
 
-@code {
+                    <table class="tb table align-middle table-nowrap table-hover dataTable no-footer table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Sr No.</th>
+                                <th>Course Name</th>
+                                <th>Subject Name</th>
+                                <th>Description</th>
+                                <th>Status</th>
+                                <th>Due Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int no = (ps.PageNo - 1) * ps.PageSize;
+                                foreach (var item in _resModel.CourseList)
+                                {
+                                    <tr>
+                                        <td>@(++no)</td>
+                                        <td>@item.CourseName</td>
+                                        <td>@item.SubjectNmae</td>
+                                        <td>@item.Description</td>
+                                        <td>@item.Status</td>
+                                        <td>@item.DueDate</td>
+                                        <td>
+                                            <button class="btn btn-primary btn-sm mb-0" type="button" @onclick="() => Edit(item.CourseId)">Edit</button>
+                                            <button class="btn btn-danger btn-sm mb-0" type="button" @onclick="() => Delete(item.CourseId)">Delete</button>
+                                            <button class="btn btn-success btn-sm mb-0" type="button" @onclick="() => Detail(item.CourseId)">Detail</button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
 
+                        </tbody>
+                    </table>
+                    <div class="d-flex flex-column align-center mb-4">
+                        <MudPagination BoundaryCount="2" MiddleCount="5" SelectedChanged="PageChanged" Count="@count" Class="mt-4" />
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="col-sm-3 ml-6" style="margin-right: -8px;">
+                <p>No Record To Show</p>
+            </div>
+        }*@
+    </div> 
+}
+
+@if (_formType == EnumFormType.Register || _formType == EnumFormType.Edit || _formType == EnumFormType.Detail)
+{
+    <div class="card">
+        <div class="card-body">
+            <h5 class="font-weight-bolder">@(_formType.ToString()) Subject</h5>
+            <div class="row">
+                <div class="col-4 mr-3 mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Subject Name</label>
+                    <RadzenDropDown AllowClear="true" TValue="string"
+                                    FilterCaseSensitivity="Radzen.FilterCaseSensitivity.CaseInsensitive"
+                                    AllowFiltering="true" Class="w-100" Disabled="@visible"
+                                    Placeholder="Select" Data=@lstSubject
+                                    Value="@_reqModel.SubjectCode"
+                                    TextProperty="SubjectName" ValueProperty="SubjectCode"
+                                    Change=@(args => { if (args != null) _reqModel.SubjectCode = args.ToString(); else _reqModel.SubjectCode = null;}) />
+                </div>
+                <div class="col-4 mr-3 mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Duration </label>
+                    <RadzenDatePicker @bind-Value=@_reqModel.Duration ShowTime="true" TimeOnly="true" DateFormat="HH:mm" Name="DatePickerTimeOnly" Class="w-100" />
+                </div>
+                <div class="col-4 mr-3 mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Status</label>
+                    <RadzenDropDown AllowClear="true" TValue="string"
+                                    FilterCaseSensitivity="Radzen.FilterCaseSensitivity.CaseInsensitive"
+                                    AllowFiltering="true" Class="w-100" Disabled=@visible
+                                    Placeholder="Select Status" Data=@lstStatus Value="@_reqModel.Status"
+                                    TextProperty="Value" ValueProperty="Value"
+                                    Change=@(args => { { _reqModel.Status = args?.ToString(); } })>
+                    </RadzenDropDown>
+                </div>
+                <div class="col-4 mr-3 mb-3" style="margin-right: -8px;">
+                    <label for="exampleFormControlTextarea1" class="form-label">Due Date</label>
+                    <RadzenDatePicker @bind-Value=@_reqModel.DueDate disabled=@visible DateFormat="d" Min="DateTime.Today" AllowInput="false" Class="w-100" />
+                </div>
+                <div class="col-4 mr-3 mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label">Description</label>
+                    <textarea class="form-control" disabled=@visible @bind="_reqModel.Description"></textarea>
+                </div>
+                <div class="col-12 mt-4">
+                    <div class="d-flex">
+                        <button @onclick=Back class="btn btn-outline-dark btn-sm mb-0 me-2" type="button">Back</button>
+                        @if (_formType != EnumFormType.Detail)
+                        {
+                            <button class="btn btn-success btn-sm mb-0" type="button" @onclick=Save>@_formType.ToString()</button>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
