@@ -1,11 +1,14 @@
 using MudBlazor.Services;
 using StudyPlannerApplication.App.Components;
 using StudyPlannerApplication.App.Services;
+using StudyPlannerApplication.App.StateContainer;
 using StudyPlannerApplication.Database.EFAppDbContextModels;
 using StudyPlannerApplication.Domain.Features.Exam;
+using StudyPlannerApplication.Domain.Features.Notification;
 using StudyPlannerApplication.Domain.Features.UserManagement.Profile;
 using StudyPlannerApplication.Domain.Features.UserManagement.SignIn;
 using StudyPlannerApplication.Domain.Features.UserManagement.UserRegistration;
+using StudyPlannerApplication.Shared.DapperService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,19 +25,22 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 ServiceLifetime.Transient,
 ServiceLifetime.Transient);
 
+builder.Services.AddScoped<DapperService>(x => new DapperService(connectionString));
+
 #endregion
 
 //builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
 builder.Services.AddScoped<IInjectService, InjectService>();
 //builder.Services.AddAuthenticationCore();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
-
+builder.Services.AddSingleton<NotificationStateContainer>();
 builder.Services.AddScoped<SignInService>();
 builder.Services.AddScoped<RegisterService>();
 builder.Services.AddScoped<SubjectService>();
 builder.Services.AddScoped<ProfileService>();
 builder.Services.AddScoped<CourseService>();
 builder.Services.AddScoped<ExamService>();
+builder.Services.AddScoped<NotificationService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

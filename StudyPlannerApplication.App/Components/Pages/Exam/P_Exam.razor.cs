@@ -29,7 +29,7 @@ public partial class P_Exam
             _userSession = await customAuthStateProvider.GetUserData();
             await GetSubjectList();
             GetStatusTypeTypeList();
-            //await List(ps);
+            await List(ps);
             StateHasChanged();
         }
     }
@@ -54,6 +54,24 @@ public partial class P_Exam
     {
         _formType = EnumFormType.Register;
         _reqModel = new ExamRequestModel();
+        _notificationStateContainer.NotificationCount = 40;
+        StateHasChanged();
+    }
+
+    async Task List(PageSettingModel ps)
+    {
+        _reqModel.PageSetting = ps;
+        _reqModel.CurrentUserId = _userSession.UserId;
+        _resModel = await _examService.List(_reqModel);
+        if (!_resModel.Response.IsSuccess)
+        {
+            await _injectService.ErrorMessage(_resModel.Response.Message);
+            return;
+        }
+        count = _resModel.PageSetting.TotalPageNo;
+        visible = false;
+        _formType = EnumFormType.List;
+        StateHasChanged();
     }
 
     async Task Save()
@@ -63,7 +81,7 @@ public partial class P_Exam
         _reqModel.CurrentUserId = _userSession.UserId;
         if (_reqModel.ExamId > 0)
         {
-            //_resModel = await _examService.Update(_reqModel);
+            _resModel = await _examService.Update(_reqModel);
         }
         else
         {
@@ -77,7 +95,8 @@ public partial class P_Exam
         }
         await _injectService.SuccessMessage(_resModel.Response.Message);
         ps = new PageSettingModel(1, 10);
-        //await List(ps);
+
+        await List(ps);
     }
 
     async Task Back()
@@ -85,7 +104,7 @@ public partial class P_Exam
         _reqModel = new ExamRequestModel();
         visible = false;
         ps = new PageSettingModel(1, 10);
-        // await List(ps);
+        await List(ps);
         _formType = EnumFormType.List;
         StateHasChanged();
     }
@@ -97,7 +116,7 @@ public partial class P_Exam
             await _injectService.ErrorMessage("Subject Field is Required.");
             return false;
         }
-        if (_reqModel.Duration.Hour ==0 && _reqModel.Duration.Minute==0)
+        if (_reqModel.Duration.Hour == 0 && _reqModel.Duration.Minute == 0)
         {
             await _injectService.ErrorMessage("Duration Field is Required.");
             return false;
@@ -107,9 +126,67 @@ public partial class P_Exam
             await _injectService.ErrorMessage("Status Field is Required.");
             return false;
         }
-       
+
 
         return true;
     }
 
+    private async Task PageChanged(int i)
+    {
+        ps.PageNo = i;
+        await List(ps);
+    }
+
+    private async Task Edit(int id)
+    {
+        _reqModel.ExamId = id;
+        var data = await _examService.Edit(id);
+        if (!data.Response.IsSuccess)
+        {
+            await _injectService.ErrorMessage(data.Response.Message);
+            return;
+        }
+        _reqModel.Description = data.ExamData.Description;
+        _reqModel.SubjectCode = data.ExamData.SubjectCode;
+        _reqModel.Status = data.ExamData.Status;
+        _reqModel.DueDate = data.ExamData.DueDate;
+        _reqModel.Duration = data.ExamData.Duration;
+        _formType = EnumFormType.Edit;
+    }
+
+    private async Task Detail(int id)
+    {
+        _reqModel.ExamId = id;
+        var data = await _examService.Edit(id);
+        if (!data.Response.IsSuccess)
+        {
+            await _injectService.ErrorMessage(data.Response.Message);
+            return;
+        }
+        _reqModel.Description = data.ExamData.Description;
+        _reqModel.SubjectCode = data.ExamData.SubjectCode;
+        _reqModel.Status = data.ExamData.Status;
+        _reqModel.DueDate = data.ExamData.DueDate;
+        _reqModel.Duration = data.ExamData.Duration;
+        visible = true;
+        _formType = EnumFormType.Detail;
+    }
+
+    private async Task Delete(int id)
+    {
+        bool isConfirm = await _injectService.ConfirmMessageBox("Are you sure you want to delete");
+        if (!isConfirm) return;
+        _reqModel.CurrentUserId = _userSession.UserId;
+        _reqModel.ExamId = id;
+        var data = await _examService.Delete(_reqModel);
+        if (!data.Response.IsSuccess)
+        {
+            await _injectService.ErrorMessage(data.Response.Message);
+            return;
+        }
+        await _injectService.SuccessMessage(data.Response.Message);
+        ps = new();
+        await List(ps);
+        StateHasChanged();
+    }
 }

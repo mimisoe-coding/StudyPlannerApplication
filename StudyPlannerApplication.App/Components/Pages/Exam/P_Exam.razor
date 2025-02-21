@@ -2,11 +2,13 @@
 @using MudBlazor
 @using Radzen.Blazor
 @using StudyPlannerApplication.App.Components.Layout
+@using StudyPlannerApplication.App.StateContainer
 @using StudyPlannerApplication.Domain.Features.Exam
 @rendermode InteractiveServer
 @layout MainLayout
 @inject ExamService _examService
 @inject SubjectService _subjectService
+@inject NotificationStateContainer _notificationStateContainer
 @if (_formType == EnumFormType.List)
 {
     <div class="card">
@@ -25,7 +27,7 @@
     <RadzenButton Click="() => Search()" Text="Search" ButtonStyle="ButtonStyle.Info"/>
     </div>
     </div> *@
-        @* @if (_resModel.CourseList != null && _resModel.CourseList.Count() > 0)
+        @if (_resModel.ExamList != null && _resModel.ExamList.Count() > 0)
         {
             <div class="flex-container mt-3" style="display: flex;">
                 <div class="container-sm">
@@ -34,10 +36,10 @@
                         <thead>
                             <tr>
                                 <th>Sr No.</th>
-                                <th>Course Name</th>
-                                <th>Subject Name</th>
+                                <th>Exam Name</th>
                                 <th>Description</th>
                                 <th>Status</th>
+                                <th>Duration</th>
                                 <th>Due Date</th>
                                 <th>Action</th>
                             </tr>
@@ -45,19 +47,19 @@
                         <tbody>
                             @{
                                 int no = (ps.PageNo - 1) * ps.PageSize;
-                                foreach (var item in _resModel.CourseList)
+                                foreach (var item in _resModel.ExamList)
                                 {
                                     <tr>
                                         <td>@(++no)</td>
-                                        <td>@item.CourseName</td>
-                                        <td>@item.SubjectNmae</td>
+                                        <td>@item.SubjectName</td>
                                         <td>@item.Description</td>
                                         <td>@item.Status</td>
+                                        <td>@item.Durationtime</td>
                                         <td>@item.DueDate</td>
                                         <td>
-                                            <button class="btn btn-primary btn-sm mb-0" type="button" @onclick="() => Edit(item.CourseId)">Edit</button>
-                                            <button class="btn btn-danger btn-sm mb-0" type="button" @onclick="() => Delete(item.CourseId)">Delete</button>
-                                            <button class="btn btn-success btn-sm mb-0" type="button" @onclick="() => Detail(item.CourseId)">Detail</button>
+                                            <button class="btn btn-primary btn-sm mb-0" type="button" @onclick="() => Edit(item.ExamId)">Edit</button>
+                                            <button class="btn btn-danger btn-sm mb-0" type="button" @onclick="() => Delete(item.ExamId)">Delete</button>
+                                            <button class="btn btn-success btn-sm mb-0" type="button" @onclick="() => Detail(item.ExamId)">Detail</button>
                                         </td>
                                     </tr>
                                 }
@@ -76,7 +78,7 @@
             <div class="col-sm-3 ml-6" style="margin-right: -8px;">
                 <p>No Record To Show</p>
             </div>
-        }*@
+        }
     </div> 
 }
 
@@ -98,7 +100,7 @@
                 </div>
                 <div class="col-4 mr-3 mb-3">
                     <label for="exampleFormControlInput1" class="form-label">Duration </label>
-                    <RadzenDatePicker @bind-Value=@_reqModel.Duration ShowTime="true" TimeOnly="true" DateFormat="HH:mm" Name="DatePickerTimeOnly" Class="w-100" />
+                    <RadzenDatePicker @bind-Value=@_reqModel.Duration ShowTime="true" Disabled=@visible TimeOnly="true" DateFormat="HH:mm" Name="DatePickerTimeOnly" Class="w-100" />
                 </div>
                 <div class="col-4 mr-3 mb-3">
                     <label for="exampleFormControlInput1" class="form-label">Status</label>

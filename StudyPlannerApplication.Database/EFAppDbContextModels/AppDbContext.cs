@@ -19,6 +19,8 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<TblExam> TblExams { get; set; }
 
+    public virtual DbSet<TblNotification> TblNotifications { get; set; }
+
     public virtual DbSet<TblRole> TblRoles { get; set; }
 
     public virtual DbSet<TblSubject> TblSubjects { get; set; }
@@ -59,7 +61,7 @@ public partial class AppDbContext : DbContext
         {
             entity.HasKey(e => e.ExamId).HasName("PK__Tbl_Exam__297521C71D689494");
 
-            entity.ToTable("Tbl_Exam");
+            entity.ToTable("Tbl_Exam", tb => tb.HasTrigger("AfterInsert_Exam"));
 
             entity.Property(e => e.CreatedDate).HasColumnType("datetime");
             entity.Property(e => e.CreatedUserId)
@@ -74,6 +76,19 @@ public partial class AppDbContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
+        });
+
+        modelBuilder.Entity<TblNotification>(entity =>
+        {
+            entity.HasKey(e => e.NotificationId).HasName("PK__Tbl_Noti__20CF2E1246977869");
+
+            entity.ToTable("Tbl_Notification");
+
+            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+            entity.Property(e => e.Message).IsUnicode(false);
+            entity.Property(e => e.UserId)
+                .HasMaxLength(50)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<TblRole>(entity =>
