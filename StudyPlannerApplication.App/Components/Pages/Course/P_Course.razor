@@ -51,7 +51,7 @@
                                     <tr>
                                         <td>@(++no)</td>
                                         <td>@item.CourseName</td>
-                                        <td>@item.SubjectNmae</td>
+                                        <td>@item.SubjectName</td>
                                         <td>@item.Description</td>
                                         <td>@item.Status</td>
                                         <td>@item.DueDate</td>
@@ -80,6 +80,7 @@
         }
     </div>
 }
+
 @if (_formType == EnumFormType.Register || _formType == EnumFormType.Edit || _formType == EnumFormType.Detail)
 {
     <div class="card">

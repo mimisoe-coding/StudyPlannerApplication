@@ -5,6 +5,7 @@ using StudyPlannerApplication.App.StateContainer;
 using StudyPlannerApplication.Database.EFAppDbContextModels;
 using StudyPlannerApplication.Domain.Features.Exam;
 using StudyPlannerApplication.Domain.Features.Notification;
+using StudyPlannerApplication.Domain.Features.Reminder;
 using StudyPlannerApplication.Domain.Features.UserManagement.Profile;
 using StudyPlannerApplication.Domain.Features.UserManagement.SignIn;
 using StudyPlannerApplication.Domain.Features.UserManagement.UserRegistration;
@@ -41,6 +42,7 @@ builder.Services.AddScoped<ProfileService>();
 builder.Services.AddScoped<CourseService>();
 builder.Services.AddScoped<ExamService>();
 builder.Services.AddScoped<NotificationService>();
+builder.Services.AddScoped<ReminderService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -8,6 +8,6 @@ public class CourseDataModel
     public string Status { get; set; }
     public DateTime DueDate { get; set; }
     public string SubjectCode { get; set; }
-    public string SubjectNmae { get; set; } 
+    public string SubjectName { get; set; } 
 
 }

@@ -1,8 +1,39 @@
 ﻿@page "/reminder"
+@using Radzen
+@using Radzen.Blazor
 @using StudyPlannerApplication.App.Components.Layout
+@using StudyPlannerApplication.Domain.Features.Reminder
+@rendermode InteractiveServer
+@inject ReminderService _reminderService
 @layout MainLayout
-<h3>P_Reminder</h3>
 
-@code {
-
-}
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">
+            Reminder
+        </h5>
+    </div>
+    <div class="rz-p-sm-12">
+        @if (_resModel.SubjectList is not null && _resModel.SubjectList.Count > 0)
+        {
+            @foreach (var item in _resModel.SubjectList)
+            {
+                <RadzenAccordion>
+                    <Items>
+                        <RadzenAccordionItem Text="@item.SubjectName" CollapseTitle="Collapse orders."
+                                             ExpandTitle="Expand orders." CollapseAriaLabel="Collapse the order details."
+                                             ExpandAriaLabel="Expand the order details.">
+                            @foreach (var course in item.CourseList)
+                            {
+                                <div>
+                                    <div>@course.CourseName</div>
+                                    <div>@course.Description</div>
+                                </div>
+                            }
+                        </RadzenAccordionItem>
+                    </Items>
+                </RadzenAccordion>
+            }
+        }
+    </div>
+</div>

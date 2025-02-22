@@ -54,7 +54,7 @@ public class CourseService
                             CourseId = c.CourseId,
                             CourseName = c.CourseName,
                             SubjectCode = c.SubjectCode,
-                            SubjectNmae = sub.SubjectName,
+                            SubjectName = sub.SubjectName,
                             Description = c.Description,
                             Status = c.Status,
                             DueDate = c.DueDate
