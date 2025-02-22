@@ -1,5 +1,4 @@
 ﻿using StudyPlannerApplication.Domain.Features.Course;
-using StudyPlannerApplication.Domain.Features.Notification;
 
 namespace StudyPlannerApplication.Domain.Features.Reminder;
 
