@@ -1,5 +1,6 @@
 ﻿using StudyPlannerApplication.Domain.Features.Course;
 using StudyPlannerApplication.Domain.Features.Exam;
+using StudyPlannerApplication.Domain.Features.Notification;
 using StudyPlannerApplication.Domain.Features.Subject;
 
 namespace StudyPlannerApplication.App.Components.Pages.Exam;
@@ -10,6 +11,7 @@ public partial class P_Exam
     private ExamRequestModel _reqModel = new();
     private ExamResponseModel _resModel = new();
     private UserSessionModel _userSession = new();
+    private NotificationResponseModel _notiData = new();
     private PageSettingModel ps = new();
     private IEnumerable<SubjectDataModel> lstSubject;
     private List<SelectListModel> lstStatus = new();
@@ -54,7 +56,6 @@ public partial class P_Exam
     {
         _formType = EnumFormType.Register;
         _reqModel = new ExamRequestModel();
-        _notificationStateContainer.NotificationCount = 40;
         StateHasChanged();
     }
 
@@ -94,6 +95,7 @@ public partial class P_Exam
             return;
         }
         await _injectService.SuccessMessage(_resModel.Response.Message);
+        await Notification();
         ps = new PageSettingModel(1, 10);
 
         await List(ps);
@@ -185,8 +187,35 @@ public partial class P_Exam
             return;
         }
         await _injectService.SuccessMessage(data.Response.Message);
+        await Notification();
         ps = new();
         await List(ps);
         StateHasChanged();
+    }
+
+    async Task Notification()
+    {
+        NotificationRequestModel reqModel = new NotificationRequestModel
+        {
+            CurrentUserId = _userSession.UserId
+        };
+        _notiData = await _notificationService.GetAllNotification(reqModel);
+        if (!_notiData.Response.IsSuccess)
+        {
+            await _injectService.ErrorMessage(_notiData.Response.Message);
+            return;
+        }
+
+        _notificationStateContainer.NotificationCount = _notiData.NotiList.Count;
+    }
+
+    private void OnSubjectCodeChange(object args)
+    {
+        _reqModel.SubjectCode = args?.ToString();
+    }
+
+    private void OnStatusChange(object args)
+    {
+        _reqModel.SubjectCode = args?.ToString();
     }
 }

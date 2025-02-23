@@ -4,10 +4,12 @@
 @using StudyPlannerApplication.App.Components.Layout
 @using StudyPlannerApplication.App.StateContainer
 @using StudyPlannerApplication.Domain.Features.Exam
+@using StudyPlannerApplication.Domain.Features.Notification
 @rendermode InteractiveServer
 @layout MainLayout
 @inject ExamService _examService
 @inject SubjectService _subjectService
+@inject StudyPlannerApplication.Domain.Features.Notification.NotificationService _notificationService
 @inject NotificationStateContainer _notificationStateContainer
 @if (_formType == EnumFormType.List)
 {
@@ -18,15 +20,6 @@
                 Exam
             </h5>
         </div>
-        @*  <div class="row col-12">
-    <div class="col-sm-3 ml-6" style="margin-right: -8px;">
-    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Image Name</RadzenText>
-    <RadzenTextBox @bind-Value=@_reqModel Class="w-100"/>
-    </div>
-    <div class="col-sm-3 mt-4 mb-6">
-    <RadzenButton Click="() => Search()" Text="Search" ButtonStyle="ButtonStyle.Info"/>
-    </div>
-    </div> *@
         @if (_resModel.ExamList != null && _resModel.ExamList.Count() > 0)
         {
             <div class="flex-container mt-3" style="display: flex;">

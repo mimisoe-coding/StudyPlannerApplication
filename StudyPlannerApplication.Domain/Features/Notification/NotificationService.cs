@@ -1,8 +1,4 @@
-﻿using Azure.Core;
-using StudyPlannerApplication.Shared.DapperService;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace StudyPlannerApplication.Domain.Features.Notification;
+﻿namespace StudyPlannerApplication.Domain.Features.Notification;
 
 public class NotificationService
 {

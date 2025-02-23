@@ -1,6 +1,12 @@
 ﻿@page "/dashboard"
 @using StudyPlannerApplication.App.Components.Layout
+@using StudyPlannerApplication.App.StateContainer
+@using StudyPlannerApplication.Domain.Features.Notification
+@rendermode InteractiveServer
 @layout MainLayout
+@inject NotificationService _notificationService
+@inject NotificationStateContainer _notificationStateContainer
+
 <h3>P_Dashboard</h3>
 
 @code {

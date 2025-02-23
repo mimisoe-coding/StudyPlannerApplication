@@ -15,11 +15,11 @@
     <link rel="icon" type="image/png" href="favicon.png" />
     <link href="custom.css" id="app-style" rel="stylesheet" type="text/css" />
 
-    <HeadOutlet />
+    <HeadOutlet @rendermode="InteractiveServer"/>
 </head>
 
 <body class="body-background">
-    <Routes />
+    <Routes @rendermode="InteractiveServer" />
     <script src="_framework/blazor.web.js"></script>
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
     <script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>

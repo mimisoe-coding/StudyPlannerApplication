@@ -1,6 +1,13 @@
 ﻿@using MudBlazor
+@using StudyPlannerApplication.App.StateContainer
+@using StudyPlannerApplication.Domain.Features.Notification
 @inherits LayoutComponentBase
+@implements IDisposable
+@inject NotificationService _notificationService
+@inject NotificationStateContainer _notificationStateContainer
 
+<MudThemeProvider />
+<MudPopoverProvider />
 <div class="page">
     <div class="sidebar">
         <NavMenu />
@@ -8,9 +15,26 @@
 
     <main>
         <div class="top-row px-4">
-            <MudBadge Content="100" Color="Color.Info" Overlap="true" Class="mx-6 my-4">
-                <MudIcon Icon="@Icons.Material.Filled.Notifications" Color="Color.Primary" />
-            </MudBadge>
+            <MudMenu class="m-lg-2">
+                <ActivatorContent  >
+                    <MudBadge Content="@_notificationStateContainer.NotificationCount"
+                    Color="Color.Info"
+                    Overlap="true"
+                    Class="ml-2"
+                              @onclick="@OnBadgeClick">
+                        <MudIcon Icon="@Icons.Material.Filled.Notifications" Color="Color.Success" />
+                    </MudBadge>
+                </ActivatorContent>
+                <ChildContent>
+                    @if (_notiData.NotiList.Count > 0)
+                    {
+                        foreach(var noti in _notiData.NotiList)
+                        {
+                            <MudMenuItem>@noti.Message</MudMenuItem>
+                        }
+                    }
+                </ChildContent>
+            </MudMenu>
             <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
         </div>
 
@@ -25,3 +49,63 @@
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+@code {
+    private bool _menuOpen = false;
+    private UserSessionModel _userSession = new();
+    private NotificationResponseModel _notiData = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _notificationStateContainer.OnChange += StateHasChanged;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var customAuthStateProvider = (CustomAuthenticationStateProvider)authStateProvider;
+            var authState = await customAuthStateProvider.GetAuthenticationStateAsync();
+            if (authState.User.Identity != null && !authState.User.Identity.IsAuthenticated)
+            {
+                _nav.NavigateTo("/");
+                return;
+            }
+            _userSession = await customAuthStateProvider.GetUserData();
+            await Notification();
+            StateHasChanged();
+        }
+    }
+
+
+    public void Dispose()
+    {
+        _notificationStateContainer.OnChange -= StateHasChanged;
+    }
+
+    private async Task OnBadgeClick()
+    {
+        await Notification();
+        StateHasChanged();
+    }
+
+    async Task Notification()
+    {
+        NotificationRequestModel reqModel = new NotificationRequestModel
+            {
+                CurrentUserId = _userSession.UserId
+            };
+         _notiData = await _notificationService.GetAllNotification(reqModel);
+        if (!_notiData.Response.IsSuccess)
+        {
+            await _injectService.ErrorMessage(_notiData.Response.Message);
+            return;
+        }
+
+        _notificationStateContainer.NotificationCount = _notiData.NotiList.Count;
+    }
+
+    private void Create()
+    {
+        StateHasChanged();
+    }
+}

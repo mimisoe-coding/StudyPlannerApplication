@@ -35,7 +35,7 @@ public partial class P_SignIn
         };
         var customAuthStateProvider = (CustomAuthenticationStateProvider)authStateProvider;
         await customAuthStateProvider.UpdateAuthenticationState(userSessionModel);
-        Navigation.NavigateTo("/dd");
+        Navigation.NavigateTo("/dashboard");
     }
     async Task Register()
     {
