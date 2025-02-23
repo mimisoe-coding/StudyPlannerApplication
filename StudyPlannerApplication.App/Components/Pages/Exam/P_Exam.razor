@@ -5,6 +5,7 @@
 @using StudyPlannerApplication.App.StateContainer
 @using StudyPlannerApplication.Domain.Features.Exam
 @using StudyPlannerApplication.Domain.Features.Notification
+@using StudyPlannerApplication.Shared
 @rendermode InteractiveServer
 @layout MainLayout
 @inject ExamService _examService
@@ -46,7 +47,9 @@
                                         <td>@(++no)</td>
                                         <td>@item.SubjectName</td>
                                         <td>@item.Description</td>
-                                        <td>@item.Status</td>
+                                        <td>
+                                            <MudChip T="string" Color="@GetStatus(item.Status)">@item.Status</MudChip>
+                                        </td>
                                         <td>@item.Durationtime</td>
                                         <td>@item.DueDate</td>
                                         <td>
@@ -118,7 +121,7 @@
                         <button @onclick=Back class="btn btn-outline-dark btn-sm mb-0 me-2" type="button">Back</button>
                         @if (_formType != EnumFormType.Detail)
                         {
-                            <button class="btn btn-success btn-sm mb-0" type="button" @onclick=Save>@_formType.ToString()</button>
+                            <button class="btn btn-success btn-sm mb-0" type="button" @onclick=Save>@_formType.ToEnumDescription()</button>
                         }
 
                     </div>

@@ -1,4 +1,5 @@
-﻿using StudyPlannerApplication.Domain.Features.Course;
+﻿using MudBlazor;
+using StudyPlannerApplication.Domain.Features.Course;
 using StudyPlannerApplication.Domain.Features.Exam;
 using StudyPlannerApplication.Domain.Features.Notification;
 using StudyPlannerApplication.Domain.Features.Subject;
@@ -209,13 +210,13 @@ public partial class P_Exam
         _notificationStateContainer.NotificationCount = _notiData.NotiList.Count;
     }
 
-    private void OnSubjectCodeChange(object args)
+    private MudBlazor.Color GetStatus(string status)
     {
-        _reqModel.SubjectCode = args?.ToString();
-    }
-
-    private void OnStatusChange(object args)
-    {
-        _reqModel.SubjectCode = args?.ToString();
+        return status switch
+        {
+            "Done" => Color.Success,
+            "Pending" => Color.Warning,
+            _ => Color.Default
+        };
     }
 }

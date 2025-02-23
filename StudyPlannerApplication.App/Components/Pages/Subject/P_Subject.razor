@@ -2,6 +2,7 @@
 @using MudBlazor
 @using StudyPlannerApplication.App.Components.Layout
 @using StudyPlannerApplication.Domain.Features.Subject
+@using StudyPlannerApplication.Shared
 @layout MainLayout
 @inject SubjectService _subjectService
 @rendermode InteractiveServer
@@ -90,7 +91,7 @@
                         <button @onclick=Back class="btn btn-outline-dark btn-sm mb-0 me-2" type="button">Back</button>
                         @if (_formType != EnumFormType.Detail)
                         {
-                            <button class="btn btn-success btn-sm mb-0" type="button" @onclick=Save>@_formType.ToString()</button>
+                            <button class="btn btn-success btn-sm mb-0" type="button" @onclick=Save>@_formType.ToEnumDescription()</button>
                         }
 
                     </div>

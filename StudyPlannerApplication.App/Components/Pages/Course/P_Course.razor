@@ -4,6 +4,7 @@
 @using Radzen.Blazor
 @using StudyPlannerApplication.App.Components.Layout
 @using StudyPlannerApplication.Domain.Features.Course
+@using StudyPlannerApplication.Shared
 @inject SubjectService _subjectService
 @inject CourseService _courseService
 @rendermode InteractiveServer
@@ -53,7 +54,7 @@
                                         <td>@item.CourseName</td>
                                         <td>@item.SubjectName</td>
                                         <td>@item.Description</td>
-                                        <td>@item.Status</td>
+                                        <td><MudChip T="string" Color="@GetStatus(item.Status)">@item.Status</MudChip></td>
                                         <td>@item.DueDate</td>
                                         <td>
                                              <button class="btn btn-primary btn-sm mb-0" type="button" @onclick="() => Edit(item.CourseId)">Edit</button>
@@ -124,7 +125,7 @@
                         <button @onclick=Back class="btn btn-outline-dark btn-sm mb-0 me-2" type="button">Back</button>
                         @if (_formType != EnumFormType.Detail)
                         {
-                            <button class="btn btn-success btn-sm mb-0" type="button" @onclick=Save>@_formType.ToString()</button>
+                            <button class="btn btn-success btn-sm mb-0" type="button" @onclick=Save>@_formType.ToEnumDescription()</button>
                         }
 
                     </div>

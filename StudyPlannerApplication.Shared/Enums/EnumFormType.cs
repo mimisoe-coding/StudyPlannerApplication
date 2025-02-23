@@ -1,11 +1,13 @@
-﻿namespace StudyPlannerApplication.Shared.Enums;
+﻿using System.ComponentModel;
+
+namespace StudyPlannerApplication.Shared.Enums;
 
 public enum EnumFormType
 {
     Default,
     Create,
-    Edit,
-    Register,
+    [Description("Update")] Edit,
+    [Description("Save")] Register,
     Detail,
     List
 }

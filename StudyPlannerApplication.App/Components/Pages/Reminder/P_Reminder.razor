@@ -1,4 +1,5 @@
 ﻿@page "/reminder"
+@using MudBlazor
 @using Radzen
 @using Radzen.Blazor
 @using StudyPlannerApplication.App.Components.Layout
@@ -25,10 +26,13 @@
                                              ExpandAriaLabel="Expand the order details.">
                             @foreach (var course in item.CourseList)
                             {
-                                <div>
-                                    <div>@course.CourseName</div>
-                                    <div>@course.Description</div>
-                                </div>
+                                <MudCard>
+                                    <MudCardContent>
+                                        <MudText Typo="Typo.subtitle2">@course.CourseName</MudText>
+                                        <MudText Typo="Typo.body2">@course.Description</MudText>
+                                        <MudChip T="string" Color="Color.Warning" Size="Size.Small">@course.Status</MudChip>
+                                    </MudCardContent>
+                                </MudCard>
                             }
                         </RadzenAccordionItem>
                     </Items>

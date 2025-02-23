@@ -21,6 +21,7 @@ public class ReminderService
                                    Tbl_Course c inner join
                                    Tbl_Subject s on c.SubjectCode=s.SubjectCode
                                    where CONVERT(DATE, c.DueDate) = CONVERT(DATE, GETDATE())
+                                    and Status='Pending'
                                    and c.CreatedUserId=@CurrentUserId";
             var result = _dapper.Query<CourseDataModel>(courseQuery, reqModel).ToList();
             if (result.Count <= 0)

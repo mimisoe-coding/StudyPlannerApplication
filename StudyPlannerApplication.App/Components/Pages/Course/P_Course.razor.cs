@@ -1,4 +1,6 @@
-﻿namespace StudyPlannerApplication.App.Components.Pages.Course;
+﻿using MudBlazor;
+
+namespace StudyPlannerApplication.App.Components.Pages.Course;
 
 public partial class P_Course
 {
@@ -180,6 +182,16 @@ public partial class P_Course
         ps = new();
         await List(ps);
         StateHasChanged();
+    }
+
+    private MudBlazor.Color GetStatus(string status)
+    {
+        return status switch
+        {
+            "Done" => Color.Success,
+            "Pending" => Color.Warning,
+            _ => Color.Default
+        };
     }
 
 }
