@@ -1,14 +1,41 @@
 ﻿@page "/dashboard"
+@using MudBlazor
 @using StudyPlannerApplication.App.Components.Layout
 @using StudyPlannerApplication.App.StateContainer
+@using StudyPlannerApplication.Domain.Features.Dashboard
 @using StudyPlannerApplication.Domain.Features.Notification
 @rendermode InteractiveServer
 @layout MainLayout
 @inject NotificationService _notificationService
 @inject NotificationStateContainer _notificationStateContainer
+@inject DashboardService _dashboardService
 
-<h3>P_Dashboard</h3>
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">
+            Weekly To-Do
+        </h5>
+    </div>
+    @if (_resModel.CurrentWeekDataList != null && _resModel.CurrentWeekDataList.Count > 0)
+    {
 
-@code {
+        <MudGrid >
+            @foreach (var item in _resModel.CurrentWeekDataList)
+            {
+                <MudItem xs="3">
+                    <MudPaper Class="pa-3" Elevation="6">
+                        <MudChip Text="pink" Color="Color.Info" Value="@Color.Info">@item.DayName</MudChip>
+                        @foreach (var data in item.CourseList)
+                        {
+                            <MudText Typo="Typo.body2">
+                                <MudIcon Icon="@GetIcon(data.Status)" Color="@GetStatus(data.Status)" Title="Favorite" />
+                                @($"{data.SubjectName} - {data.CourseName}")
+                            </MudText>
+                        }
+                    </MudPaper>
+                </MudItem>
+            }
+        </MudGrid>
 
-}
+    }
+</div>

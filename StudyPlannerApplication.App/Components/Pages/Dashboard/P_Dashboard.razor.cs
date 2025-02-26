@@ -1,4 +1,6 @@
-﻿using StudyPlannerApplication.App.StateContainer;
+﻿using MudBlazor;
+using StudyPlannerApplication.App.StateContainer;
+using StudyPlannerApplication.Domain.Features.Dashboard;
 using StudyPlannerApplication.Domain.Features.Notification;
 
 namespace StudyPlannerApplication.App.Components.Pages.Dashboard
@@ -6,6 +8,8 @@ namespace StudyPlannerApplication.App.Components.Pages.Dashboard
     public partial class P_Dashboard
     {
         private UserSessionModel _userSession = new();
+        private DashboardRequestModel _reqModel = new();
+        private DashboardResponseModel _resModel = new();
         protected override async Task OnInitializedAsync()
         {
             //await Notification(); 
@@ -23,6 +27,7 @@ namespace StudyPlannerApplication.App.Components.Pages.Dashboard
                 }
                 _userSession = await customAuthStateProvider.GetUserData();
                 await Notification();
+                await GetCourseList();
                 StateHasChanged();
             }
         }
@@ -43,6 +48,34 @@ namespace StudyPlannerApplication.App.Components.Pages.Dashboard
             _notificationStateContainer.NotificationCount = notiData.NotiList.Count;
         }
 
+        async Task GetCourseList()
+        {
+            _reqModel.CurrentUserId = _userSession.UserId;
+            _resModel = await _dashboardService.GetAllCourseList(_reqModel);
+            if (!_resModel.Response.IsSuccess)
+            {
+                await _injectService.ErrorMessage(_resModel.Response.Message);
+            }
+        }
 
+        private MudBlazor.Color GetStatus(string status)
+        {
+            return status switch
+            {
+                "Done" => Color.Success,
+                "Pending" => Color.Warning,
+                _ => Color.Default
+            };
+        }
+
+        private string GetIcon(string status)
+        {
+            return status switch
+            {
+                "Done" => Icons.Material.Outlined.CheckCircleOutline,
+                "Pending" => Icons.Material.Outlined.IncompleteCircle,
+                _ => Icons.Material.Outlined.IncompleteCircle
+            };
+        }
     }
 }
