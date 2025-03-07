@@ -36,8 +36,6 @@ namespace StudyPlannerApplication.App.Components.Pages.Reminder
                 await _injectService.ErrorMessage(_resModel.Response.Message);
                 return;
             }
-            await _injectService.SuccessMessage(_resModel.Response.Message);
-            return;
         }
     }
 }
