@@ -7,6 +7,7 @@ using StudyPlannerApplication.Domain.Features.Dashboard;
 using StudyPlannerApplication.Domain.Features.Exam;
 using StudyPlannerApplication.Domain.Features.Notification;
 using StudyPlannerApplication.Domain.Features.Reminder;
+using StudyPlannerApplication.Domain.Features.UserManagement.ChangePassword;
 using StudyPlannerApplication.Domain.Features.UserManagement.Profile;
 using StudyPlannerApplication.Domain.Features.UserManagement.SignIn;
 using StudyPlannerApplication.Domain.Features.UserManagement.UserRegistration;
@@ -45,6 +46,7 @@ builder.Services.AddScoped<CourseService>();
 builder.Services.AddScoped<ExamService>();
 builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<ReminderService>();
+builder.Services.AddScoped<ChangePasswordService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

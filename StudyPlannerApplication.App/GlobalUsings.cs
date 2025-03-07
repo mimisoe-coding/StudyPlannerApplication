@@ -8,3 +8,6 @@ global using Microsoft.EntityFrameworkCore;
 global using StudyPlannerApplication.Domain.Features.Subject;
 global using StudyPlannerApplication.Domain.Features.Course;
 global using StudyPlannerApplication.Domain.Models;
+global using StudyPlannerApplication.Domain.Features.UserManagement.ChangePassword;
+global using StudyPlannerApplication.Domain.Features.UserManagement.SignIn;
+global using StudyPlannerApplication.Domain.Features.UserManagement.UserRegistration;
