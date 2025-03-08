@@ -19,7 +19,7 @@ public class RegisterService
             #region Check Duplicate UserName and PhoneNo
 
             TblUser? user = await _db.TblUsers.AsNoTracking().FirstOrDefaultAsync(x => x.UserName.ToLower().Trim() == reqModel.UserName.ToLower().Trim()
-            || x.PhoneNo==reqModel.PhoneNo);
+            || x.PhoneNo==reqModel.PhoneNo || x.Email.ToLower()==reqModel.Email.ToLower());
             if (user is not null)
             {
                 if (user.UserName.ToLower().Trim() == reqModel.UserName.ToLower().Trim())
@@ -30,6 +30,11 @@ public class RegisterService
                 if (user.PhoneNo == reqModel.PhoneNo)
                 {
                     model.Response = SubResponseModel.GetResponseMsg("Your PhoneNo is already used.", false);
+                    return model;
+                }
+                if (user.Email.ToLower() == reqModel.Email.ToLower())
+                {
+                    model.Response = SubResponseModel.GetResponseMsg("Your Email is already used.", false);
                     return model;
                 }
             }

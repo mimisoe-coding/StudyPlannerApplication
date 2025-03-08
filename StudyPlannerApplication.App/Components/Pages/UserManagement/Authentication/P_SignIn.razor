@@ -5,12 +5,13 @@
 @inject SignInService _signInService
 @inject RegisterService _registerService
 @inject NavigationManager Navigation
+@inject ChangePasswordService _changePasswordService
 @rendermode RenderMode.InteractiveServer
 
 <div class="d-flex justify-content-center align-items-center vh-100">
     <div class="card shadow-sm p-4" style="width: 100%; max-width: 400px;">
         <div class="card-body">
-            @if (!_isRegister)
+            @if (_formType==EnumSignInFormType.SignIn)
             {
                 <h1 class="h3 mb-3 fw-normal text-center">Sign In</h1>
                 <form class="form-horizontal" id="signin-form" method="post" action="/SignIn/Index">
@@ -29,13 +30,16 @@
                             </div>
                         </div>
                     </div>
+                    <div class="text-center mt-3">
+                        <a href="javascript:void(0);" @onclick="() => ChangePage(EnumSignInFormType.ForgotPassword)">Forgot your password?</a>
+                    </div>
                     <button type="button" class="btn btn-primary w-100 py-2" @onclick=SignIn>Sign In</button>
                     <div class="text-center mt-3">
-                        <a href="javascript:void(0);" @onclick="() => ChangePage()">Don't have an account? Sign Up</a>
+                        <a href="javascript:void(0);" @onclick="() => ChangePage(EnumSignInFormType.Register)">Don't have an account? Sign Up</a>
                     </div>
                 </form>
             }
-            else
+            else if(_formType==EnumSignInFormType.Register)
             {
                 <h1 class="h3 mb-3 fw-normal text-center">Register</h1>
                 <div class="form-floating mb-3">
@@ -72,8 +76,20 @@
                 </div>
                 <button type="button" class="btn btn-primary w-100 py-2" @onclick=Register>Sign Up</button>
                 <div class="text-center mt-3">
-                    <a href="javascript:void(0);" @onclick="() => ChangePage()">Already have an account? Sign In</a>
+                    <a href="javascript:void(0);" @onclick="() => ChangePage(EnumSignInFormType.SignIn)">Already have an account? Sign In</a>
                 </div>
+            }
+            else if (_formType == EnumSignInFormType.ForgotPassword)
+            {
+                <h1 class="h3 mb-3 fw-normal text-center">Forgot your password?</h1>
+                <div class="form-floating mb-3">
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input class="form-control" type="email" placeholder="Email" @bind-value="_reqModel.Email" />
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary w-100 py-2" @onclick=SendEmail>Send</button>
             }
         </div>
     </div>

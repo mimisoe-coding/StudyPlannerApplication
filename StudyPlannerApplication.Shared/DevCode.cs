@@ -50,4 +50,16 @@ public static partial class DevCode
             .GetCustomAttributes(typeof(DescriptionAttribute), false);
         return attributes.Length > 0 ? attributes[0].Description : string.Empty;
     }
+
+    public static string GeneratePassword()
+    {
+        var random = new Random();
+        var rNum = new StringBuilder();
+        for (int i = 0; i < 6; i++)
+        {
+            rNum.Append(random.Next(0, 6).ToString());
+        }
+
+        return rNum.ToString();
+    }
 }

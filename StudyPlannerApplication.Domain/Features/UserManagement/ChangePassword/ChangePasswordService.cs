@@ -1,6 +1,5 @@
 ﻿using FluentEmail.Core;
 using FluentEmail.Smtp;
-using StudyPlannerApplication.Domain.Features.UserManagement.Profile;
 using System.Net;
 using System.Net.Mail;
 
@@ -20,33 +19,52 @@ public class ChangePasswordService
         ChangePasswordResponseModel model = new ChangePasswordResponseModel();
         try
         {
-            var senderEmail ="studyplannerhub@gmail.com";
-            var password = "nhyr ysyd owwk jama";
+            var user = await _db.TblUsers.AsNoTracking().FirstOrDefaultAsync(x => x.Email == reqModel.Email);
+            if (user is null)
+            {
+                model.Response = SubResponseModel.GetResponseMsg("Invalid email.", false);
+                return model;
+            }
+
+            string password = DevCode.GeneratePassword();
+            string hashPassword = password.ToSHA256HexHashString(user.UserName);
+            user.Password = hashPassword;
+            _db.Entry(user).State = EntityState.Modified;
+            await _db.SaveAndDetachAsync();
+            #region Send Email
+            var senderEmail = "studyplannerhub@gmail.com";
+            var senderPassword = "nhyr ysyd owwk jama";
             var sender = new SmtpSender(() => new SmtpClient("smtp.gmail.com")
             {
                 UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(senderEmail,password),
+                Credentials = new NetworkCredential(senderEmail, senderPassword),
                 EnableSsl = true,
                 Port = 587
             });
 
             Email.DefaultSender = sender;
 
+            var emailBody = $@"
+                                Your password has been successfully reset.
+                                UserName: {user.UserName}
+                                Password: {password}";
+            
             var email = await Email
                 .From(senderEmail)
                 .To("mimisoe968@gmail.com", "Mi Mi Soe")
-                .Subject("Test Email")
-                .Body("This is a test email sent using FluentEmail.", false)
+                .Subject("Password Reset Successful")
+                .Body(emailBody, false)
                 .SendAsync();
 
             if (email.Successful)
             {
-                Console.WriteLine("Email sent successfully!");
+                model.Response = SubResponseModel.GetResponseMsg("Sending email is successful", true);
             }
             else
             {
-                Console.WriteLine("Failed to send email. Errors: " + string.Join(", ", email.ErrorMessages));
+                model.Response = SubResponseModel.GetResponseMsg("Sending email is fail", false);
             }
+            #endregion
         }
         catch (Exception ex)
         {

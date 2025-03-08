@@ -3,7 +3,7 @@
 public partial class P_SignIn
 {
     private SignInRequestModel _reqModel = new();
-    private bool _isRegister = true;
+    private EnumSignInFormType _formType = EnumSignInFormType.Register;
     private bool isPasswordVisible = false;
     private bool isCPasswordVisible = false;
     private string password = "password";
@@ -47,7 +47,7 @@ public partial class P_SignIn
             return;
         }
         await _injectService.SuccessMessage(model.Response.Message);
-        _isRegister = false;
+        _formType = EnumSignInFormType.SignIn;
         _reqModel = new();
         StateHasChanged();
     }
@@ -63,7 +63,7 @@ public partial class P_SignIn
             await _injectService.ErrorMessage("Password Field is Required.");
             return false;
         }
-        if (_isRegister)
+        if (_formType == EnumSignInFormType.Register)
         {
             if (string.IsNullOrEmpty(_reqModel.Email))
             {
@@ -75,7 +75,7 @@ public partial class P_SignIn
                 await _injectService.ErrorMessage("PhoneNo Field is Required.");
                 return false;
             }
-            if (_reqModel.Password!=_reqModel.ConfirmPassword)
+            if (_reqModel.Password != _reqModel.ConfirmPassword)
             {
                 await _injectService.ErrorMessage("Password and Confirm Password must be the same.");
                 return false;
@@ -84,9 +84,9 @@ public partial class P_SignIn
         return true;
     }
 
-    private void ChangePage()
+    private void ChangePage(EnumSignInFormType type)
     {
-        _isRegister = _isRegister ? false : true;
+        _formType = type;
         _reqModel = new();
         StateHasChanged();
     }
@@ -102,6 +102,28 @@ public partial class P_SignIn
     {
         isCPasswordVisible = isCPasswordVisible ? false : true;
         cPassword = cPassword == "password" ? "text" : "password";
+        StateHasChanged();
+    }
+
+    async Task SendEmail()
+    {
+        if (string.IsNullOrEmpty(_reqModel.Email))
+        {
+            await _injectService.ErrorMessage("Email Field is Required.");
+            return;
+        }
+        ChangePasswordRequestModel passwordRequest = new()
+        {
+            Email = _reqModel.Email
+        };
+        var model = await _changePasswordService.ResetPassword(passwordRequest);
+        if (!model.Response.IsSuccess)
+        {
+            await _injectService.ErrorMessage(model.Response.Message);
+            return;
+        }
+        await _injectService.SuccessMessage(model.Response.Message);
+        _formType = EnumSignInFormType.SignIn;
         StateHasChanged();
     }
 }

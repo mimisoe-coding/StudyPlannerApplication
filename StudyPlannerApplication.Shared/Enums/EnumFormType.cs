@@ -11,3 +11,11 @@ public enum EnumFormType
     Detail,
     List
 }
+
+public enum EnumSignInFormType
+{
+    Default,
+    SignIn,
+    Register,
+    ForgotPassword
+}
