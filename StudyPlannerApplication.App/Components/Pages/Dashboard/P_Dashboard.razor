@@ -16,11 +16,11 @@
             Weekly To-Do
         </h5>
     </div>
-    @if (_resModel.CurrentWeekDataList != null && _resModel.CurrentWeekDataList.Count > 0)
+    @if (_resModel?.Data?.CurrentWeekDataList?.Any()==true)
     {
 
         <MudGrid >
-            @foreach (var item in _resModel.CurrentWeekDataList)
+            @foreach (var item in _resModel.Data.CurrentWeekDataList)
             {
                 <MudItem xs="3">
                     <MudPaper Class="pa-3" Elevation="6">

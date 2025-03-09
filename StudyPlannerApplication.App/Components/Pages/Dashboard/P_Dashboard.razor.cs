@@ -1,15 +1,10 @@
-﻿using MudBlazor;
-using StudyPlannerApplication.App.StateContainer;
-using StudyPlannerApplication.Domain.Features.Dashboard;
-using StudyPlannerApplication.Domain.Features.Notification;
-
-namespace StudyPlannerApplication.App.Components.Pages.Dashboard
+﻿namespace StudyPlannerApplication.App.Components.Pages.Dashboard
 {
     public partial class P_Dashboard
     {
         private UserSessionModel _userSession = new();
         private DashboardRequestModel _reqModel = new();
-        private DashboardResponseModel _resModel = new();
+        private Result<DashboardResponseModel> _resModel = new();
         protected override async Task OnInitializedAsync()
         {
             //await Notification(); 
@@ -26,7 +21,7 @@ namespace StudyPlannerApplication.App.Components.Pages.Dashboard
                     return;
                 }
                 _userSession = await customAuthStateProvider.GetUserData();
-                await Notification();
+                //await Notification();
                 await GetCourseList();
                 StateHasChanged();
             }
@@ -52,9 +47,9 @@ namespace StudyPlannerApplication.App.Components.Pages.Dashboard
         {
             _reqModel.CurrentUserId = _userSession.UserId;
             _resModel = await _dashboardService.GetAllCourseList(_reqModel);
-            if (!_resModel.Response.IsSuccess)
+            if (!_resModel.Success)
             {
-                await _injectService.ErrorMessage(_resModel.Response.Message);
+                await _injectService.ErrorMessage(_resModel.Message);
             }
         }
 

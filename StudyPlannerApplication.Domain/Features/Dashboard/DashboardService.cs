@@ -15,7 +15,7 @@ public class DashboardService
         _db = db;
     }
 
-    public async Task<DashboardResponseModel> GetAllCourseList(DashboardRequestModel reqModel)
+    public async Task<Result<DashboardResponseModel>> GetAllCourseList(DashboardRequestModel reqModel)
     {
         DashboardResponseModel model = new();
         List<CurrentWeekDataModel> currentWeekDayList = new();
@@ -50,13 +50,11 @@ public class DashboardService
                 currentWeekDayList.Add(currentWeekDay);
             }
             model.CurrentWeekDataList = currentWeekDayList;
-            model.Response = SubResponseModel.GetResponseMsg("Courses are retrieved successfully.", true);
+            return Result<DashboardResponseModel>.SuccessResult(model,"Courses are retrieved successfully.");
         }
         catch(Exception ex)
         {
-            model.Response = SubResponseModel.GetResponseMsg(ex.ToString(), false);
+            return Result<DashboardResponseModel>.FailureResult(ex.ToString());
         }
-        return model;
     }
-
 }
