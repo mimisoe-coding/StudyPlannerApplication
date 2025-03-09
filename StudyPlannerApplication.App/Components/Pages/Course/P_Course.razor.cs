@@ -1,9 +1,8 @@
-﻿using MudBlazor;
-
-namespace StudyPlannerApplication.App.Components.Pages.Course;
+﻿namespace StudyPlannerApplication.App.Components.Pages.Course;
 
 public partial class P_Course
 {
+    [Inject] private ILogger<P_Course> _logger { get; set; }
     private EnumFormType _formType = EnumFormType.List;
     private UserSessionModel _userSession = new();
     private PageSettingModel ps = new();
@@ -82,26 +81,33 @@ public partial class P_Course
 
     async Task Save()
     {
-        if (!await CheckRequiredFields(_reqModel)) return;
+        try
+        {
+            if (!await CheckRequiredFields(_reqModel)) return;
 
-        _reqModel.CurrentUserId = _userSession.UserId;
-        if (_reqModel.CourseId > 0)
-        {
-            _resModel = await _courseService.Update(_reqModel);
-        }
-        else
-        {
-            _resModel = await _courseService.Create(_reqModel);
-        }
+            _reqModel.CurrentUserId = _userSession.UserId;
+            if (_reqModel.CourseId > 0)
+            {
+                _resModel = await _courseService.Update(_reqModel);
+            }
+            else
+            {
+                _resModel = await _courseService.Create(_reqModel);
+            }
 
-        if (!_resModel.Response.IsSuccess)
-        {
-            await _injectService.ErrorMessage(_resModel.Response.Message);
-            return;
+            if (!_resModel.Response.IsSuccess)
+            {
+                await _injectService.ErrorMessage(_resModel.Response.Message);
+                return;
+            }
+            await _injectService.SuccessMessage(_resModel.Response.Message);
+            ps = new PageSettingModel(1, 10);
+            await List(ps);
         }
-        await _injectService.SuccessMessage(_resModel.Response.Message);
-        ps = new PageSettingModel(1, 10);
-        await List(ps);
+        catch (Exception ex)
+        {
+            _logger.LogCustomError(ex);
+        }
     }
 
     async Task<bool> CheckRequiredFields(CourseRequestModel _reqModel)

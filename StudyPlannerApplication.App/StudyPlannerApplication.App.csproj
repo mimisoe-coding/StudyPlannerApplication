@@ -1,24 +1,28 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="MudBlazor" Version="8.2.0" />
-    <PackageReference Include="Radzen.Blazor" Version="5.9.9" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="MudBlazor" Version="8.2.0" />
+		<PackageReference Include="Radzen.Blazor" Version="5.9.9" />
+		<PackageReference Include="Serilog" Version="3.1.1" />
+		<PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
+		<PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
+		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\StudyPlannerApplication.Database\StudyPlannerApplication.Database.csproj" />
-    <ProjectReference Include="..\StudyPlannerApplication.Domain\StudyPlannerApplication.Domain.csproj" />
-    <ProjectReference Include="..\StudyPlannerApplication.Shared\StudyPlannerApplication.Shared.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\StudyPlannerApplication.Database\StudyPlannerApplication.Database.csproj" />
+		<ProjectReference Include="..\StudyPlannerApplication.Domain\StudyPlannerApplication.Domain.csproj" />
+		<ProjectReference Include="..\StudyPlannerApplication.Shared\StudyPlannerApplication.Shared.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\images\profile\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="wwwroot\images\profile\" />
+	</ItemGroup>
 
 </Project>
