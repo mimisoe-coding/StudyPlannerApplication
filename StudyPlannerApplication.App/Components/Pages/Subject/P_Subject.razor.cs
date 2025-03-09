@@ -1,7 +1,10 @@
-﻿namespace StudyPlannerApplication.App.Components.Pages.Subject;
+﻿using StudyPlannerApplication.App.Components.Pages.Exam;
+
+namespace StudyPlannerApplication.App.Components.Pages.Subject;
 
 public partial class P_Subject
 {
+    [Inject] private ILogger<P_Subject> _logger { get; set; }
     private EnumFormType _formType = EnumFormType.List;
     private SubjectRequestModel _reqModel = new();
     private UserSessionModel _userSession = new();
@@ -49,17 +52,24 @@ public partial class P_Subject
 
     private async Task Detail(int id)
     {
-        _reqModel.SubjectId = id;
-        var data = await _subjectService.Edit(id);
-        if (!data.Response.IsSuccess)
+        try
         {
-            await _injectService.ErrorMessage(data.Response.Message);
-            return;
+            _reqModel.SubjectId = id;
+            var data = await _subjectService.Edit(id);
+            if (!data.Response.IsSuccess)
+            {
+                await _injectService.ErrorMessage(data.Response.Message);
+                return;
+            }
+            _reqModel.SubjectName = data.Subject.SubjectName;
+            _reqModel.Description = data.Subject.Description;
+            visible = true;
+            _formType = EnumFormType.Detail;
         }
-        _reqModel.SubjectName = data.Subject.SubjectName;
-        _reqModel.Description = data.Subject.Description;
-        visible = true;
-        _formType = EnumFormType.Detail;
+        catch (Exception ex)
+        {
+            _logger.LogCustomError(ex);
+        }
     }
 
     private async Task Delete(int id)
@@ -92,41 +102,55 @@ public partial class P_Subject
 
     async Task Save()
     {
-        if (!await CheckRequiredFields(_reqModel)) return;
+        try
+        {
+            if (!await CheckRequiredFields(_reqModel)) return;
 
-        _reqModel.CurrentUserId = _userSession.UserId;
-        if (_reqModel.SubjectId > 0)
-        {
-            _resModel = await _subjectService.Update(_reqModel);
-        }
-        else
-        {
-            _resModel = await _subjectService.Create(_reqModel);
-        }
+            _reqModel.CurrentUserId = _userSession.UserId;
+            if (_reqModel.SubjectId > 0)
+            {
+                _resModel = await _subjectService.Update(_reqModel);
+            }
+            else
+            {
+                _resModel = await _subjectService.Create(_reqModel);
+            }
 
-        if (!_resModel.Response.IsSuccess)
-        {
-            await _injectService.ErrorMessage(_resModel.Response.Message);
-            return;
+            if (!_resModel.Response.IsSuccess)
+            {
+                await _injectService.ErrorMessage(_resModel.Response.Message);
+                return;
+            }
+            await _injectService.SuccessMessage(_resModel.Response.Message);
+            ps = new PageSettingModel(1, 10);
+            await List(ps);
         }
-        await _injectService.SuccessMessage(_resModel.Response.Message);
-        ps = new PageSettingModel(1, 10);
-        await List(ps);
+        catch (Exception ex)
+        {
+            _logger.LogCustomError(ex);
+        }
     }
 
     async Task List(PageSettingModel ps)
     {
-        _reqModel.PageSetting = ps;
-        _reqModel.CurrentUserId = _userSession.UserId;
-        _resModel = await _subjectService.List(_reqModel);
-        if (!_resModel.Response.IsSuccess)
+        try
         {
-            await _injectService.ErrorMessage(_resModel.Response.Message);
-            return;
+            _reqModel.PageSetting = ps;
+            _reqModel.CurrentUserId = _userSession.UserId;
+            _resModel = await _subjectService.List(_reqModel);
+            if (!_resModel.Response.IsSuccess)
+            {
+                await _injectService.ErrorMessage(_resModel.Response.Message);
+                return;
+            }
+            count = _resModel.PageSetting.TotalPageNo;
+            _formType = EnumFormType.List;
+            StateHasChanged();
         }
-        count = _resModel.PageSetting.TotalPageNo;
-        _formType = EnumFormType.List;
-        StateHasChanged();
+        catch (Exception ex)
+        {
+            _logger.LogCustomError(ex);
+        }
     }
 
     async Task<bool> CheckRequiredFields(SubjectRequestModel _reqModel)
