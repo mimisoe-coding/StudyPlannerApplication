@@ -31,6 +31,7 @@ public class ChangePasswordService
             user.Password = hashPassword;
             _db.Entry(user).State = EntityState.Modified;
             await _db.SaveAndDetachAsync();
+
             #region Send Email
             var senderEmail = "studyplannerhub@gmail.com";
             var senderPassword = "nhyr ysyd owwk jama";
@@ -51,7 +52,7 @@ public class ChangePasswordService
             
             var email = await Email
                 .From(senderEmail)
-                .To("mimisoe968@gmail.com", "Mi Mi Soe")
+                .To(user.Email, user.UserName)
                 .Subject("Password Reset Successful")
                 .Body(emailBody, false)
                 .SendAsync();
