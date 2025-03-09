@@ -1,6 +1,4 @@
-﻿using StudyPlannerApplication.Domain.Features.Course;
-
-namespace StudyPlannerApplication.Domain.Features.Reminder;
+﻿namespace StudyPlannerApplication.Domain.Features.Reminder;
 
 public class ReminderService
 {
@@ -11,7 +9,7 @@ public class ReminderService
         _dapper = dapper;
     }
 
-    public async Task<ReminderResponseModel> GetAllCourse(ReminderRequestModel reqModel)
+    public async Task<Result<ReminderResponseModel>> GetAllCourse(ReminderRequestModel reqModel)
     {
         ReminderResponseModel model = new ReminderResponseModel();
         List<SubjectListModel> subList = new List<SubjectListModel>();
@@ -26,8 +24,7 @@ public class ReminderService
             var result = _dapper.Query<CourseDataModel>(courseQuery, reqModel).ToList();
             if (result.Count <= 0)
             {
-                model.Response = SubResponseModel.GetResponseMsg("No Data found.", true);
-                return model;
+                return Result<ReminderResponseModel>.FailureResult("No Data found.");
             }
 
             var subjectNameList = result.Select(x => x.SubjectName).Distinct();
@@ -40,12 +37,11 @@ public class ReminderService
                 subList.Add(subject);
             }
             model.SubjectList = subList;
-            model.Response = SubResponseModel.GetResponseMsg("Course data are successfully retrieved.", true);
+            return Result<ReminderResponseModel>.SuccessResult(model,"Course data are successfully retrieved.");
         }
         catch (Exception ex)
         {
-            model.Response = SubResponseModel.GetResponseMsg(ex.ToString(), false);
+            return Result<ReminderResponseModel>.FailureResult(ex.ToString());
         }
-        return model;
     }
 }

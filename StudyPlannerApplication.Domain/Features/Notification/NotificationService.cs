@@ -9,7 +9,7 @@ public class NotificationService
         _dapper = dapper;
     }
 
-    public async Task<NotificationResponseModel> GetAllNotification(NotificationRequestModel reqModel)
+    public async Task<Result<NotificationResponseModel>> GetAllNotification(NotificationRequestModel reqModel)
     {
         NotificationResponseModel model = new();
         try
@@ -26,12 +26,11 @@ and e.CreatedUserId=@CurrentUserId";
                 item.Message = string.Format(item.Message, item.Day, item.SubjectName);
             }
             model.NotiList = result;
-            model.Response = SubResponseModel.GetResponseMsg("Notification success", true);
+            return Result<NotificationResponseModel>.SuccessResult(model,"Notification success");
         }
         catch (Exception ex)
         {
-            model.Response = SubResponseModel.GetResponseMsg(ex.ToString(), false);
+            return Result<NotificationResponseModel>.FailureResult(ex.ToString());
         }
-        return model;
     }
 }

@@ -27,21 +27,21 @@
             }
         }
 
-        async Task Notification()
-        {
-            NotificationRequestModel reqModel = new NotificationRequestModel
-            {
-                CurrentUserId = _userSession.UserId
-            };
-            var notiData = await _notificationService.GetAllNotification(reqModel);
-            if (!notiData.Response.IsSuccess)
-            {
-                await _injectService.ErrorMessage(notiData.Response.Message);
-                return;
-            }
+        //async Task Notification()
+        //{
+        //    NotificationRequestModel reqModel = new NotificationRequestModel
+        //    {
+        //        CurrentUserId = _userSession.UserId
+        //    };
+        //    var notiData = await _notificationService.GetAllNotification(reqModel);
+        //    if (!notiData.Response.IsSuccess)
+        //    {
+        //        await _injectService.ErrorMessage(notiData.Response.Message);
+        //        return;
+        //    }
 
-            _notificationStateContainer.NotificationCount = notiData.NotiList.Count;
-        }
+        //    _notificationStateContainer.NotificationCount = notiData.NotiList.Count;
+        //}
 
         async Task GetCourseList()
         {

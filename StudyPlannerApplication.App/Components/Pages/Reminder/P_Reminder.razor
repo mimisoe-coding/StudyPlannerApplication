@@ -15,9 +15,9 @@
         </h5>
     </div>
     <div class="rz-p-sm-12">
-        @if (_resModel.SubjectList is not null && _resModel.SubjectList.Count > 0)
+        @if (_resModel?.Data?.SubjectList?.Any()==true)
         {
-            @foreach (var item in _resModel.SubjectList)
+            @foreach (var item in _resModel.Data.SubjectList)
             {
                 <RadzenAccordion>
                     <Items>

@@ -26,9 +26,9 @@
                     </MudBadge>
                 </ActivatorContent>
                 <ChildContent>
-                    @if (_notiData.NotiList.Count > 0)
+                    @if (_notiData?.Data?.NotiList?.Any() == true)
                     {
-                        foreach(var noti in _notiData.NotiList)
+                        foreach(var noti in _notiData.Data.NotiList)
                         {
                             <MudMenuItem>@noti.Message</MudMenuItem>
                         }
@@ -52,7 +52,7 @@
 @code {
     private bool _menuOpen = false;
     private UserSessionModel _userSession = new();
-    private NotificationResponseModel _notiData = new();
+    private Result<NotificationResponseModel> _notiData = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -95,13 +95,13 @@
                 CurrentUserId = _userSession.UserId
             };
          _notiData = await _notificationService.GetAllNotification(reqModel);
-        if (!_notiData.Response.IsSuccess)
+        if (!_notiData.Success)
         {
-            await _injectService.ErrorMessage(_notiData.Response.Message);
+            await _injectService.ErrorMessage(_notiData.Message);
             return;
         }
 
-        _notificationStateContainer.NotificationCount = _notiData.NotiList.Count;
+        _notificationStateContainer.NotificationCount = _notiData.Data.NotiList.Count;
     }
 
     private void Create()

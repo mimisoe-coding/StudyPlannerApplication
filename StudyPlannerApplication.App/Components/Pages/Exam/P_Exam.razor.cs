@@ -9,7 +9,7 @@ public partial class P_Exam
     private ExamRequestModel _reqModel = new();
     private Result<ExamResponseModel> _resModel = new();
     private UserSessionModel _userSession = new();
-    private NotificationResponseModel _notiData = new();
+    private Result<NotificationResponseModel> _notiData = new();
     private PageSettingModel ps = new();
     private IEnumerable<SubjectDataModel> lstSubject;
     private List<SelectListModel> lstStatus = new();
@@ -239,13 +239,13 @@ public partial class P_Exam
             CurrentUserId = _userSession.UserId
         };
         _notiData = await _notificationService.GetAllNotification(reqModel);
-        if (!_notiData.Response.IsSuccess)
+        if (!_notiData.Success)
         {
-            await _injectService.ErrorMessage(_notiData.Response.Message);
+            await _injectService.ErrorMessage(_notiData.Message);
             return;
         }
 
-        _notificationStateContainer.NotificationCount = _notiData.NotiList.Count;
+        _notificationStateContainer.NotificationCount = _notiData.Data.NotiList.Count;
     }
 
     private MudBlazor.Color GetStatus(string status)
