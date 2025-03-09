@@ -9,7 +9,7 @@ public class SubjectService
         _db = db;
     }
 
-    public async Task<SubjectResponseModel> Create(SubjectRequestModel reqModel)
+    public async Task<Result<SubjectResponseModel>> Create(SubjectRequestModel reqModel)
     {
         SubjectResponseModel model = new SubjectResponseModel();
         try
@@ -20,8 +20,7 @@ public class SubjectService
                 .FirstOrDefaultAsync(x => x.SubjectName.ToLower() == reqModel.SubjectName.ToLower());
             if (item is not null)
             {
-                model.Response = SubResponseModel.GetResponseMsg("Your subject is already exists.", false);
-                return model;
+                return Result<SubjectResponseModel>.FailureResult("Your subject is already exists.");
             }
             #endregion
 
@@ -33,16 +32,15 @@ public class SubjectService
 
             await _db.AddAsync(subject);
             await _db.SaveAndDetachAsync();
-            model.Response = SubResponseModel.GetResponseMsg("Your subject is successfully added.", true);
+            return Result<SubjectResponseModel>.SuccessResult("Your subject is successfully added.");
         }
         catch (Exception ex)
         {
-            model.Response = SubResponseModel.GetResponseMsg(ex.ToString(), false);
+            return Result<SubjectResponseModel>.FailureResult(ex.ToString());
         }
-        return model;
     }
 
-    public async Task<SubjectResponseModel> List(SubjectRequestModel reqModel)
+    public async Task<Result<SubjectResponseModel>> List(SubjectRequestModel reqModel)
     {
         SubjectResponseModel model = new SubjectResponseModel();
         PageSettingResponseModel pageSetting = new();
@@ -60,41 +58,36 @@ public class SubjectService
             model.PageSetting = pageSetting;
             model.SubjectList = lst.Skip(reqModel.PageSetting.SkipRowCount)
                 .Take(reqModel.PageSetting.PageSize).ToList();
-            model.Response = SubResponseModel.GetResponseMsg("Your subjects are retrieved successfully.", true);
+            return Result<SubjectResponseModel>.SuccessResult(model, "Your subjects are retrieved successfully.");
         }
         catch (Exception ex)
         {
-            model.Response = SubResponseModel.GetResponseMsg(ex.ToString(), false);
+            return Result<SubjectResponseModel>.FailureResult(ex.ToString());
         }
-        return model;
     }
 
-    public async Task<SubjectResponseModel> Delete(SubjectRequestModel reqModel)
+    public async Task<Result<SubjectResponseModel>> Delete(SubjectRequestModel reqModel)
     {
-        SubjectResponseModel model = new SubjectResponseModel();
         try
         {
             var item = await _db.TblSubjects.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.SubjectId == reqModel.SubjectId);
             if (item == null)
             {
-                model.Response = SubResponseModel.GetResponseMsg("No Subject Found", false);
-                return model;
+                return Result<SubjectResponseModel>.FailureResult("No Subject Found");
             }
             _db.Remove(item);
             await _db.SaveAndDetachAsync();
-            model.Response = SubResponseModel.GetResponseMsg("Your subject is successfully deleted", true);
+            return Result<SubjectResponseModel>.SuccessResult("Your subject is successfully deleted");
         }
         catch (Exception ex)
         {
-            model.Response = SubResponseModel.GetResponseMsg(ex.ToString(), false);
+            return Result<SubjectResponseModel>.FailureResult(ex.ToString());
         }
-        return model;
     }
 
-    public async Task<SubjectResponseModel> Update(SubjectRequestModel reqModel)
+    public async Task<Result<SubjectResponseModel>> Update(SubjectRequestModel reqModel)
     {
-        SubjectResponseModel model = new SubjectResponseModel();
         try
         {
             TblSubject? item = await _db.TblSubjects
@@ -102,24 +95,22 @@ public class SubjectService
                 .FirstOrDefaultAsync(x => x.SubjectId == reqModel.SubjectId);
             if (item == null)
             {
-                model.Response = SubResponseModel.GetResponseMsg("No Subject Found", false);
-                return model;
+                return Result<SubjectResponseModel>.FailureResult("No Subject Found");
             }
 
             item.SubjectName = reqModel.SubjectName;
             item.Description = reqModel.Description;
             _db.Entry(item).State = EntityState.Modified;
             await _db.SaveAndDetachAsync();
-            model.Response = SubResponseModel.GetResponseMsg("Your subject is successfully updated.", true);
+            return Result<SubjectResponseModel>.SuccessResult("Your subject is successfully updated.");
         }
         catch (Exception ex)
         {
-            model.Response = SubResponseModel.GetResponseMsg(ex.ToString(), false);
+            return Result<SubjectResponseModel>.FailureResult(ex.ToString());
         }
-        return model;
     }
 
-    public async Task<SubjectResponseModel> Edit(int id)
+    public async Task<Result<SubjectResponseModel>> Edit(int id)
     {
         SubjectResponseModel model = new SubjectResponseModel();
         SubjectDataModel subjectData = new SubjectDataModel();
@@ -129,24 +120,22 @@ public class SubjectService
                 .FirstOrDefaultAsync(x => x.SubjectId == id);
             if (item == null)
             {
-                model.Response = SubResponseModel.GetResponseMsg("No Subject Found", false);
-                return model;
+                return Result<SubjectResponseModel>.FailureResult("No Subject Found");
             }
             subjectData.SubjectId = item.SubjectId;
             subjectData.SubjectCode = item.SubjectCode;
             subjectData.SubjectName = item.SubjectName;
             subjectData.Description = item.Description;
             model.Subject = subjectData;
-            model.Response = SubResponseModel.GetResponseMsg("Your subject is successfully retrieved.", true);
+            return Result<SubjectResponseModel>.SuccessResult(model, "Your subject is successfully retrieved.");
         }
         catch (Exception ex)
         {
-            model.Response = SubResponseModel.GetResponseMsg(ex.ToString(), false);
+            return Result<SubjectResponseModel>.FailureResult(ex.ToString());
         }
-        return model;
     }
 
-    public async Task<SubjectResponseModel> GetSubjectList(string userId)
+    public async Task<Result<SubjectResponseModel>> GetSubjectList(string userId)
     {
         SubjectResponseModel model = new SubjectResponseModel();
         PageSettingResponseModel pageSetting = new();
@@ -160,13 +149,12 @@ public class SubjectService
                     SubjectName = x.SubjectName
                 }).ToListAsync();
             model.SubjectList = lst;
-            model.Response = SubResponseModel.GetResponseMsg("Your subject is successfully added.", true);
+            return Result<SubjectResponseModel>.SuccessResult(model, "Your subject is successfully added.");
         }
         catch (Exception ex)
         {
-            model.Response = SubResponseModel.GetResponseMsg(ex.ToString(), false);
+            return Result<SubjectResponseModel>.FailureResult(ex.ToString());
         }
-        return model;
     }
 
 

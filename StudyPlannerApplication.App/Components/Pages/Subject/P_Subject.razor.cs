@@ -8,7 +8,7 @@ public partial class P_Subject
     private EnumFormType _formType = EnumFormType.List;
     private SubjectRequestModel _reqModel = new();
     private UserSessionModel _userSession = new();
-    private SubjectResponseModel _resModel = new();
+    private Result<SubjectResponseModel> _resModel = new();
     private PageSettingModel ps = new();
     private int count;
     bool visible = false;
@@ -39,14 +39,14 @@ public partial class P_Subject
     private async Task Edit(int id)
     {
         _reqModel.SubjectId = id;
-        var data = await _subjectService.Edit(id);
-        if (!data.Response.IsSuccess)
+        var result = await _subjectService.Edit(id);
+        if (!result.Success)
         {
-            await _injectService.ErrorMessage(data.Response.Message);
+            await _injectService.ErrorMessage(result.Message);
             return;
         }
-        _reqModel.SubjectName = data.Subject.SubjectName;
-        _reqModel.Description = data.Subject.Description;
+        _reqModel.SubjectName = result.Data.Subject.SubjectName;
+        _reqModel.Description = result.Data.Subject.Description;
         _formType = EnumFormType.Edit;
     }
 
@@ -55,14 +55,14 @@ public partial class P_Subject
         try
         {
             _reqModel.SubjectId = id;
-            var data = await _subjectService.Edit(id);
-            if (!data.Response.IsSuccess)
+            var result = await _subjectService.Edit(id);
+            if (!result.Success)
             {
-                await _injectService.ErrorMessage(data.Response.Message);
+                await _injectService.ErrorMessage(result.Message);
                 return;
             }
-            _reqModel.SubjectName = data.Subject.SubjectName;
-            _reqModel.Description = data.Subject.Description;
+            _reqModel.SubjectName = result.Data.Subject.SubjectName;
+            _reqModel.Description = result.Data.Subject.Description;
             visible = true;
             _formType = EnumFormType.Detail;
         }
@@ -78,13 +78,13 @@ public partial class P_Subject
         if (!isConfirm) return;
         _reqModel.CurrentUserId = _userSession.UserId;
         _reqModel.SubjectId = id;
-        var data = await _subjectService.Delete(_reqModel);
-        if (!data.Response.IsSuccess)
+        var result = await _subjectService.Delete(_reqModel);
+        if (!result.Success)
         {
-            await _injectService.ErrorMessage(data.Response.Message);
+            await _injectService.ErrorMessage(result.Message);
             return;
         }
-        await _injectService.SuccessMessage(data.Response.Message);
+        await _injectService.SuccessMessage(result.Message);
         ps = new();
         await List(ps);
         StateHasChanged();
@@ -116,12 +116,12 @@ public partial class P_Subject
                 _resModel = await _subjectService.Create(_reqModel);
             }
 
-            if (!_resModel.Response.IsSuccess)
+            if (!_resModel.Success)
             {
-                await _injectService.ErrorMessage(_resModel.Response.Message);
+                await _injectService.ErrorMessage(_resModel.Message);
                 return;
             }
-            await _injectService.SuccessMessage(_resModel.Response.Message);
+            await _injectService.SuccessMessage(_resModel.Message);
             ps = new PageSettingModel(1, 10);
             await List(ps);
         }
@@ -138,12 +138,12 @@ public partial class P_Subject
             _reqModel.PageSetting = ps;
             _reqModel.CurrentUserId = _userSession.UserId;
             _resModel = await _subjectService.List(_reqModel);
-            if (!_resModel.Response.IsSuccess)
+            if (!_resModel.Success)
             {
-                await _injectService.ErrorMessage(_resModel.Response.Message);
+                await _injectService.ErrorMessage(_resModel.Message);
                 return;
             }
-            count = _resModel.PageSetting.TotalPageNo;
+            count = _resModel.Data.PageSetting.TotalPageNo;
             _formType = EnumFormType.List;
             StateHasChanged();
         }

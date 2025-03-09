@@ -24,7 +24,7 @@
     <RadzenButton Click="() => Search()" Text="Search" ButtonStyle="ButtonStyle.Info"/>
     </div>
     </div> *@
-        @if (_resModel.SubjectList != null && _resModel.SubjectList.Count() > 0)
+        @if (_resModel?.Data?.SubjectList?.Any() == true)
         {
             <div class="flex-container mt-3" style="display: flex;">
                 <div class="container-sm">
@@ -41,7 +41,7 @@
                         <tbody>
                             @{
                                 int no = (ps.PageNo - 1) * ps.PageSize;
-                                foreach (var item in _resModel.SubjectList)
+                                foreach (var item in _resModel.Data.SubjectList)
                                 {
                                     <tr>
                                         <td>@(++no)</td>

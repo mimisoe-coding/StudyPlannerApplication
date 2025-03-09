@@ -47,7 +47,7 @@ public partial class P_Exam
         {
             _reqModel.CurrentUserId = _userSession.UserId;
             var result = await _subjectService.GetSubjectList(_reqModel.CurrentUserId);
-            lstSubject = result.SubjectList;
+            lstSubject = result.Data.SubjectList;
         }
         catch (Exception ex)
         {
