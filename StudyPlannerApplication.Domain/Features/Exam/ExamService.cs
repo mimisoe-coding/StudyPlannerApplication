@@ -13,19 +13,17 @@ public class ExamService
         _dapper = dapper;
     }
 
-    public async Task<ExamResponseModel> Create(ExamRequestModel reqModel)
+    public async Task<Result<ExamResponseModel>> Create(ExamRequestModel reqModel)
     {
-        ExamResponseModel model = new ExamResponseModel();
         try
         {
             #region Check Duplicate Subject
 
             var item = await _db.TblExams.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.SubjectCode.ToLower() == reqModel.SubjectCode.ToLower());
+                .FirstOrDefaultAsync(x => x.SubjectCode.ToLower() == reqModel.SubjectCode.ToLower() && x.CreatedUserId==reqModel.CurrentUserId);
             if (item is not null)
             {
-                model.Response = SubResponseModel.GetResponseMsg("Your exam subject is already exists.", false);
-                return model;
+                return Result<ExamResponseModel>.FailureResult("Your exam subject is already exists.");
             }
             #endregion
 
@@ -40,16 +38,15 @@ public class ExamService
 
             await _db.AddAsync(exam);
             await _db.SaveAndDetachAsync();
-            model.Response = SubResponseModel.GetResponseMsg("Your subject is successfully added.", true);
+            return Result<ExamResponseModel>.SuccessResult("Your subject is successfully added.");
         }
         catch (Exception ex)
         {
-            model.Response = SubResponseModel.GetResponseMsg(ex.ToString(), false);
+           return Result<ExamResponseModel>.FailureResult(ex.ToString());
         }
-        return model;
     }
 
-    public async Task<ExamResponseModel> List(ExamRequestModel reqModel)
+    public async Task<Result<ExamResponseModel>> List(ExamRequestModel reqModel)
     {
         ExamResponseModel model = new ExamResponseModel();
         PageSettingResponseModel pageSetting = new();
@@ -73,18 +70,16 @@ where e.CreatedUserId = @CurrentUserId";
             model.PageSetting = pageSetting;
             model.ExamList = lst.Skip(reqModel.PageSetting.SkipRowCount)
                 .Take(reqModel.PageSetting.PageSize).ToList();
-            model.Response = SubResponseModel.GetResponseMsg("Your Exam is successfully added.", true);
+            return Result<ExamResponseModel>.SuccessResult(model,"Your Exam is successfully added.");
         }
         catch (Exception ex)
         {
-            model.Response = SubResponseModel.GetResponseMsg(ex.ToString(), false);
+            return Result<ExamResponseModel>.FailureResult(ex.ToString());
         }
-        return model;
     }
 
-    public async Task<ExamResponseModel> Delete(ExamRequestModel reqModel)
+    public async Task<Result<ExamResponseModel>> Delete(ExamRequestModel reqModel)
     {
-        ExamResponseModel model = new ExamResponseModel();
         try
         {
             var item = await _db.TblExams.AsNoTracking()
@@ -92,21 +87,19 @@ where e.CreatedUserId = @CurrentUserId";
                 && x.CreatedUserId == reqModel.CurrentUserId);
             if (item == null)
             {
-                model.Response = SubResponseModel.GetResponseMsg("No Exam Found", false);
-                return model;
+                return Result<ExamResponseModel>.FailureResult("No Exam Found");
             }
             _db.Remove(item);
             await _db.SaveChangesAsync();
-            model.Response = SubResponseModel.GetResponseMsg("Your Exam is successfully deleted", true);
+            return Result<ExamResponseModel>.SuccessResult("Your Exam is successfully deleted");
         }
         catch (Exception ex)
         {
-            model.Response = SubResponseModel.GetResponseMsg(ex.ToString(), false);
+            return Result<ExamResponseModel>.FailureResult(ex.ToString());
         }
-        return model;
     }
 
-    public async Task<ExamResponseModel> Edit(int id)
+    public async Task<Result<ExamResponseModel>> Edit(int id)
     {
         ExamResponseModel model = new ExamResponseModel();
         ExamDataModel exam = new ExamDataModel();
@@ -116,8 +109,7 @@ where e.CreatedUserId = @CurrentUserId";
                 .FirstOrDefaultAsync(x => x.ExamId == id);
             if (item == null)
             {
-                model.Response = SubResponseModel.GetResponseMsg("No Exam Found", false);
-                return model;
+                return Result<ExamResponseModel>.FailureResult("No Exam Found");
             }
             exam.ExamId = item.ExamId;
             exam.SubjectCode = item.SubjectCode;
@@ -127,18 +119,16 @@ where e.CreatedUserId = @CurrentUserId";
             exam.DueDate = item.DueDate;
             exam.Status = item.Status;
             model.ExamData = exam;
-            model.Response = SubResponseModel.GetResponseMsg("Your Exam is successfully retrieved.", true);
+            return Result<ExamResponseModel>.SuccessResult(model,"Your Exam is successfully retrieved.");
         }
         catch (Exception ex)
         {
-            model.Response = SubResponseModel.GetResponseMsg(ex.ToString(), false);
+            return Result<ExamResponseModel>.FailureResult(ex.ToString());
         }
-        return model;
     }
 
-    public async Task<ExamResponseModel> Update(ExamRequestModel reqModel)
+    public async Task<Result<ExamResponseModel>> Update(ExamRequestModel reqModel)
     {
-        ExamResponseModel model = new ExamResponseModel();
         try
         {
             TblExam? item = await _db.TblExams
@@ -146,8 +136,7 @@ where e.CreatedUserId = @CurrentUserId";
                 .FirstOrDefaultAsync(x => x.ExamId == reqModel.ExamId && x.CreatedUserId == reqModel.CurrentUserId);
             if (item == null)
             {
-                model.Response = SubResponseModel.GetResponseMsg("No Exam Found", false);
-                return model;
+                return Result<ExamResponseModel>.FailureResult("No Exam Found");
             }
 
             item.SubjectCode = reqModel.SubjectCode;
@@ -158,12 +147,11 @@ where e.CreatedUserId = @CurrentUserId";
             item.UpdatedDate = DateTime.Now;
             _db.Entry(item).State = EntityState.Modified;
             await _db.SaveAndDetachAsync();
-            model.Response = SubResponseModel.GetResponseMsg("Your Exam is successfully updated.", true);
+            return Result<ExamResponseModel>.SuccessResult("Your Exam is successfully updated.");
         }
         catch (Exception ex)
         {
-            model.Response = SubResponseModel.GetResponseMsg(ex.ToString(), false);
+            return Result<ExamResponseModel>.FailureResult(ex.ToString());
         }
-        return model;
     }
 }

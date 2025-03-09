@@ -1,11 +1,13 @@
-﻿namespace StudyPlannerApplication.App.Components.Pages.Exam;
+﻿using StudyPlannerApplication.Domain.Models;
+
+namespace StudyPlannerApplication.App.Components.Pages.Exam;
 
 public partial class P_Exam
 {
     [Inject] private ILogger<P_Exam> _logger { get; set; }
     private EnumFormType _formType = EnumFormType.List;
     private ExamRequestModel _reqModel = new();
-    private ExamResponseModel _resModel = new();
+    private Result<ExamResponseModel> _resModel = new();
     private UserSessionModel _userSession = new();
     private NotificationResponseModel _notiData = new();
     private PageSettingModel ps = new();
@@ -69,12 +71,12 @@ public partial class P_Exam
             _reqModel.PageSetting = ps;
             _reqModel.CurrentUserId = _userSession.UserId;
             _resModel = await _examService.List(_reqModel);
-            if (!_resModel.Response.IsSuccess)
+            if (!_resModel.Success)
             {
-                await _injectService.ErrorMessage(_resModel.Response.Message);
+                await _injectService.ErrorMessage(_resModel.Message);
                 return;
             }
-            count = _resModel.PageSetting.TotalPageNo;
+            count = _resModel.Data.PageSetting.TotalPageNo;
             visible = false;
             _formType = EnumFormType.List;
             StateHasChanged();
@@ -101,12 +103,12 @@ public partial class P_Exam
                 _resModel = await _examService.Create(_reqModel);
             }
 
-            if (!_resModel.Response.IsSuccess)
+            if (!_resModel.Success)
             {
-                await _injectService.ErrorMessage(_resModel.Response.Message);
+                await _injectService.ErrorMessage(_resModel.Message);
                 return;
             }
-            await _injectService.SuccessMessage(_resModel.Response.Message);
+            await _injectService.SuccessMessage(_resModel.Message);
             await Notification();
             ps = new PageSettingModel(1, 10);
 
@@ -160,17 +162,17 @@ public partial class P_Exam
         try
         {
             _reqModel.ExamId = id;
-            var data = await _examService.Edit(id);
-            if (!data.Response.IsSuccess)
+            var result = await _examService.Edit(id);
+            if (!result.Success)
             {
-                await _injectService.ErrorMessage(data.Response.Message);
+                await _injectService.ErrorMessage(result.Message);
                 return;
             }
-            _reqModel.Description = data.ExamData.Description;
-            _reqModel.SubjectCode = data.ExamData.SubjectCode;
-            _reqModel.Status = data.ExamData.Status;
-            _reqModel.DueDate = data.ExamData.DueDate;
-            _reqModel.Duration = data.ExamData.Duration;
+            _reqModel.Description = result.Data.ExamData.Description;
+            _reqModel.SubjectCode = result.Data.ExamData.SubjectCode;
+            _reqModel.Status = result.Data.ExamData.Status;
+            _reqModel.DueDate = result.Data.ExamData.DueDate;
+            _reqModel.Duration = result.Data.ExamData.Duration;
             _formType = EnumFormType.Edit;
         }
         catch (Exception ex)
@@ -184,17 +186,17 @@ public partial class P_Exam
         try
         {
             _reqModel.ExamId = id;
-            var data = await _examService.Edit(id);
-            if (!data.Response.IsSuccess)
+            var result = await _examService.Edit(id);
+            if (!result.Success)
             {
-                await _injectService.ErrorMessage(data.Response.Message);
+                await _injectService.ErrorMessage(result.Message);
                 return;
             }
-            _reqModel.Description = data.ExamData.Description;
-            _reqModel.SubjectCode = data.ExamData.SubjectCode;
-            _reqModel.Status = data.ExamData.Status;
-            _reqModel.DueDate = data.ExamData.DueDate;
-            _reqModel.Duration = data.ExamData.Duration;
+            _reqModel.Description = result.Data.ExamData.Description;
+            _reqModel.SubjectCode = result.Data.ExamData.SubjectCode;
+            _reqModel.Status = result.Data.ExamData.Status;
+            _reqModel.DueDate = result.Data.ExamData.DueDate;
+            _reqModel.Duration = result.Data.ExamData.Duration;
             visible = true;
             _formType = EnumFormType.Detail;
         }
@@ -213,12 +215,12 @@ public partial class P_Exam
             _reqModel.CurrentUserId = _userSession.UserId;
             _reqModel.ExamId = id;
             var data = await _examService.Delete(_reqModel);
-            if (!data.Response.IsSuccess)
+            if (!data.Success)
             {
-                await _injectService.ErrorMessage(data.Response.Message);
+                await _injectService.ErrorMessage(data.Message);
                 return;
             }
-            await _injectService.SuccessMessage(data.Response.Message);
+            await _injectService.SuccessMessage(data.Message);
             await Notification();
             ps = new();
             await List(ps);

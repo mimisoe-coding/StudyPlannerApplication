@@ -21,7 +21,7 @@
                 Exam
             </h5>
         </div>
-        @if (_resModel.ExamList != null && _resModel.ExamList.Count() > 0)
+        @if (_resModel?.Data?.ExamList?.Any()==true)
         {
             <div class="flex-container mt-3" style="display: flex;">
                 <div class="container-sm">
@@ -41,7 +41,7 @@
                         <tbody>
                             @{
                                 int no = (ps.PageNo - 1) * ps.PageSize;
-                                foreach (var item in _resModel.ExamList)
+                                foreach (var item in _resModel.Data.ExamList)
                                 {
                                     <tr>
                                         <td>@(++no)</td>
@@ -78,11 +78,11 @@
     </div> 
 }
 
-@if (_formType == EnumFormType.Register || _formType == EnumFormType.Edit || _formType == EnumFormType.Detail)
+@if (_formType != EnumFormType.List )
 {
     <div class="card">
         <div class="card-body">
-            <h5 class="font-weight-bolder">@(_formType.ToString()) Subject</h5>
+            <h5 class="font-weight-bolder">@(_formType.ToString()) Exam</h5>
             <div class="row">
                 <div class="col-4 mr-3 mb-3">
                     <label for="exampleFormControlInput1" class="form-label">Subject Name</label>
