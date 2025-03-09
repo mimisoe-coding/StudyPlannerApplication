@@ -1,7 +1,4 @@
-﻿using StudyPlannerApplication.Database.EFAppDbContextModels;
-using StudyPlannerApplication.Domain.Features.Subject;
-
-namespace StudyPlannerApplication.Domain.Features.Course;
+﻿namespace StudyPlannerApplication.Domain.Features.Course;
 
 public class CourseService
 {
@@ -12,9 +9,8 @@ public class CourseService
         _db = db;
     }
 
-    public async Task<CourseResponseModel> Create(CourseRequestModel reqModel)
+    public async Task<Result<CourseResponseModel>> Create(CourseRequestModel reqModel)
     {
-        CourseResponseModel model = new CourseResponseModel();
         try
         {
             TblCourse course = new TblCourse()
@@ -30,16 +26,15 @@ public class CourseService
 
             await _db.AddAsync(course);
             await _db.SaveAndDetachAsync();
-            model.Response = SubResponseModel.GetResponseMsg("Your course is successfully added.", true);
+            return Result<CourseResponseModel>.SuccessResult("Your course is successfully added.");
         }
         catch (Exception ex)
         {
-            model.Response = SubResponseModel.GetResponseMsg(ex.ToString(), false);
+            return Result<CourseResponseModel>.FailureResult(ex.ToString());
         }
-        return model;
     }
 
-    public async Task<CourseResponseModel> List(CourseRequestModel reqModel)
+    public async Task<Result<CourseResponseModel>> List(CourseRequestModel reqModel)
     {
         CourseResponseModel model = new CourseResponseModel();
         PageSettingResponseModel pageSetting = new();
@@ -65,18 +60,16 @@ public class CourseService
             model.PageSetting = pageSetting;
             model.CourseList = lst.Skip(reqModel.PageSetting.SkipRowCount)
                 .Take(reqModel.PageSetting.PageSize).ToList();
-            model.Response = SubResponseModel.GetResponseMsg("Your course is successfully added.", true);
+            return Result<CourseResponseModel>.SuccessResult(model, "Your course is successfully added.");
         }
         catch (Exception ex)
         {
-            model.Response = SubResponseModel.GetResponseMsg(ex.ToString(), false);
+            return Result<CourseResponseModel>.FailureResult(ex.ToString());
         }
-        return model;
     }
 
-    public async Task<CourseResponseModel> Delete(CourseRequestModel reqModel)
+    public async Task<Result<CourseResponseModel>> Delete(CourseRequestModel reqModel)
     {
-        CourseResponseModel model = new CourseResponseModel();
         try
         {
             var item = await _db.TblCourses.AsNoTracking()
@@ -84,21 +77,19 @@ public class CourseService
                 && x.CreatedUserId == reqModel.CurrentUserId);
             if (item == null)
             {
-                model.Response = SubResponseModel.GetResponseMsg("No Course Found", false);
-                return model;
+                return Result<CourseResponseModel>.FailureResult("No Course Found");
             }
             _db.Remove(item);
             await _db.SaveChangesAsync();
-            model.Response = SubResponseModel.GetResponseMsg("Your course is successfully deleted", true);
+            return Result<CourseResponseModel>.SuccessResult("Your course is successfully deleted");
         }
         catch (Exception ex)
         {
-            model.Response = SubResponseModel.GetResponseMsg(ex.ToString(), false);
+            return Result<CourseResponseModel>.FailureResult(ex.ToString());
         }
-        return model;
     }
 
-    public async Task<CourseResponseModel> Edit(int id)
+    public async Task<Result<CourseResponseModel>> Edit(int id)
     {
         CourseResponseModel model = new CourseResponseModel();
         CourseDataModel courseData = new CourseDataModel();
@@ -108,8 +99,7 @@ public class CourseService
                 .FirstOrDefaultAsync(x => x.CourseId == id);
             if (item == null)
             {
-                model.Response = SubResponseModel.GetResponseMsg("No Course Found", false);
-                return model;
+                return Result<CourseResponseModel>.FailureResult("No Course Found");
             }
             courseData.CourseId = item.CourseId;
             courseData.SubjectCode = item.SubjectCode;
@@ -118,18 +108,16 @@ public class CourseService
             courseData.DueDate = item.DueDate;
             courseData.Status = item.Status;
             model.Course = courseData;
-            model.Response = SubResponseModel.GetResponseMsg("Your course is successfully retrieved.", true);
+            return Result<CourseResponseModel>.SuccessResult(model, "Your course is successfully retrieved.");
         }
         catch (Exception ex)
         {
-            model.Response = SubResponseModel.GetResponseMsg(ex.ToString(), false);
+            return Result<CourseResponseModel>.FailureResult(ex.ToString());
         }
-        return model;
     }
 
-    public async Task<CourseResponseModel> Update(CourseRequestModel reqModel)
+    public async Task<Result<CourseResponseModel>> Update(CourseRequestModel reqModel)
     {
-        CourseResponseModel model = new CourseResponseModel();
         try
         {
             TblCourse? item = await _db.TblCourses
@@ -137,8 +125,7 @@ public class CourseService
                 .FirstOrDefaultAsync(x => x.CourseId == reqModel.CourseId && x.CreatedUserId == reqModel.CurrentUserId);
             if (item == null)
             {
-                model.Response = SubResponseModel.GetResponseMsg("No course Found", false);
-                return model;
+                return Result<CourseResponseModel>.FailureResult("No course Found");
             }
 
             item.SubjectCode = reqModel.SubjectCode;
@@ -149,13 +136,11 @@ public class CourseService
             item.UpdatedDate = DateTime.Now;
             _db.Entry(item).State = EntityState.Modified;
             await _db.SaveAndDetachAsync();
-            model.Response = SubResponseModel.GetResponseMsg("Your course is successfully updated.", true);
+            return Result<CourseResponseModel>.SuccessResult("Your course is successfully updated.");
         }
         catch (Exception ex)
         {
-            model.Response = SubResponseModel.GetResponseMsg(ex.ToString(), false);
+            return Result<CourseResponseModel>.FailureResult(ex.ToString());
         }
-        return model;
     }
-
 }

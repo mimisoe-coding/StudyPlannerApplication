@@ -7,7 +7,7 @@ public partial class P_Course
     private UserSessionModel _userSession = new();
     private PageSettingModel ps = new();
     private CourseRequestModel _reqModel = new();
-    private CourseResponseModel _resModel = new();
+    private Result<CourseResponseModel> _resModel = new();
     private IEnumerable<SubjectDataModel> lstSubject;
     private List<SelectListModel> lstStatus = new();
     private int count;
@@ -63,12 +63,12 @@ public partial class P_Course
             _reqModel.PageSetting = ps;
             _reqModel.CurrentUserId = _userSession.UserId;
             _resModel = await _courseService.List(_reqModel);
-            if (!_resModel.Response.IsSuccess)
+            if (!_resModel.Success)
             {
-                await _injectService.ErrorMessage(_resModel.Response.Message);
+                await _injectService.ErrorMessage(_resModel.Message);
                 return;
             }
-            count = _resModel.PageSetting.TotalPageNo;
+            count = _resModel.Data.PageSetting.TotalPageNo;
             visible = false;
             _formType = EnumFormType.List;
             StateHasChanged();
@@ -110,12 +110,12 @@ public partial class P_Course
                 _resModel = await _courseService.Create(_reqModel);
             }
 
-            if (!_resModel.Response.IsSuccess)
+            if (!_resModel.Success)
             {
-                await _injectService.ErrorMessage(_resModel.Response.Message);
+                await _injectService.ErrorMessage(_resModel.Message);
                 return;
             }
-            await _injectService.SuccessMessage(_resModel.Response.Message);
+            await _injectService.SuccessMessage(_resModel.Message);
             ps = new PageSettingModel(1, 10);
             await List(ps);
         }
@@ -157,17 +157,17 @@ public partial class P_Course
         try
         {
             _reqModel.CourseId = id;
-            var data = await _courseService.Edit(id);
-            if (!data.Response.IsSuccess)
+            var result = await _courseService.Edit(id);
+            if (!result.Success)
             {
-                await _injectService.ErrorMessage(data.Response.Message);
+                await _injectService.ErrorMessage(result.Message);
                 return;
             }
-            _reqModel.CourseName = data.Course.CourseName;
-            _reqModel.Description = data.Course.Description;
-            _reqModel.SubjectCode = data.Course.SubjectCode;
-            _reqModel.Status = data.Course.Status;
-            _reqModel.DueDate = data.Course.DueDate;
+            _reqModel.CourseName = result.Data.Course.CourseName;
+            _reqModel.Description = result.Data.Course.Description;
+            _reqModel.SubjectCode = result.Data.Course.SubjectCode;
+            _reqModel.Status = result.Data.Course.Status;
+            _reqModel.DueDate = result.Data.Course.DueDate;
             _formType = EnumFormType.Edit;
         }
         catch (Exception ex)
@@ -181,17 +181,19 @@ public partial class P_Course
         try
         {
             _reqModel.CourseId = id;
-            var data = await _courseService.Edit(id);
-            if (!data.Response.IsSuccess)
+            var result = await _courseService.Edit(id);
+            if (!result.Success)
             {
-                await _injectService.ErrorMessage(data.Response.Message);
+                await _injectService.ErrorMessage(result.Message);
                 return;
             }
-            _reqModel.CourseName = data.Course.CourseName;
-            _reqModel.Description = data.Course.Description;
-            _reqModel.SubjectCode = data.Course.SubjectCode;
-            _reqModel.Status = data.Course.Status;
-            _reqModel.DueDate = data.Course.DueDate;
+            _reqModel.CourseName = result.Data.Course.CourseName;
+            _reqModel.Description = result.Data.Course.Description;
+            _reqModel.SubjectCode = result.Data.Course.SubjectCode;
+            _reqModel.SubjectCode = result.Data.Course.SubjectCode;
+            _reqModel.Status = result.Data.Course.Status;
+            _reqModel.Status = result.Data.Course.Status;
+            _reqModel.DueDate = result.Data.Course.DueDate;
             visible = true;
             _formType = EnumFormType.Detail;
         }
@@ -209,13 +211,13 @@ public partial class P_Course
             if (!isConfirm) return;
             _reqModel.CurrentUserId = _userSession.UserId;
             _reqModel.CourseId = id;
-            var data = await _courseService.Delete(_reqModel);
-            if (!data.Response.IsSuccess)
+            var result = await _courseService.Delete(_reqModel);
+            if (!result.Success)
             {
-                await _injectService.ErrorMessage(data.Response.Message);
+                await _injectService.ErrorMessage(result.Message);
                 return;
             }
-            await _injectService.SuccessMessage(data.Response.Message);
+            await _injectService.SuccessMessage(result.Message);
             ps = new();
             await List(ps);
             StateHasChanged();
