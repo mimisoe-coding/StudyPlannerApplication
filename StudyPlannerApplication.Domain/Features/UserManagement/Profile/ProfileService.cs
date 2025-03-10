@@ -8,7 +8,7 @@ public class ProfileService
         _db = db;
     }
 
-    public async Task<ProfileResponseModel> Profile(ProfileRequestModel reqModel)
+    public async Task<Result<ProfileResponseModel>> Profile(ProfileRequestModel reqModel)
     {
         ProfileResponseModel model = new ProfileResponseModel();
         try
@@ -17,18 +17,16 @@ public class ProfileService
                 .FirstOrDefaultAsync(x => x.UserId==reqModel.UserId);
             if (user == null)
             {
-                model.Response = SubResponseModel.GetResponseMsg("No User Found", false);
-                return model;
+                return Result<ProfileResponseModel>.FailureResult("No User Found");
             }
             model.UserId = user.UserId;
             model.UserName = user.UserName;
             model.Phone = user.PhoneNo;
             model.Email = user.Email;
-            model.Response = SubResponseModel.GetResponseMsg("Your profile is retrieved.", true);
+            return Result<ProfileResponseModel>.SuccessResult(model,"Your profile is retrieved.");
         }catch (Exception ex)
         {
-            model.Response = SubResponseModel.GetResponseMsg(ex.ToString(), false);
+            return Result<ProfileResponseModel>.FailureResult(ex.ToString());
         }
-        return model;
     }
 }

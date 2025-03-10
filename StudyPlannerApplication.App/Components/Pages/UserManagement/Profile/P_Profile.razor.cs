@@ -1,12 +1,10 @@
-﻿using StudyPlannerApplication.Domain.Features.UserManagement.Profile;
-
-namespace StudyPlannerApplication.App.Components.Pages.UserManagement.Profile;
+﻿namespace StudyPlannerApplication.App.Components.Pages.UserManagement.Profile;
 
 public partial class P_Profile
 {
     private UserSessionModel _userSession = new();
     private ProfileRequestModel _reqModel = new();
-    private ProfileResponseModel _resModel = new();
+    private Result<ProfileResponseModel> _resModel = new();
     private string _defaultProfileImage = "/images/profile/default-user.png";
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -29,9 +27,9 @@ public partial class P_Profile
     private async Task Profile()
     {
         _resModel = await _profileService.Profile(_reqModel);
-        if (!_resModel.Response.IsSuccess)
+        if (!_resModel.Success)
         {
-            await _injectService.ErrorMessage(_resModel.Response.Message);
+            await _injectService.ErrorMessage(_resModel.Message);
             return;
         }
     }

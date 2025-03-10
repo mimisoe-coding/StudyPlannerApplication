@@ -6,7 +6,7 @@
 @inject ProfileService _profileService;
 <h3>Profile</h3>
 
-@if (_resModel != null)
+@if (_resModel.Data != null)
 {
     <div class="card">
         <div class="card-body">
@@ -34,7 +34,7 @@
                 <div class="mb-3 row">
                     <b class="col-md-2">User Name</b>
                     <div class="col-md-10">
-                        @_resModel.UserName
+                        @_resModel.Data.UserName
                     </div>
                 </div>
             </div>
@@ -42,7 +42,7 @@
                 <div class="mb-3 row">
                     <b class="col-md-2">Phone</b>
                     <div class="col-md-10">
-                        @_resModel.Phone
+                        @_resModel.Data.Phone
                     </div>
                 </div>
             </div>
@@ -50,7 +50,7 @@
                 <div class="mb-3 row">
                     <b class="col-md-2">Email</b>
                     <div class="col-md-10">
-                        @_resModel.Email
+                        @_resModel.Data.Email
                     </div>
                 </div>
             </div>
