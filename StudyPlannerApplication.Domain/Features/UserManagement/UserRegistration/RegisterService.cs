@@ -11,9 +11,8 @@ public class RegisterService
         _db = db;
     }
 
-    public async Task<SignInResponseModel> Register(SignInRequestModel reqModel)
+    public async Task<Result<SignInResponseModel>> Register(SignInRequestModel reqModel)
     {
-        SignInResponseModel model = new SignInResponseModel();
         try
         {
             #region Check Duplicate UserName and PhoneNo
@@ -24,18 +23,15 @@ public class RegisterService
             {
                 if (user.UserName.ToLower().Trim() == reqModel.UserName.ToLower().Trim())
                 {
-                    model.Response = SubResponseModel.GetResponseMsg("Your UserName is already used.", false);
-                    return model;
+                    return Result<SignInResponseModel>.FailureResult("Your UserName is already used.");
                 }
                 if (user.PhoneNo == reqModel.PhoneNo)
                 {
-                    model.Response = SubResponseModel.GetResponseMsg("Your PhoneNo is already used.", false);
-                    return model;
+                    return Result<SignInResponseModel>.FailureResult("Your PhoneNo is already used.");
                 }
                 if (user.Email.ToLower() == reqModel.Email.ToLower())
                 {
-                    model.Response = SubResponseModel.GetResponseMsg("Your Email is already used.", false);
-                    return model;
+                    return Result<SignInResponseModel>.FailureResult("Your Email is already used.");
                 }
             }
 
@@ -53,13 +49,11 @@ public class RegisterService
             item.RoleCode = EnumRoleType.Student.ToEnumDescription();
             await _db.AddAsync(item);
             await _db.SaveChangesAsync();
-            model.Response = SubResponseModel.GetResponseMsg("Registration Success!Welcome to your account.", true);
+            return Result<SignInResponseModel>.SuccessResult("Registration Success!Welcome to your account.");
         }
         catch (Exception ex)
         {
-            model.Response = SubResponseModel.GetResponseMsg(ex.ToString(), false);
+            return Result<SignInResponseModel>.FailureResult(ex.ToString());
         }
-
-        return model;
     }
 }

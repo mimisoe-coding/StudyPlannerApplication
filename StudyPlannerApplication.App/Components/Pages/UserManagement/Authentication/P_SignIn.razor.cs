@@ -37,20 +37,22 @@ public partial class P_SignIn
         await customAuthStateProvider.UpdateAuthenticationState(userSessionModel);
         Navigation.NavigateTo("/dashboard");
     }
+
     async Task Register()
     {
         if (!await CheckRequiredFields(_reqModel)) return;
         var model = await _registerService.Register(_reqModel);
-        if (!model.Response.IsSuccess)
+        if (!model.Success)
         {
-            await _injectService.ErrorMessage(model.Response.Message);
+            await _injectService.ErrorMessage(model.Message);
             return;
         }
-        await _injectService.SuccessMessage(model.Response.Message);
+        await _injectService.SuccessMessage(model.Message);
         _formType = EnumSignInFormType.SignIn;
         _reqModel = new();
         StateHasChanged();
     }
+
     async Task<bool> CheckRequiredFields(SignInRequestModel _reqModel)
     {
         if (string.IsNullOrEmpty(_reqModel.UserName))
