@@ -9,7 +9,7 @@ public class SignInService
         _db = db;
     }
 
-    public async Task<SignInResponseModel> SignIn(SignInRequestModel reqModel)
+    public async Task<Result<SignInResponseModel>> SignIn(SignInRequestModel reqModel)
     {
         SignInResponseModel model = new SignInResponseModel();
         try
@@ -18,21 +18,17 @@ public class SignInService
             TblUser? user = await _db.TblUsers.AsNoTracking().FirstOrDefaultAsync(x => x.UserName == reqModel.UserName && x.Password == hashPassword);
             if (user is null)
             {
-                model.Response = SubResponseModel.GetResponseMsg("UserName and Password is wrong", false);
-                return model;
+                return Result<SignInResponseModel>.FailureResult("UserName and Password is wrong");
             }
             model.UserName = user!.UserName;
             model.Phone = user.PhoneNo;
             model.UserId = user.UserId;
             model.Role = user.RoleCode;
-            model.Response = SubResponseModel.GetResponseMsg("Welcome to your account.", true);
+            return Result<SignInResponseModel>.SuccessResult(model,"Welcome to your account.");
         }
         catch(Exception ex)
         {
-            model.Response = SubResponseModel.GetResponseMsg(ex.ToString(), false); 
+            return Result<SignInResponseModel>.FailureResult(ex.ToString()); 
         }
-        
-        return model;
     }
-
 }

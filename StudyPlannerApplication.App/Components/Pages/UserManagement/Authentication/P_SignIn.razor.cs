@@ -22,16 +22,16 @@ public partial class P_SignIn
     {
         if (!await CheckRequiredFields(_reqModel)) return;
         var model = await _signInService.SignIn(_reqModel);
-        if (!model.Response.IsSuccess)
+        if (!model.Success)
         {
-            await _injectService.ErrorMessage(model.Response.Message);
+            await _injectService.ErrorMessage(model.Message);
             return;
         }
         var userSessionModel = new UserSessionModel
         {
-            UserName = model.UserName,
-            Role = model.Role,
-            UserId = model.UserId,
+            UserName = model.Data.UserName,
+            Role = model.Data.Role,
+            UserId = model.Data.UserId,
         };
         var customAuthStateProvider = (CustomAuthenticationStateProvider)authStateProvider;
         await customAuthStateProvider.UpdateAuthenticationState(userSessionModel);
