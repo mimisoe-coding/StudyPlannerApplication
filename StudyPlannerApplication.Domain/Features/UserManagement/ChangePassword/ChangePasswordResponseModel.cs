@@ -2,5 +2,4 @@
 
 public class ChangePasswordResponseModel
 {
-    public ResponseModel Response { get; set; }
 }

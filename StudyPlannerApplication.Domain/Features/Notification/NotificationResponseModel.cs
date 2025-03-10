@@ -3,9 +3,9 @@
 public class NotificationResponseModel
 {
     public List<NotificationDataModel> NotiList { get; set; }
-    public ResponseModel Response { get; set; }
     public PageSettingResponseModel PageSetting { get; set; }
 }
+
 public class NotificationDataModel
 {
     public int NotificationId { get; set; }

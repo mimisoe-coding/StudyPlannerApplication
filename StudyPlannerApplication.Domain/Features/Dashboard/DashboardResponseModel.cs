@@ -5,7 +5,6 @@ namespace StudyPlannerApplication.Domain.Features.Dashboard;
 public class DashboardResponseModel
 {
     public List<CurrentWeekDataModel> CurrentWeekDataList { get; set; }
-    public ResponseModel Response { get; set; }
 }
 
 public class CurrentWeekDataModel

@@ -1,10 +1,7 @@
-﻿using StudyPlannerApplication.Domain.Features.Course;
-
-namespace StudyPlannerApplication.Domain.Features.Reminder;
+﻿namespace StudyPlannerApplication.Domain.Features.Reminder;
 
 public class ReminderResponseModel 
 {
-    public ResponseModel Response { get; set; }
     public List<SubjectListModel> SubjectList { get; set; }
 }
 

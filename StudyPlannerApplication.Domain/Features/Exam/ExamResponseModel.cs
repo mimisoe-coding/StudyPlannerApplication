@@ -4,7 +4,6 @@ public class ExamResponseModel
 {
     public List<ExamDataModel> ExamList { get; set; }
     public ExamDataModel ExamData { get; set; }
-    public ResponseModel Response { get; set; }
     public PageSettingResponseModel PageSetting { get; set; }
 }
 
