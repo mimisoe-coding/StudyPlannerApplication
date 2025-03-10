@@ -117,12 +117,12 @@ public partial class P_SignIn
             Email = _reqModel.Email
         };
         var model = await _changePasswordService.ResetPassword(passwordRequest);
-        if (!model.Response.IsSuccess)
+        if (!model.Success)
         {
-            await _injectService.ErrorMessage(model.Response.Message);
+            await _injectService.ErrorMessage(model.Message);
             return;
         }
-        await _injectService.SuccessMessage(model.Response.Message);
+        await _injectService.SuccessMessage(model.Message);
         _formType = EnumSignInFormType.SignIn;
         StateHasChanged();
     }

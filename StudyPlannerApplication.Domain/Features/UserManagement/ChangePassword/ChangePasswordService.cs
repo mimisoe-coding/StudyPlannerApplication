@@ -14,7 +14,7 @@ public class ChangePasswordService
         _db = db;
     }
 
-    public async Task<ChangePasswordResponseModel> ResetPassword(ChangePasswordRequestModel reqModel)
+    public async Task<Result<ChangePasswordResponseModel>> ResetPassword(ChangePasswordRequestModel reqModel)
     {
         ChangePasswordResponseModel model = new ChangePasswordResponseModel();
         try
@@ -22,8 +22,7 @@ public class ChangePasswordService
             var user = await _db.TblUsers.AsNoTracking().FirstOrDefaultAsync(x => x.Email == reqModel.Email);
             if (user is null)
             {
-                model.Response = SubResponseModel.GetResponseMsg("Invalid email.", false);
-                return model;
+                return Result<ChangePasswordResponseModel>.FailureResult("Invalid email.");
             }
 
             string password = DevCode.GeneratePassword();
@@ -33,6 +32,7 @@ public class ChangePasswordService
             await _db.SaveAndDetachAsync();
 
             #region Send Email
+
             var senderEmail = "studyplannerhub@gmail.com";
             var senderPassword = "nhyr ysyd owwk jama";
             var sender = new SmtpSender(() => new SmtpClient("smtp.gmail.com")
@@ -49,7 +49,7 @@ public class ChangePasswordService
                                 Your password has been successfully reset.
                                 UserName: {user.UserName}
                                 Password: {password}";
-            
+
             var email = await Email
                 .From(senderEmail)
                 .To(user.Email, user.UserName)
@@ -57,20 +57,16 @@ public class ChangePasswordService
                 .Body(emailBody, false)
                 .SendAsync();
 
-            if (email.Successful)
-            {
-                model.Response = SubResponseModel.GetResponseMsg("Sending email is successful", true);
-            }
-            else
-            {
-                model.Response = SubResponseModel.GetResponseMsg("Sending email is fail", false);
-            }
+            if (!email.Successful)
+                return Result<ChangePasswordResponseModel>.FailureResult("Sending email is fail");
+
+            return Result<ChangePasswordResponseModel>.SuccessResult("Sending email is successful");
+
             #endregion
         }
         catch (Exception ex)
         {
-            model.Response = SubResponseModel.GetResponseMsg(ex.ToString(), false);
+            return Result<ChangePasswordResponseModel>.FailureResult(ex.ToString());
         }
-        return model;
     }
 }
