@@ -5,3 +5,15 @@
     -o-background-size: cover;
     background-size: cover;
 }
+
+.image-container {
+    position: relative;
+    display: inline-block;
+}
+
+.badge-overlay {
+    position: absolute;
+    bottom: 5px; 
+    right: 5px; 
+    z-index: 10; 
+}

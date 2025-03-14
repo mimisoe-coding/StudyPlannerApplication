@@ -21,8 +21,4 @@
 		<ProjectReference Include="..\StudyPlannerApplication.Shared\StudyPlannerApplication.Shared.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<Folder Include="wwwroot\images\profile\" />
-	</ItemGroup>
-
 </Project>

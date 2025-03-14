@@ -1,4 +1,5 @@
 ﻿@page "/profile"
+@using MudBlazor
 @using StudyPlannerApplication.App.Components.Layout
 @using StudyPlannerApplication.Domain.Features.UserManagement.Profile
 @layout MainLayout
@@ -10,50 +11,57 @@
 {
     <div class="card">
         <div class="card-body">
-            <div class="avatar-upload">
-                <div class="avatar-edit">
-                    @* <InputFile id="ProfileImage" OnChange="UploadImage" accept=".jpg, .jpeg, .png" /> *@
-                    <label for="ProfileImage">
-                        <i class="bx bx-camera" title="Change Profile"
-                           style="padding: 0 !important;color: #fff;margin: 4px;margin-top: 4px; font-size: 1.8em">
-                        </i>
-                    </label>
+            <div class="row align-items-center">
+                <!-- Left Side: Profile Image with Badge -->
+                <div class="col-md-3 position-relative text-center">
+                    @if (_reqModel.ImageUrl is not null)
+                    {
+                        <MudImage Src=@_reqModel.ImageUrl Width="200" Height="200" Style="border-radius: 50%;" />
+                    }
+                    else
+                    {
+                        <MudImage Src=@_imageBase64Str Width="200" Height="200" Style="border-radius: 50%;" />
+                    }
+                    <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles">
+                        <ActivatorContent>
+                            <MudBadge Icon="@Icons.Material.Filled.CameraAlt" Color="Color.Info" Style="position: absolute; bottom: 15px; right: 68px; z-index: 10;" />
+                        </ActivatorContent>
+                    </MudFileUpload>
                 </div>
-                <div class="avatar-preview" style="margin: auto;">
-                    @* @if (_imageBase64Str.IsNullOrEmpty() || _imageBase64Str.Equals("data:image;base64,"))
-                { *@
-                    <div id="imagePreview" style="background-image: url('@_defaultProfileImage');"></div>
-                    @* } *@
-                    @*  else
-                {
-                <div id="imagePreview" style="background-image: url('@_imageBase64Str');"></div>
-                } *@
-                </div>
-            </div>
-            <div class="row pb-2">
-                <div class="mb-3 row">
-                    <b class="col-md-2">User Name</b>
-                    <div class="col-md-10">
-                        @_resModel.Data.UserName
+
+                <!-- Right Side: User Details -->
+                <div class="col-md-9">
+                    <div class="row pb-2">
+                        <div class="mb-3 row">
+                            <b class="col-md-2">User Name</b>
+                            <div class="col-md-10">
+                                @_resModel.Data.UserName
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="row pb-2">
-                <div class="mb-3 row">
-                    <b class="col-md-2">Phone</b>
-                    <div class="col-md-10">
-                        @_resModel.Data.Phone
+                    <div class="row pb-2">
+                        <div class="mb-3 row">
+                            <b class="col-md-2">Phone</b>
+                            <div class="col-md-10">
+                                @_resModel.Data.Phone
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="row pb-2">
-                <div class="mb-3 row">
-                    <b class="col-md-2">Email</b>
-                    <div class="col-md-10">
-                        @_resModel.Data.Email
+                    <div class="row pb-2">
+                        <div class="mb-3 row">
+                            <b class="col-md-2">Email</b>
+                            <div class="col-md-10">
+                                @_resModel.Data.Email
+                            </div>
+                        </div>
                     </div>
+                    <button @onclick=Clear class="btn btn-outline-dark btn-sm mb-0 me-2" type="button">Back</button>
+                    <button class="btn btn-success btn-sm mb-0" type="button" @onclick=Save>Save</button>
                 </div>
+
+
             </div>
+
             <div>
                 @* <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="Clear">@_loc["f_Clear"]</button>
             <button type="submit" class="btn btn-primary" @onclick="Save" disabled="@btnSaveDisabled">@_loc["f_Save"]</button> *@

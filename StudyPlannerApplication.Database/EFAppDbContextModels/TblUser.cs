@@ -17,6 +17,8 @@ public partial class TblUser
 
     public string PhoneNo { get; set; } = null!;
 
+    public string? ImagePath { get; set; }
+
     public string RoleCode { get; set; } = null!;
 
     public DateTime CreatedDate { get; set; }
