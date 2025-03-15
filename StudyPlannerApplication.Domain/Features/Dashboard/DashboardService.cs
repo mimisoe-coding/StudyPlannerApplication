@@ -1,8 +1,4 @@
-﻿using StudyPlannerApplication.Database.EFAppDbContextModels;
-using StudyPlannerApplication.Domain.Features.Course;
-using System.Security;
-
-namespace StudyPlannerApplication.Domain.Features.Dashboard;
+﻿namespace StudyPlannerApplication.Domain.Features.Dashboard;
 
 public class DashboardService
 {
@@ -50,9 +46,9 @@ public class DashboardService
                 currentWeekDayList.Add(currentWeekDay);
             }
             model.CurrentWeekDataList = currentWeekDayList;
-            return Result<DashboardResponseModel>.SuccessResult(model,"Courses are retrieved successfully.");
+            return Result<DashboardResponseModel>.SuccessResult(model, "Courses are retrieved successfully.");
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             return Result<DashboardResponseModel>.FailureResult(ex.ToString());
         }

@@ -1,17 +1,14 @@
 ﻿@page "/exam"
 @using MudBlazor
 @using Radzen.Blazor
-@using StudyPlannerApplication.App.Components.Layout
-@using StudyPlannerApplication.App.StateContainer
-@using StudyPlannerApplication.Domain.Features.Exam
-@using StudyPlannerApplication.Domain.Features.Notification
-@using StudyPlannerApplication.Shared
+
 @rendermode InteractiveServer
 @layout MainLayout
 @inject ExamService _examService
 @inject SubjectService _subjectService
 @inject StudyPlannerApplication.Domain.Features.Notification.NotificationService _notificationService
 @inject NotificationStateContainer _notificationStateContainer
+@inject ILogger<P_Exam> _logger
 @if (_formType == EnumFormType.List)
 {
     <div class="card">

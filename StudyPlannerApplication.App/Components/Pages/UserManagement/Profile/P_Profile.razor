@@ -5,6 +5,7 @@
 @layout MainLayout
 @rendermode RenderMode.InteractiveServer
 @inject ProfileService _profileService;
+@inject ILogger<P_Profile> _logger; 
 <h3>Profile</h3>
 
 @if (_resModel.Data != null)
@@ -55,7 +56,7 @@
                             </div>
                         </div>
                     </div>
-                    <button @onclick=Clear class="btn btn-outline-dark btn-sm mb-0 me-2" type="button">Back</button>
+                    <button @onclick=Clear class="btn btn-outline-dark btn-sm mb-0 me-2" disabled="@disabled" type="button">Clear</button>
                     <button class="btn btn-success btn-sm mb-0" type="button" @onclick=Save>Save</button>
                 </div>
 

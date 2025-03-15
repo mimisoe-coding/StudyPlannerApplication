@@ -5,3 +5,8 @@ global using StudyPlannerApplication.Domain.Features.UserManagement.Login;
 global using StudyPlannerApplication.Shared;
 global using StudyPlannerApplication.Shared.DapperService;
 global using StudyPlannerApplication.Domain.Features.Course;
+global using FluentEmail.Core;
+global using FluentEmail.Smtp;
+global using System.Net;
+global using System.Net.Mail;
+global using StudyPlannerApplication.Shared.Enums;

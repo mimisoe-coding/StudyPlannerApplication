@@ -1,22 +1,21 @@
-﻿namespace StudyPlannerApplication.App.StateContainer
+﻿namespace StudyPlannerApplication.App.StateContainer;
+
+public class NotificationStateContainer
 {
-    public class NotificationStateContainer
+    private int _notificationCount = 0;
+
+    public int NotificationCount
     {
-        private int _notificationCount = 0;
-
-        public int NotificationCount
+        get => _notificationCount;
+        set
         {
-            get => _notificationCount;
-            set
-            {
-                _notificationCount = value;
-                NotifyStateChanged();
+            _notificationCount = value;
+            NotifyStateChanged();
 
-            }
         }
-
-        public event Action? OnChange;
-
-        private void NotifyStateChanged() => OnChange?.Invoke();
     }
+
+    public event Action? OnChange;
+
+    private void NotifyStateChanged() => OnChange?.Invoke();
 }

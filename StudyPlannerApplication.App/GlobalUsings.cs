@@ -25,3 +25,4 @@ global using StudyPlannerApplication.Domain.Features.Dashboard;
 global using Microsoft.AspNetCore.Components;
 global using MudBlazor;
 global using StudyPlannerApplication.Shared;
+global using StudyPlannerApplication.App.Components.Layout;

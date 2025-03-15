@@ -2,7 +2,6 @@
 
 public partial class P_Course
 {
-    [Inject] private ILogger<P_Course> _logger { get; set; }
     private EnumFormType _formType = EnumFormType.List;
     private UserSessionModel _userSession = new();
     private PageSettingModel ps = new();

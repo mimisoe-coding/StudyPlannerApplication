@@ -1,10 +1,7 @@
-﻿using StudyPlannerApplication.Domain.Models;
-
-namespace StudyPlannerApplication.App.Components.Pages.Exam;
+﻿namespace StudyPlannerApplication.App.Components.Pages.Exam;
 
 public partial class P_Exam
 {
-    [Inject] private ILogger<P_Exam> _logger { get; set; }
     private EnumFormType _formType = EnumFormType.List;
     private ExamRequestModel _reqModel = new();
     private Result<ExamResponseModel> _resModel = new();

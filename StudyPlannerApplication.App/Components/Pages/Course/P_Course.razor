@@ -2,13 +2,12 @@
 @using MudBlazor
 @using Radzen
 @using Radzen.Blazor
-@using StudyPlannerApplication.App.Components.Layout
-@using StudyPlannerApplication.Domain.Features.Course
-@using StudyPlannerApplication.Shared
+
 @inject SubjectService _subjectService
 @inject CourseService _courseService
 @rendermode InteractiveServer
 @layout MainLayout
+@inject ILogger<P_Course> _logger
 @if (_formType == EnumFormType.List)
 {
     <div class="card">
@@ -18,15 +17,6 @@
                 Course
             </h5>
         </div>
-        @*  <div class="row col-12">
-    <div class="col-sm-3 ml-6" style="margin-right: -8px;">
-    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Image Name</RadzenText>
-    <RadzenTextBox @bind-Value=@_reqModel Class="w-100"/>
-    </div>
-    <div class="col-sm-3 mt-4 mb-6">
-    <RadzenButton Click="() => Search()" Text="Search" ButtonStyle="ButtonStyle.Info"/>
-    </div>
-    </div> *@
         @if (_resModel?.Data?.CourseList?.Any() == true)
         {
             <div class="flex-container mt-3" style="display: flex;">
@@ -57,8 +47,8 @@
                                         <td><MudChip T="string" Color="@GetStatus(item.Status)">@item.Status</MudChip></td>
                                         <td>@item.DueDate</td>
                                         <td>
-                                             <button class="btn btn-primary btn-sm mb-0" type="button" @onclick="() => Edit(item.CourseId)">Edit</button>
-                                             <button class="btn btn-danger btn-sm mb-0" type="button" @onclick="() => Delete(item.CourseId)">Delete</button>
+                                            <button class="btn btn-primary btn-sm mb-0" type="button" @onclick="() => Edit(item.CourseId)">Edit</button>
+                                            <button class="btn btn-danger btn-sm mb-0" type="button" @onclick="() => Delete(item.CourseId)">Delete</button>
                                             <button class="btn btn-success btn-sm mb-0" type="button" @onclick="() => Detail(item.CourseId)">Detail</button>
                                         </td>
                                     </tr>
@@ -82,7 +72,7 @@
     </div>
 }
 
-@if (_formType !=EnumFormType.List)
+@if (_formType != EnumFormType.List)
 {
     <div class="card">
         <div class="card-body">

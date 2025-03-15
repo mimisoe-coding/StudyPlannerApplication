@@ -1,10 +1,7 @@
-﻿using StudyPlannerApplication.App.Components.Pages.Exam;
-
-namespace StudyPlannerApplication.App.Components.Pages.Subject;
+﻿namespace StudyPlannerApplication.App.Components.Pages.Subject;
 
 public partial class P_Subject
 {
-    [Inject] private ILogger<P_Subject> _logger { get; set; }
     private EnumFormType _formType = EnumFormType.List;
     private SubjectRequestModel _reqModel = new();
     private UserSessionModel _userSession = new();

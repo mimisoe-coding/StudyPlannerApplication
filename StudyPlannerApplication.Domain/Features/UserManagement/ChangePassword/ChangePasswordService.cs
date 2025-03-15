@@ -1,9 +1,4 @@
-﻿using FluentEmail.Core;
-using FluentEmail.Smtp;
-using System.Net;
-using System.Net.Mail;
-
-namespace StudyPlannerApplication.Domain.Features.UserManagement.ChangePassword;
+﻿namespace StudyPlannerApplication.Domain.Features.UserManagement.ChangePassword;
 
 public class ChangePasswordService
 {

@@ -1,4 +1,4 @@
-﻿using StudyPlannerApplication.Shared.Enums;
+﻿
 
 namespace StudyPlannerApplication.Domain.Features.UserManagement.UserRegistration;
 

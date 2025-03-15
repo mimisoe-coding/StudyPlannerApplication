@@ -1,11 +1,10 @@
 ﻿@page "/subject"
 @using MudBlazor
-@using StudyPlannerApplication.App.Components.Layout
-@using StudyPlannerApplication.Domain.Features.Subject
-@using StudyPlannerApplication.Shared
+
 @layout MainLayout
 @inject SubjectService _subjectService
 @rendermode InteractiveServer
+@inject ILogger<P_Subject> _logger
 @if (_formType == EnumFormType.List)
 {
     <div class="card">
