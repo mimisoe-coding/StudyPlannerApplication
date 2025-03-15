@@ -5,7 +5,7 @@ public partial class P_Dashboard
     private UserSessionModel _userSession = new();
     private DashboardRequestModel _reqModel = new();
     private Result<DashboardResponseModel> _resModel = new();
-    
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -69,4 +69,28 @@ public partial class P_Dashboard
             _ => Icons.Material.Outlined.IncompleteCircle
         };
     }
+
+    string GetDayIcon(string day) => day switch
+    {
+        "Monday" => "📖",
+        "Tuesday" => "📆",
+        "Wednesday" => "🌙",
+        "Thursday" => "📝",
+        "Friday" => "☀️",
+        "Saturday" => "🎉",
+        "Sunday" => "😴",
+        _ => "📅"
+    };
+
+    string GetDayColor(string day) => day switch
+    {
+        "Monday" => "background-color:#FFEBEE",   
+        "Tuesday" => "background-color:#E3F2FD",  
+        "Wednesday" => "background-color:#FFF9C4",
+        "Thursday" => "background-color:#E8F5E9", 
+        "Friday" => "background-color:#FFECB3",   
+        "Saturday" => "background-color:#D1C4E9", 
+        "Sunday" => "background-color:#F8BBD0",   
+        _ => "background-color:#ECEFF1"
+    };
 }

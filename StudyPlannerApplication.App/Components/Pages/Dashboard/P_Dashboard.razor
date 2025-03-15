@@ -10,7 +10,7 @@
 @inject NotificationStateContainer _notificationStateContainer
 @inject DashboardService _dashboardService
 
-<div class="card">
+@* <div class="card">
     <div class="card-header">
         <h5 class="mb-0">
             Weekly To-Do
@@ -38,4 +38,37 @@
         </MudGrid>
 
     }
-</div>
+</div> *@
+@if (_resModel?.Data?.CurrentWeekDataList?.Any() == true)
+{
+    <MudContainer MaxWidth="MaxWidth.Medium" Class="pa-4">
+        <MudPaper Elevation="4" Class="p-2 text-center rounded-lg bg-orange-200">
+            <MudText Typo="Typo.h4" Class="font-bold">📅 Weekly To-Do List</MudText>
+        </MudPaper>
+
+        <MudGrid Class="mt-4" Spacing="3">
+            @foreach (var item in _resModel.Data.CurrentWeekDataList)
+            {
+                <MudItem Xs="12" Sm="6" Md="4">
+                    <MudCard Class="rounded-lg" Style=@GetDayColor(item.DayName)>
+                        <MudCardContent>
+                            <MudText Typo="Typo.h5" Class="font-bold mb-2">@(GetDayIcon(item.DayName)) @item.DayName</MudText>
+                            <!-- Course List -->
+                            <MudStack Spacing="2">
+                            @foreach (var data in item.CourseList)
+                            {
+                                <MudText Typo="Typo.body2">
+                                    <MudIcon Icon="@GetIcon(data.Status)" Color="@GetStatus(data.Status)" Title="Favorite" />
+                                    @($"{data.SubjectName} - {data.CourseName}")
+                                </MudText>
+                            }
+                            </MudStack>
+                        </MudCardContent>
+                    </MudCard>
+                </MudItem>
+            }
+        </MudGrid>
+
+    </MudContainer>
+}
+
