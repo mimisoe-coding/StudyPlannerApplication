@@ -19,6 +19,10 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<TblExam> TblExams { get; set; }
 
+    public virtual DbSet<TblLiveChatDetail> TblLiveChatDetails { get; set; }
+
+    public virtual DbSet<TblLiveChatLogin> TblLiveChatLogins { get; set; }
+
     public virtual DbSet<TblNotification> TblNotifications { get; set; }
 
     public virtual DbSet<TblRole> TblRoles { get; set; }
@@ -26,6 +30,10 @@ public partial class AppDbContext : DbContext
     public virtual DbSet<TblSubject> TblSubjects { get; set; }
 
     public virtual DbSet<TblUser> TblUsers { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=.;Database=StudyPlannerApp;User ID=sa;Password=sa@123;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -72,6 +80,43 @@ public partial class AppDbContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
+        });
+
+        modelBuilder.Entity<TblLiveChatDetail>(entity =>
+        {
+            entity.HasKey(e => e.LiveChatDetailId);
+
+            entity.ToTable("TblLiveChatDetail");
+
+            entity.Property(e => e.LiveChatDetailId)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.CreatedDateTime).HasColumnType("datetime");
+            entity.Property(e => e.ImagePath).IsUnicode(false);
+            entity.Property(e => e.LiveChatGroupId)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.LiveChatUserId)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Message).IsUnicode(false);
+        });
+
+        modelBuilder.Entity<TblLiveChatLogin>(entity =>
+        {
+            entity.HasKey(e => e.LiveChatLoginId);
+
+            entity.ToTable("TblLiveChatLogin");
+
+            entity.Property(e => e.LiveChatLoginId)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.ConnectionId)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.UserId)
+                .HasMaxLength(50)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<TblNotification>(entity =>

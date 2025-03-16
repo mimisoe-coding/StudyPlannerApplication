@@ -1,0 +1,43 @@
+﻿@page "/chat"
+@using MudBlazor
+@using StudyPlannerApplication.Domain.Features.LiveChat
+@layout MainLayout
+@inject ProfileService _profileService
+@inject LiveChatService _liveChatService
+@inject ILogger<P_Chat> _logger
+<h3>P_Chat</h3>
+<div class="card">
+    <div class="card-body">
+        <MudPaper Elevation="1" Class="chat-container">
+            <div class="chat-messages">
+                @foreach (var item in allMessages)
+                {
+                    <MudChat ChatPosition="@ChangePosition(item.UserName)">
+                        <MudAvatar>
+                            <MudImage Src=@GetImage64(item.ImageUrl) />
+                        </MudAvatar>
+                        <MudChatBubble>
+                            @item.Message
+                        </MudChatBubble>
+                    </MudChat>
+                }
+            </div>
+        </MudPaper>
+        <MudGrid>
+            <MudItem xs="10">
+                <MudTextField @bind-Value="@message"
+                              Label="Type a message"
+                              Variant="Variant.Filled"
+                              FullWidth="true" />
+            </MudItem>
+            <MudItem xs="2" class="d-flex align-center">
+                <MudButton StartIcon="fas fa-paper-plane"
+                           OnClick="SendMessage"
+                           Color="Color.Info"
+                           Variant="Variant.Filled">Send</MudButton>
+            </MudItem>
+        </MudGrid>
+
+    </div>
+</div>
+

@@ -5,7 +5,7 @@
 @implements IDisposable
 @inject NotificationService _notificationService
 @inject NotificationStateContainer _notificationStateContainer
-
+@inject ILogger<MainLayout> _logger
 <MudThemeProvider />
 <MudPopoverProvider />
 <div class="page">
@@ -16,11 +16,11 @@
     <main>
         <div class="top-row px-4">
             <MudMenu class="m-lg-2">
-                <ActivatorContent  >
+                <ActivatorContent>
                     <MudBadge Content="@_notificationStateContainer.NotificationCount"
-                    Color="Color.Info"
-                    Overlap="true"
-                    Class="ml-2"
+                              Color="Color.Info"
+                              Overlap="true"
+                              Class="ml-2"
                               @onclick="@OnBadgeClick">
                         <MudIcon Icon="@Icons.Material.Filled.Notifications" Color="Color.Success" />
                     </MudBadge>
@@ -28,7 +28,7 @@
                 <ChildContent>
                     @if (_notiData?.Data?.NotiList?.Any() == true)
                     {
-                        foreach(var noti in _notiData.Data.NotiList)
+                        foreach (var noti in _notiData.Data.NotiList)
                         {
                             <MudMenuItem>@noti.Message</MudMenuItem>
                         }
@@ -54,7 +54,7 @@
     private UserSessionModel _userSession = new();
     private Result<NotificationResponseModel> _notiData = new();
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         _notificationStateContainer.OnChange += StateHasChanged;
     }
@@ -63,16 +63,23 @@
     {
         if (firstRender)
         {
-            var customAuthStateProvider = (CustomAuthenticationStateProvider)authStateProvider;
-            var authState = await customAuthStateProvider.GetAuthenticationStateAsync();
-            if (authState.User.Identity != null && !authState.User.Identity.IsAuthenticated)
+            try
             {
-                _nav.NavigateTo("/");
-                return;
+                var customAuthStateProvider = (CustomAuthenticationStateProvider)authStateProvider;
+                var authState = await customAuthStateProvider.GetAuthenticationStateAsync();
+                if (authState.User.Identity != null && !authState.User.Identity.IsAuthenticated)
+                {
+                    _nav.NavigateTo("/");
+                    return;
+                }
+                _userSession = await customAuthStateProvider.GetUserData();
+                await Notification();
+                StateHasChanged();
             }
-            _userSession = await customAuthStateProvider.GetUserData();
-            await Notification();
-            StateHasChanged();
+            catch (Exception ex)
+            {
+                _logger.LogCustomError(ex);
+            }
         }
     }
 
@@ -94,7 +101,7 @@
             {
                 CurrentUserId = _userSession.UserId
             };
-         _notiData = await _notificationService.GetAllNotification(reqModel);
+        _notiData = await _notificationService.GetAllNotification(reqModel);
         if (!_notiData.Success)
         {
             await _injectService.ErrorMessage(_notiData.Message);
@@ -102,6 +109,10 @@
         }
 
         _notificationStateContainer.NotificationCount = _notiData.Data.NotiList.Count;
+        //     await InvokeAsync(() =>
+        // {
+        //     _notificationStateContainer.NotificationCount = _notiData.Data.NotiList.Count;
+        // });
     }
 
     private void Create()

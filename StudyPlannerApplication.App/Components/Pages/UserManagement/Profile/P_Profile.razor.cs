@@ -38,8 +38,11 @@ public partial class P_Profile
                 await _injectService.ErrorMessage(_resModel.Message);
                 return;
             }
-            _resModel.Data.ImagePath = _resModel.Data.ImagePath ?? "images/profile/profile.png";
             _imageBase64Str = "data:image;base64," + _resModel.Data.ImageStr;
+            if(_resModel.Data.ImagePath is null)
+            {
+                _imageBase64Str="images/profile/profile.png";
+            }
         }
         catch(Exception ex)
         {

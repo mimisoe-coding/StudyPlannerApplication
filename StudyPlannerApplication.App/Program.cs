@@ -1,4 +1,6 @@
 using Serilog;
+using StudyPlannerApplication.Domain.Features.LiveChat;
+using StudyPlannerApplication.Domain.Hubs;
 using System.Reflection;
 
 string logDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) ?? string.Empty, "log");
@@ -16,6 +18,15 @@ builder.Host.UseSerilog();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 //builder.Services.AddServerSideBlazor();
+builder.Services.AddSignalR();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", corsPolicyBuilder =>
+        corsPolicyBuilder.AllowAnyOrigin()
+    .AllowAnyHeader()
+    .AllowAnyMethod()
+    .AllowAnyHeader());
+});
 builder.Services.AddMudServices();
 
 #region DbService
@@ -42,6 +53,7 @@ builder.Services.AddScoped<ExamService>();
 builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<ReminderService>();
 builder.Services.AddScoped<ChangePasswordService>();
+builder.Services.AddScoped<LiveChatService>();
 var app = builder.Build();
 
 
@@ -57,7 +69,7 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseAntiforgery();
-
+app.MapHub<LiveChatHub>("/liveChatHub");
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
