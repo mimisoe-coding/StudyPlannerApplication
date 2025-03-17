@@ -23,7 +23,7 @@
                         <div class="mb-3">
                             <label class="form-label">Password</label>
                             <div class="input-group">
-                                <input class="form-control" type=@password placeholder="Password" @bind-value="_reqModel.Password" maxlength="11" />
+                                <input class="form-control" type=@password placeholder="Password" @bind-value="_reqModel.Password" maxlength="6" />
                                 <button type="button" class="btn btn-outline-secondary" @onclick="PasswordVisibility">
                                     <i class="@passwordIcon"></i>
                                 </button>
@@ -53,12 +53,12 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Phone No</label>
-                        <input class="form-control" type="text" placeholder="Phone Number" @bind-value="_reqModel.PhoneNo" />
+                        <input class="form-control" type="text" placeholder="Phone Number" @bind-value="_reqModel.PhoneNo" maxlength="11" />
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Password</label>
                         <div class="input-group">
-                            <input class="form-control" type=@password placeholder="Password" @bind-value="_reqModel.Password" maxlength="11" />
+                            <input class="form-control" type=@password placeholder="Password" @bind-value="_reqModel.Password" maxlength="6" />
                             <button type="button" class="btn btn-outline-secondary" @onclick="PasswordVisibility">
                                 <i class="@passwordIcon"></i>
                             </button>
@@ -67,7 +67,7 @@
                     <div class="mb-3">
                         <label class="form-label">Confirm Password</label>
                         <div class="input-group">
-                            <input class="form-control" type=@cPassword placeholder="Confirm Password" @bind-value="_reqModel.ConfirmPassword" maxlength="11" />
+                            <input class="form-control" type=@cPassword placeholder="Confirm Password" @bind-value="_reqModel.ConfirmPassword" maxlength="6" />
                             <button type="button" class="btn btn-outline-secondary" @onclick="ConfirmPasswordVisibility">
                                 <i class="@cPasswordIcon"></i>
                             </button>

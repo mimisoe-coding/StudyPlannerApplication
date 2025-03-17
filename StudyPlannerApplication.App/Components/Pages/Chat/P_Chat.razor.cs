@@ -71,7 +71,9 @@ public partial class P_Chat
     }
 
     private async Task Send()
-    {
+    { 
+        if(string.IsNullOrWhiteSpace(message) || string.IsNullOrEmpty(message))
+            return;
         if (hubConnection is not null)
         {
             var item = new LiveChatRequestModel
@@ -86,6 +88,7 @@ public partial class P_Chat
             await hubConnection.SendAsync("AdminSendMessage", item);
             await InvokeAsync(StateHasChanged);
         }
+        message = string.Empty;
     }
 
     public bool isConnected =>
