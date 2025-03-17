@@ -28,8 +28,8 @@ public class ChangePasswordService
 
             #region Send Email
 
-            var senderEmail = "studyplannerhub@gmail.com";
-            var senderPassword = "nhyr ysyd owwk jama";
+            var senderEmail = "studygoalsetter@gmail.com";
+            var senderPassword = "pmoj whuo xkbg vrol";
             var sender = new SmtpSender(() => new SmtpClient("smtp.gmail.com")
             {
                 UseDefaultCredentials = false,
@@ -40,8 +40,7 @@ public class ChangePasswordService
 
             Email.DefaultSender = sender;
 
-            var emailBody = $@"
-                                Your password has been successfully reset.
+            var emailBody = $@" Your password has been successfully reset.
                                 UserName: {user.UserName}
                                 Password: {password}";
 
