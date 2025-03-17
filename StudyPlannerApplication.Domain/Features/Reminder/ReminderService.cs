@@ -24,7 +24,7 @@ public class ReminderService
             var result = _dapper.Query<CourseDataModel>(courseQuery, reqModel).ToList();
             if (result.Count <= 0)
             {
-                return Result<ReminderResponseModel>.FailureResult("No Data found.");
+                return Result<ReminderResponseModel>.SuccessResult("No Data found.");
             }
 
             var subjectNameList = result.Select(x => x.SubjectName).Distinct();
