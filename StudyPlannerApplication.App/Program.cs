@@ -42,7 +42,7 @@ builder.Services.AddScoped<DapperService>(x => new DapperService(connectionStrin
 
 builder.Services.AddScoped<IInjectService, InjectService>();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
-builder.Services.AddSingleton<NotificationStateContainer>();
+builder.Services.AddScoped<NotificationStateContainer>();
 builder.Services.AddScoped<SignInService>();
 builder.Services.AddScoped<DashboardService>();
 builder.Services.AddScoped<RegisterService>();

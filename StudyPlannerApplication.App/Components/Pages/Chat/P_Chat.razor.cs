@@ -40,7 +40,10 @@ public partial class P_Chat
             hubConnection = new HubConnectionBuilder()
                 .WithUrl("https://localhost:7261/liveChatHub")
                 .Build();
-
+            hubConnection.Closed += async (error) =>
+            {
+                await hubConnection.StartAsync();
+            };
             hubConnection.On<LiveChatRequestModel>("AdminReceiveMessage", async (item) =>
             {
                 LiveChatGroupId = item.LiveChatGroupId;

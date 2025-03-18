@@ -86,7 +86,14 @@
 
     public void Dispose()
     {
-        _notificationStateContainer.OnChange -= StateHasChanged;
+        try
+        {
+            _notificationStateContainer.OnChange -= StateHasChanged;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogCustomError(ex);
+        }
     }
 
     private async Task OnBadgeClick()
