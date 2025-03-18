@@ -3,7 +3,7 @@
 public partial class P_SignIn
 {
     private SignInRequestModel _reqModel = new();
-    private EnumSignInFormType _formType = EnumSignInFormType.Register;
+    private EnumSignInFormType _formType = EnumSignInFormType.SignIn;
     private bool isPasswordVisible = false;
     private bool isCPasswordVisible = false;
     private string password = "password";

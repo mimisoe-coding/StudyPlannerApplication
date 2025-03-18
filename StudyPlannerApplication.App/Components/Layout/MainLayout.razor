@@ -54,7 +54,7 @@
     private UserSessionModel _userSession = new();
     private Result<NotificationResponseModel> _notiData = new();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         _notificationStateContainer.OnChange += StateHasChanged;
     }

@@ -20,20 +20,7 @@ public partial class P_Chat
 
     protected override async Task OnInitializedAsync()
     {
-        //hubConnection = new HubConnectionBuilder()
-        //    .WithUrl("https://localhost:7261/liveChatHub")
-        //    .Build();
-
-        //hubConnection.On<LiveChatRequestModel>("AdminReceiveMessage", (item) =>
-        //{
-        //    LiveChatGroupId = item.LiveChatGroupId;
-        //    messages.Add(item);
-        //    InvokeAsync(StateHasChanged);
-        //});
-
-        //await hubConnection.StartAsync();
-
-        //await hubConnection.SendAsync("Connect", _userSession.UserId);
+        
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -61,9 +48,7 @@ public partial class P_Chat
                 allMessages = allMessages.OrderBy(x => x.CreatedDate).ToList();
                 await InvokeAsync(StateHasChanged);
             });
-
             await hubConnection.StartAsync();
-
             await hubConnection.SendAsync("Connect", _userSession.UserId);
             await InvokeAsync(StateHasChanged);
         }
