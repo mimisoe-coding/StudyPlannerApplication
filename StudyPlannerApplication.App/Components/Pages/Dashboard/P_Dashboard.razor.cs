@@ -1,4 +1,4 @@
-﻿namespace StudyPlannerApplication.App.Components.Pages.Dashboard;
+namespace StudyPlannerApplication.App.Components.Pages.Dashboard;
 
 public partial class P_Dashboard
 {
@@ -50,47 +50,5 @@ public partial class P_Dashboard
         }
     }
 
-    private MudBlazor.Color GetStatus(string status)
-    {
-        return status switch
-        {
-            "Done" => Color.Success,
-            "Pending" => Color.Warning,
-            _ => Color.Default
-        };
-    }
 
-    private string GetIcon(string status)
-    {
-        return status switch
-        {
-            "Done" => Icons.Material.Outlined.CheckCircleOutline,
-            "Pending" => Icons.Material.Outlined.IncompleteCircle,
-            _ => Icons.Material.Outlined.IncompleteCircle
-        };
-    }
-
-    string GetDayIcon(string day) => day switch
-    {
-        "Monday" => "📖",
-        "Tuesday" => "📆",
-        "Wednesday" => "🌙",
-        "Thursday" => "📝",
-        "Friday" => "☀️",
-        "Saturday" => "🎉",
-        "Sunday" => "😴",
-        _ => "📅"
-    };
-
-    string GetDayColor(string day) => day switch
-    {
-        "Monday" => "background-color:#FFEBEE",   
-        "Tuesday" => "background-color:#E3F2FD",  
-        "Wednesday" => "background-color:#FFF9C4",
-        "Thursday" => "background-color:#E8F5E9", 
-        "Friday" => "background-color:#FFECB3",   
-        "Saturday" => "background-color:#D1C4E9", 
-        "Sunday" => "background-color:#F8BBD0",   
-        _ => "background-color:#ECEFF1"
-    };
 }

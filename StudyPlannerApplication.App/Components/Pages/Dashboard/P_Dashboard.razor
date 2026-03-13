@@ -1,5 +1,4 @@
-﻿@page "/dashboard"
-@using MudBlazor
+@page "/dashboard"
 @using StudyPlannerApplication.App.Components.Layout
 @using StudyPlannerApplication.App.StateContainer
 @using StudyPlannerApplication.Domain.Features.Dashboard
@@ -9,65 +8,102 @@
 @inject NotificationService _notificationService
 @inject DashboardService _dashboardService
 
-@* <div class="card">
-    <div class="card-header">
-        <h5 class="mb-0">
-            Weekly To-Do
-        </h5>
-    </div>
-    @if (_resModel?.Data?.CurrentWeekDataList?.Any()==true)
-    {
-
-        <MudGrid >
-            @foreach (var item in _resModel.Data.CurrentWeekDataList)
-            {
-                <MudItem xs="3">
-                    <MudPaper Class="pa-3" Elevation="6">
-                        <MudChip Text="pink" Color="Color.Info" Value="@Color.Info">@item.DayName</MudChip>
-                        @foreach (var data in item.CourseList)
-                        {
-                            <MudText Typo="Typo.body2">
-                                <MudIcon Icon="@GetIcon(data.Status)" Color="@GetStatus(data.Status)" Title="Favorite" />
-                                @($"{data.SubjectName} - {data.CourseName}")
-                            </MudText>
-                        }
-                    </MudPaper>
-                </MudItem>
-            }
-        </MudGrid>
-
-    }
-</div> *@
 @if (_resModel?.Data?.CurrentWeekDataList?.Any() == true)
 {
-    <MudContainer MaxWidth="MaxWidth.Medium" Class="pa-4">
-        <MudPaper Elevation="4" Class="p-2 text-center rounded-lg bg-orange-200">
-            <MudText Typo="Typo.h4" Class="font-bold">📅 Weekly To-Do List</MudText>
-        </MudPaper>
+    <div class="space-y-8 animate-in fade-in duration-500">
+        <div class="bg-primary/10 border border-primary/20 rounded-2xl p-8 text-center">
+            <h2 class="text-3xl font-extrabold tracking-tight text-primary flex items-center justify-center gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg>
+                Weekly To-Do List
+            </h2>
+            <p class="text-muted-foreground mt-2">Your study schedule for the current week</p>
+        </div>
 
-        <MudGrid Class="mt-4" Spacing="3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             @foreach (var item in _resModel.Data.CurrentWeekDataList)
             {
-                <MudItem Xs="12" Sm="6" Md="4">
-                    <MudCard Class="rounded-lg" Style=@GetDayColor(item.DayName)>
-                        <MudCardContent>
-                            <MudText Typo="Typo.h5" Class="font-bold mb-2">@(GetDayIcon(item.DayName)) @item.DayName</MudText>
-                            <!-- Course List -->
-                            <MudStack Spacing="2">
+                <div class="bg-card border border-border rounded-xl shadow-sm overflow-hidden flex flex-col hover:border-primary/50 transition-colors">
+                    <div class="px-5 py-4 border-b border-border bg-muted/30 flex items-center justify-between">
+                        <h3 class="font-bold text-lg flex items-center gap-2">
+                            <span class="text-primary">
+                                @switch (item.DayName)
+                                {
+                                    case "Monday":
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M8 7h6"/><path d="M8 11h8"/></svg>
+                                        break;
+                                    case "Tuesday":
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+                                        break;
+                                    case "Wednesday":
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                                        break;
+                                    case "Thursday":
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M9 14h6"/><path d="M9 18h6"/><path d="M9 10h6"/></svg>
+                                        break;
+                                    case "Friday":
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="M20 12h2"/><path d="m19.07 19.07-1.41-1.41"/><path d="M12 20v2"/><path d="m6.34 17.66-1.41 1.41"/><path d="M2 12h2"/><path d="m7.76 7.76-1.41-1.41"/><circle cx="12" cy="12" r="4"/></svg>
+                                        break;
+                                    case "Saturday":
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m19 9-4 4"/><path d="m15 9 4 4"/><rect width="20" height="12" x="2" y="6" rx="2"/><path d="M12 12h.01"/><path d="M15 15h.01"/><path d="M12 18h.01"/><path d="M9 15h.01"/></svg>
+                                        break;
+                                    case "Sunday":
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" x2="6" y1="2" y2="8"/><line x1="10" x2="10" y1="2" y2="8"/><line x1="14" x2="14" y1="2" y2="8"/></svg>
+                                        break;
+                                    default:
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+                                        break;
+                                }
+                            </span>
+                            @item.DayName
+                        </h3>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Week Plan</span>
+                    </div>
+                    
+                    <div class="p-5 flex-1 space-y-4">
+                        @if (item.CourseList?.Any() == true)
+                        {
                             @foreach (var data in item.CourseList)
                             {
-                                <MudText Typo="Typo.body2">
-                                    <MudIcon Icon="@GetIcon(data.Status)" Color="@GetStatus(data.Status)" Title="Favorite" />
-                                    @($"{data.SubjectName} - {data.CourseName}")
-                                </MudText>
+                                <div class="flex items-start gap-3 group">
+                                    <div class="mt-0.5 text-primary">
+                                        @if (data.Status == "Done")
+                                        {
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-500"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                        }
+                                        else if (data.Status == "In Progress")
+                                        {
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500 animate-spin-slow"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+                                        }
+                                        else
+                                        {
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+                                        }
+                                    </div>
+                                    <div class="space-y-0.5">
+                                        <p class="text-sm font-semibold leading-none group-hover:text-primary transition-colors">@data.SubjectName</p>
+                                        <p class="text-xs text-muted-foreground">@data.CourseName</p>
+                                    </div>
+                                </div>
                             }
-                            </MudStack>
-                        </MudCardContent>
-                    </MudCard>
-                </MudItem>
+                        }
+                        else
+                        {
+                            <p class="text-sm text-muted-foreground italic">No tasks planned</p>
+                        }
+                    </div>
+                </div>
             }
-        </MudGrid>
-
-    </MudContainer>
+        </div>
+    </div>
+}
+else
+{
+    <div class="flex flex-col items-center justify-center py-20 text-center space-y-4">
+        <div class="w-16 h-16 bg-muted rounded-full flex items-center justify-center text-muted-foreground">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg>
+        </div>
+        <h3 class="text-xl font-bold">No tasks found for this week</h3>
+        <p class="text-muted-foreground">Start by adding some subjects and courses to your schedule.</p>
+    </div>
 }
 
