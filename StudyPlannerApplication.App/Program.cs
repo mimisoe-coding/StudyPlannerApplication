@@ -53,6 +53,7 @@ builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<ReminderService>();
 builder.Services.AddScoped<ChangePasswordService>();
 builder.Services.AddScoped<ThemeService>();
+builder.Services.AddScoped<PageHeaderService>();
 builder.Services.AddScoped<LiveChatService>();
 var app = builder.Build();
 

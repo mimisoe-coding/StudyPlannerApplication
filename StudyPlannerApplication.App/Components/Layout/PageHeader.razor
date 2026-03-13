@@ -1,0 +1,31 @@
+@using StudyPlannerApplication.App.Services
+@inject PageHeaderService HeaderService
+@implements IDisposable
+
+<div class="mb-8 space-y-2 animate-in fade-in slide-in-from-left-4 duration-500">
+    <div class="flex items-center gap-2">
+        @if (!string.IsNullOrEmpty(HeaderService.Icon))
+        {
+            <div class="p-2 rounded-lg bg-primary/10 text-primary">
+                @((MarkupString)HeaderService.Icon)
+            </div>
+        }
+        <h1 class="text-3xl font-bold tracking-tight">@HeaderService.Title</h1>
+    </div>
+    @if (!string.IsNullOrEmpty(HeaderService.Subtitle))
+    {
+        <p class="text-muted-foreground text-lg">@HeaderService.Subtitle</p>
+    }
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        HeaderService.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        HeaderService.OnChange -= StateHasChanged;
+    }
+}

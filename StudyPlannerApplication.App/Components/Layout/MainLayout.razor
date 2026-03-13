@@ -75,8 +75,11 @@
 
         <!-- Page Body -->
         <main class="flex-1 overflow-y-auto p-8">
-            <div class="max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
-                @Body
+            <div class="max-w-7xl mx-auto">
+                <PageHeader />
+                <div class="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    @Body
+                </div>
             </div>
         </main>
     </div>
@@ -107,6 +110,10 @@
             try
             {
                 await themeService.InitializeAsync();
+                if (!string.IsNullOrEmpty(themeService.CustomPrimaryColor))
+                {
+                    await themeService.SetPrimaryColorAsync(themeService.CustomPrimaryColor);
+                }
                 var customAuthStateProvider = (CustomAuthenticationStateProvider)authStateProvider;
                 var authState = await customAuthStateProvider.GetAuthenticationStateAsync();
                 if (authState.User.Identity != null && !authState.User.Identity.IsAuthenticated)
@@ -137,6 +144,7 @@
         if (uri.Contains("exam")) return "Exams";
         if (uri.Contains("reminder")) return "Reminders";
         if (uri.Contains("chat")) return "Group Chat";
+        if (uri.Contains("settings")) return "Settings";
         return "Study Planner";
     }
 
