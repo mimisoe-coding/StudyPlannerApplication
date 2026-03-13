@@ -1,4 +1,4 @@
-﻿namespace StudyPlannerApplication.App.Components.Pages.Exam;
+namespace StudyPlannerApplication.App.Components.Pages.Exam;
 
 public partial class P_Exam
 {
@@ -243,15 +243,5 @@ public partial class P_Exam
         }
 
         _notificationStateContainer.NotificationCount = _notiData.Data.NotiList.Count;
-    }
-
-    private MudBlazor.Color GetStatus(string status)
-    {
-        return status switch
-        {
-            "Done" => Color.Success,
-            "Pending" => Color.Warning,
-            _ => Color.Default
-        };
     }
 }

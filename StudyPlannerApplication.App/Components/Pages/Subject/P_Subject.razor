@@ -1,101 +1,141 @@
-﻿@page "/subject"
-@using MudBlazor
-
+@page "/subject"
+@using StudyPlannerApplication.App.Components.Layout
 @layout MainLayout
 @inject SubjectService _subjectService
 @rendermode InteractiveServer
 @inject ILogger<P_Subject> _logger
-@if (_formType == EnumFormType.List)
-{
-    <div class="card">
-        <div class="card-header">
-            <h5 class="mb-0">
-                <button class="btn btn-success btn-sm mb-0" type="button" @onclick=Create>Create</button>
-                Subject
-            </h5>
-        </div>
-        @*  <div class="row col-12">
-    <div class="col-sm-3 ml-6" style="margin-right: -8px;">
-    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Image Name</RadzenText>
-    <RadzenTextBox @bind-Value=@_reqModel Class="w-100"/>
-    </div>
-    <div class="col-sm-3 mt-4 mb-6">
-    <RadzenButton Click="() => Search()" Text="Search" ButtonStyle="ButtonStyle.Info"/>
-    </div>
-    </div> *@
-        @if (_resModel?.Data?.SubjectList?.Any() == true)
-        {
-            <div class="flex-container mt-3" style="display: flex;">
-                <div class="container-sm">
 
-                    <table class="tb table align-middle table-nowrap table-hover dataTable no-footer table-responsive">
-                        <thead>
+<div class="space-y-6 animate-in fade-in duration-500">
+    <div class="flex items-center justify-between">
+        <div>
+            <h2 class="text-3xl font-extrabold tracking-tight">Subjects</h2>
+            <p class="text-muted-foreground mt-1">Manage your academic subjects and topics.</p>
+        </div>
+        @if (_formType == EnumFormType.List)
+        {
+            <button class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 gap-2" @onclick=Create>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>
+                Create Subject
+            </button>
+        }
+    </div>
+
+    @if (_formType == EnumFormType.List)
+    {
+        <div class="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+            @if (_resModel?.Data?.SubjectList?.Any() == true)
+            {
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-muted/50 border-b border-border text-muted-foreground font-medium">
                             <tr>
-                                <th>Sr No.</th>
-                                <th>Subject Name</th>
-                                <th>Description</th>
-                                <th>Action</th>
+                                <th class="px-6 py-4">Sr No.</th>
+                                <th class="px-6 py-4">Subject Name</th>
+                                <th class="px-6 py-4">Description</th>
+                                <th class="px-6 py-4 text-right">Action</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="divide-y divide-border">
                             @{
                                 int no = (ps.PageNo - 1) * ps.PageSize;
                                 foreach (var item in _resModel.Data.SubjectList)
                                 {
-                                    <tr>
-                                        <td>@(++no)</td>
-                                        <td>@item.SubjectName</td>
-                                        <td>@item.Description</td>
-                                        <td>
-                                            @* <button class="btn btn-primary btn-sm mb-0" type="button" @onclick="() => Edit(item.SubjectId)">Edit</button>
-                                             <button class="btn btn-danger btn-sm mb-0" type="button" @onclick="() => Delete(item.SubjectId)">Delete</button>*@
-                                            <button class="btn btn-success btn-sm mb-0" type="button" @onclick="() => Detail(item.SubjectId)">Detail</button>
+                                    <tr class="hover:bg-muted/30 transition-colors">
+                                        <td class="px-6 py-4 font-medium text-muted-foreground whitespace-nowrap">@(++no)</td>
+                                        <td class="px-6 py-4 font-semibold whitespace-nowrap">@item.SubjectName</td>
+                                        <td class="px-6 py-4 text-muted-foreground max-w-xs truncate">@item.Description</td>
+                                        <td class="px-6 py-4 text-right">
+                                            <div class="flex items-center justify-end gap-2">
+                                                <button class="inline-flex items-center justify-center rounded-md text-xs font-medium transition-colors border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 px-3" @onclick="() => Edit(item.SubjectId)">
+                                                    Edit
+                                                </button>
+                                                <button class="inline-flex items-center justify-center rounded-md text-xs font-medium transition-colors border border-primary/20 bg-primary/10 text-primary hover:bg-primary/20 h-8 px-3" @onclick="() => Detail(item.SubjectId)">
+                                                    Details
+                                                </button>
+                                                <button class="inline-flex items-center justify-center rounded-md text-xs font-medium transition-colors border border-destructive/20 bg-destructive/10 text-destructive hover:bg-destructive/20 h-8 px-3" @onclick="() => Delete(item.SubjectId)">
+                                                    Delete
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 }
                             }
-
                         </tbody>
                     </table>
-                    <div class="d-flex flex-column align-center mb-4">
-                        <MudPagination BoundaryCount="2" MiddleCount="5" SelectedChanged="PageChanged" Count="@count" Class="mt-4" />
+                </div>
+
+                <!-- Custom Pagination -->
+                @if (count > 1)
+                {
+                    <div class="flex items-center justify-between px-6 py-4 border-t border-border bg-muted/20">
+                        <div class="text-xs text-muted-foreground">
+                            Page <span class="font-medium text-foreground">@ps.PageNo</span> of <span class="font-medium text-foreground">@count</span>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <button disabled="@(ps.PageNo <= 1)" class="inline-flex items-center justify-center rounded-md w-8 h-8 text-sm font-medium transition-colors border border-input bg-background hover:bg-accent hover:text-accent-foreground disabled:opacity-50 disabled:pointer-events-none" @onclick="() => PageChanged(ps.PageNo - 1)">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                            </button>
+                            
+                            @for (int i = 1; i <= count; i++)
+                            {
+                                int pageIdx = i;
+                                <button class="inline-flex items-center justify-center rounded-md w-8 h-8 text-sm font-medium transition-colors @(ps.PageNo == pageIdx ? "bg-primary text-primary-foreground hover:bg-primary/90" : "border border-input bg-background hover:bg-accent hover:text-accent-foreground")" @onclick="() => PageChanged(pageIdx)">
+                                    @pageIdx
+                                </button>
+                            }
+
+                            <button disabled="@(ps.PageNo >= count)" class="inline-flex items-center justify-center rounded-md w-8 h-8 text-sm font-medium transition-colors border border-input bg-background hover:bg-accent hover:text-accent-foreground disabled:opacity-50 disabled:pointer-events-none" @onclick="() => PageChanged(ps.PageNo + 1)">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                            </button>
+                        </div>
                     </div>
+                }
+            }
+            else
+            {
+                <div class="flex flex-col items-center justify-center py-12 text-center space-y-3">
+                    <div class="w-12 h-12 bg-muted rounded-full flex items-center justify-center text-muted-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14.5 2 14.5 7.5 20 7.5"/></svg>
+                    </div>
+                    <p class="text-lg font-medium">No subjects found</p>
+                    <p class="text-sm text-muted-foreground max-w-[200px]">Create your first subject to start organized studying.</p>
                 </div>
+            }
+        </div>
+    }
+
+    @if (_formType == EnumFormType.Register || _formType == EnumFormType.Edit || _formType == EnumFormType.Detail)
+    {
+        <div class="bg-card border border-border rounded-xl shadow-sm overflow-hidden animate-in slide-in-from-right-4 duration-300">
+            <div class="px-6 py-4 border-b border-border bg-muted/30">
+                <h3 class="font-bold text-lg">@(_formType.ToString()) Subject</h3>
             </div>
-        }
-        else
-        {
-            <div class="col-sm-3 ml-6" style="margin-right: -8px;">
-                <p>No Record To Show</p>
-            </div>
-        }
-    </div>
-}
-@if (_formType == EnumFormType.Register || _formType == EnumFormType.Edit || _formType == EnumFormType.Detail)
-{
-    <div class="card">
-        <div class="card-body">
-            <h5 class="font-weight-bolder">@(_formType.ToString()) Subject</h5>
-            <div class="col-4">
-                <div class="mb-3">
-                    <label for="exampleFormControlInput1" class="form-label">Subject Name</label>
-                    <input type="email" disabled=@visible class="form-control" min="3" @bind-value="_reqModel.SubjectName">
-                </div>
-                <div class="mb-3">
-                    <label for="exampleFormControlTextarea1" class="form-label">Description</label>
-                    <textarea class="form-control" disabled=@visible @bind="_reqModel.Description"></textarea>
-                </div>
-                <div class="col-12 mt-4">
-                    <div class="d-flex">
-                        <button @onclick=Back class="btn btn-outline-dark btn-sm mb-0 me-2" type="button">Back</button>
+            <div class="p-6">
+                <div class="max-w-2xl space-y-6">
+                    <div class="space-y-4">
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium leading-none" for="subjectName">Subject Name</label>
+                            <input id="subjectName" type="text" disabled=@visible class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" @bind-value="_reqModel.SubjectName" placeholder="e.g. Mathematics, History">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium leading-none" for="description">Description</label>
+                            <textarea id="description" disabled=@visible class="flex min-h-[120px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" @bind="_reqModel.Description" placeholder="Provide a brief overview of the subject..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3 pt-4 border-t border-border">
+                        <button @onclick=Back class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-6">
+                            Back
+                        </button>
                         @if (_formType != EnumFormType.Detail)
                         {
-                            <button class="btn btn-success btn-sm mb-0" type="button" @onclick=Save>@_formType.ToEnumDescription()</button>
+                            <button class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-8" @onclick=Save>
+                                @(_formType == EnumFormType.Register ? "Create" : "Save Changes")
+                            </button>
                         }
-
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-}
+    }
+</div>

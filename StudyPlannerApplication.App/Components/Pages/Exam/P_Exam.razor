@@ -1,6 +1,4 @@
-﻿@page "/exam"
-@using MudBlazor
-@using Radzen.Blazor
+@page "/exam"
 
 @rendermode InteractiveServer
 @layout MainLayout
@@ -9,120 +7,186 @@
 @inject StudyPlannerApplication.Domain.Features.Notification.NotificationService _notificationService
 @inject NotificationStateContainer _notificationStateContainer
 @inject ILogger<P_Exam> _logger
+
 @if (_formType == EnumFormType.List)
 {
-    <div class="card">
-        <div class="card-header">
-            <h5 class="mb-0">
-                <button class="btn btn-success btn-sm mb-0" type="button" @onclick=Create>Create</button>
-                Exam
-            </h5>
+    <div class="bg-card text-card-foreground rounded-lg border shadow-sm">
+        <div class="p-6 flex flex-row items-center justify-between space-y-0 pb-4">
+            <h1 class="text-2xl font-semibold tracking-tight">Exams</h1>
+            <button class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2" 
+                    @onclick="Create">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                New Exam
+            </button>
         </div>
-        @if (_resModel?.Data?.ExamList?.Any()==true)
-        {
-            <div class="flex-container mt-3" style="display: flex;">
-                <div class="container-sm">
-
-                    <table class="tb table align-middle table-nowrap table-hover dataTable no-footer table-responsive">
-                        <thead>
-                            <tr>
-                                <th>Sr No.</th>
-                                <th>Exam Name</th>
-                                <th>Description</th>
-                                <th>Status</th>
-                                <th>Duration</th>
-                                <th>Due Date</th>
-                                <th>Action</th>
+        
+        <div class="p-6 pt-0">
+            @if (_resModel?.Data?.ExamList?.Any() == true)
+            {
+                <div class="rounded-md border overflow-hidden">
+                    <table class="w-full caption-bottom text-sm">
+                        <thead class="bg-muted/50 border-b">
+                            <tr class="transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground w-[80px]">Sr No.</th>
+                                <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Subject</th>
+                                <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Description</th>
+                                <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Status</th>
+                                <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Duration</th>
+                                <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Due Date</th>
+                                <th class="h-12 px-4 text-right align-middle font-medium text-muted-foreground">Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="divide-y">
                             @{
                                 int no = (ps.PageNo - 1) * ps.PageSize;
                                 foreach (var item in _resModel.Data.ExamList)
                                 {
-                                    <tr>
-                                        <td>@(++no)</td>
-                                        <td>@item.SubjectName</td>
-                                        <td>@item.Description</td>
-                                        <td>
-                                            <MudChip T="string" Color="@GetStatus(item.Status)">@item.Status</MudChip>
+                                    <tr class="transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-4 align-middle">@(++no)</td>
+                                        <td class="p-4 align-middle font-medium">@item.SubjectName</td>
+                                        <td class="p-4 align-middle text-muted-foreground">@item.Description</td>
+                                        <td class="p-4 align-middle">
+                                            @{
+                                                var statusClass = item.Status == "Done" 
+                                                    ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400" 
+                                                    : "bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400";
+                                            }
+                                            <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium @statusClass">
+                                                @item.Status
+                                            </span>
                                         </td>
-                                        <td>@item.Durationtime</td>
-                                        <td>@item.DueDate</td>
-                                        <td>
-                                            <button class="btn btn-primary btn-sm mb-0" type="button" @onclick="() => Edit(item.ExamId)">Edit</button>
-                                            <button class="btn btn-danger btn-sm mb-0" type="button" @onclick="() => Delete(item.ExamId)">Delete</button>
-                                            <button class="btn btn-success btn-sm mb-0" type="button" @onclick="() => Detail(item.ExamId)">Detail</button>
+                                        <td class="p-4 align-middle">@item.Durationtime</td>
+                                        <td class="p-4 align-middle">@item.DueDate.ToString("MMM dd, yyyy")</td>
+                                        <td class="p-4 align-middle text-right space-x-2">
+                                            <button @onclick="() => Edit(item.ExamId)" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-8 w-8" title="Edit">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+                                            </button>
+                                            <button @onclick="() => Detail(item.ExamId)" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-8 w-8" title="Details">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                                            </button>
+                                            <button @onclick="() => Delete(item.ExamId)" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-destructive hover:text-destructive-foreground h-8 w-8 text-destructive" title="Delete">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                                            </button>
                                         </td>
                                     </tr>
                                 }
                             }
-
                         </tbody>
                     </table>
-                    <div class="d-flex flex-column align-center mb-4">
-                        <MudPagination BoundaryCount="2" MiddleCount="5" SelectedChanged="PageChanged" Count="@count" Class="mt-4" />
+                </div>
+
+                <!-- Custom Pagination -->
+                <div class="flex items-center justify-between space-x-2 py-4">
+                    <div class="text-sm text-muted-foreground">
+                        Page <strong>@ps.PageNo</strong> of <strong>@count</strong>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-8 px-3"
+                                disabled="@(ps.PageNo <= 1)"
+                                @onclick="() => PageChanged(ps.PageNo - 1)">
+                            Previous
+                        </button>
+                        @for (int i = 1; i <= count; i++)
+                        {
+                            var pageIndex = i;
+                            <button class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-8 w-8 @(ps.PageNo == pageIndex ? "bg-primary text-primary-foreground shadow" : "border border-input bg-background hover:bg-accent hover:text-accent-foreground shadow-sm")"
+                                    @onclick="() => PageChanged(pageIndex)">
+                                @pageIndex
+                            </button>
+                        }
+                        <button class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-8 px-3"
+                                disabled="@(ps.PageNo >= count)"
+                                @onclick="() => PageChanged(ps.PageNo + 1)">
+                            Next
+                        </button>
                     </div>
                 </div>
-            </div>
-        }
-        else
-        {
-            <div class="col-sm-3 ml-6" style="margin-right: -8px;">
-                <p>No Record To Show</p>
-            </div>
-        }
-    </div> 
+            }
+            else
+            {
+                <div class="flex flex-col items-center justify-center py-10 border rounded-md border-dashed">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-muted-foreground mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg>
+                    <p class="text-muted-foreground">No exams found. Create one to get started.</p>
+                </div>
+            }
+        </div>
+    </div>
 }
 
-@if (_formType != EnumFormType.List )
+@if (_formType != EnumFormType.List)
 {
-    <div class="card">
-        <div class="card-body">
-            <h5 class="font-weight-bolder">@(_formType.ToString()) Exam</h5>
-            <div class="row">
-                <div class="col-4 mr-3 mb-3">
-                    <label for="exampleFormControlInput1" class="form-label">Subject Name</label>
-                    <RadzenDropDown AllowClear="true" TValue="string"
-                                    FilterCaseSensitivity="Radzen.FilterCaseSensitivity.CaseInsensitive"
-                                    AllowFiltering="true" Class="w-100" Disabled="@visible"
-                                    Placeholder="Select" Data=@lstSubject
-                                    Value="@_reqModel.SubjectCode"
-                                    TextProperty="SubjectName" ValueProperty="SubjectCode"
-                                    Change=@(args => { if (args != null) _reqModel.SubjectCode = args.ToString(); else _reqModel.SubjectCode = null;}) />
-                </div>
-                <div class="col-4 mr-3 mb-3">
-                    <label for="exampleFormControlInput1" class="form-label">Duration </label>
-                    <RadzenDatePicker @bind-Value=@_reqModel.Duration ShowTime="true" Disabled=@visible TimeOnly="true" DateFormat="HH:mm" Name="DatePickerTimeOnly" Class="w-100" />
-                </div>
-                <div class="col-4 mr-3 mb-3">
-                    <label for="exampleFormControlInput1" class="form-label">Status</label>
-                    <RadzenDropDown AllowClear="true" TValue="string"
-                                    FilterCaseSensitivity="Radzen.FilterCaseSensitivity.CaseInsensitive"
-                                    AllowFiltering="true" Class="w-100" Disabled=@visible
-                                    Placeholder="Select Status" Data=@lstStatus Value="@_reqModel.Status"
-                                    TextProperty="Value" ValueProperty="Value"
-                                    Change=@(args => { { _reqModel.Status = args?.ToString(); } })>
-                    </RadzenDropDown>
-                </div>
-                <div class="col-4 mr-3 mb-3" style="margin-right: -8px;">
-                    <label for="exampleFormControlTextarea1" class="form-label">Due Date</label>
-                    <RadzenDatePicker @bind-Value=@_reqModel.DueDate disabled=@visible DateFormat="d" Min="DateTime.Today" AllowInput="false" Class="w-100" />
-                </div>
-                <div class="col-4 mr-3 mb-3">
-                    <label for="exampleFormControlTextarea1" class="form-label">Description</label>
-                    <textarea class="form-control" disabled=@visible @bind="_reqModel.Description"></textarea>
-                </div>
-                <div class="col-12 mt-4">
-                    <div class="d-flex">
-                        <button @onclick=Back class="btn btn-outline-dark btn-sm mb-0 me-2" type="button">Back</button>
-                        @if (_formType != EnumFormType.Detail)
+    <div class="max-w-2xl mx-auto bg-card text-card-foreground rounded-lg border shadow-sm">
+        <div class="p-6">
+            <h2 class="text-2xl font-semibold tracking-tight mb-6 text-primary">@(_formType == EnumFormType.Detail ? "Exam Details" : (_formType == EnumFormType.Edit ? "Edit Exam" : "Create New Exam"))</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Subject</label>
+                    <select class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                            disabled="@visible"
+                            @bind="_reqModel.SubjectCode">
+                        <option value="">Select Subject</option>
+                        @if (lstSubject != null)
                         {
-                            <button class="btn btn-success btn-sm mb-0" type="button" @onclick=Save>@_formType.ToEnumDescription()</button>
+                            foreach (var subject in lstSubject)
+                            {
+                                <option value="@subject.SubjectCode">@subject.SubjectName</option>
+                            }
                         }
-
-                    </div>
+                    </select>
                 </div>
+
+                <div class="space-y-2">
+                    <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Duration (HH:mm)</label>
+                    <input type="time" 
+                           class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                           disabled="@visible"
+                           @bind="_reqModel.Duration" />
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Status</label>
+                    <select class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                            disabled="@visible"
+                            @bind="_reqModel.Status">
+                        <option value="">Select Status</option>
+                        @foreach (var status in lstStatus)
+                        {
+                            <option value="@status.Value">@status.Value</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Due Date</label>
+                    <input type="date" 
+                           class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                           disabled="@visible"
+                           min="@DateTime.Today.ToString("yyyy-MM-dd")"
+                           @bind="_reqModel.DueDate" />
+                </div>
+
+                <div class="space-y-2 md:col-span-2">
+                    <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Description</label>
+                    <textarea class="flex min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                              disabled="@visible"
+                              placeholder="Describe the exam context or requirements..."
+                              @bind="_reqModel.Description"></textarea>
+                </div>
+            </div>
+
+            <div class="flex flex-row items-center justify-end space-x-2 pt-8">
+                <button class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2" 
+                        @onclick="Back">
+                    Back to List
+                </button>
+                @if (_formType != EnumFormType.Detail)
+                {
+                    <button class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2" 
+                            @onclick="Save">
+                        @(_formType == EnumFormType.Edit ? "Update Exam" : "Create Exam")
+                    </button>
+                }
             </div>
         </div>
     </div>

@@ -1,4 +1,4 @@
-﻿namespace StudyPlannerApplication.App.Components.Pages.Course;
+namespace StudyPlannerApplication.App.Components.Pages.Course;
 
 public partial class P_Course
 {
@@ -226,15 +226,4 @@ public partial class P_Course
             _logger.LogCustomError(ex);
         }
     }
-
-    private MudBlazor.Color GetStatus(string status)
-    {
-        return status switch
-        {
-            "Done" => Color.Success,
-            "Pending" => Color.Warning,
-            _ => Color.Default
-        };
-    }
-
 }
