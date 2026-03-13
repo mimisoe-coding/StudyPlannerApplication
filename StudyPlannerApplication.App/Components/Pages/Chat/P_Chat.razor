@@ -1,43 +1,68 @@
-﻿@page "/chat"
-@using MudBlazor
+@page "/chat"
+
 @using StudyPlannerApplication.Domain.Features.LiveChat
 @layout MainLayout
 @inject ProfileService _profileService
 @inject LiveChatService _liveChatService
 @inject ILogger<P_Chat> _logger
-<h3>Group Chat</h3>
-<div class="card">
-    <div class="card-body">
-        <MudPaper Elevation="1" Class="chat-container">
-            <div class="chat-messages">
-                @foreach (var item in allMessages)
-                {
-                    <MudChat ChatPosition="@ChangePosition(item.UserName)">
-                        <MudAvatar>
-                            <MudImage Src=@GetImage64(item.ImageUrl) />
-                        </MudAvatar>
-                        <MudChatBubble>
-                            @item.Message
-                        </MudChatBubble>
-                    </MudChat>
-                }
-            </div>
-        </MudPaper>
-        <MudGrid>
-            <MudItem xs="10">
-                <MudTextField @bind-Value="@message"
-                              Label="Type a message"
-                              Variant="Variant.Filled"
-                              FullWidth="true" />
-            </MudItem>
-            <MudItem xs="2" class="d-flex align-center">
-                <MudButton StartIcon="fas fa-paper-plane"
-                           OnClick="SendMessage"
-                           Color="Color.Info"
-                           Variant="Variant.Filled">Send</MudButton>
-            </MudItem>
-        </MudGrid>
 
+<div class="flex flex-col h-[calc(100vh-12rem)] max-w-4xl mx-auto bg-card text-card-foreground rounded-lg border shadow-lg overflow-hidden">
+    <!-- Chat Header -->
+    <div class="p-4 border-b bg-muted/30 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/></svg>
+            </div>
+            <div>
+                <h3 class="font-semibold text-lg leading-none">Group Chat</h3>
+                <p class="text-xs text-muted-foreground mt-1 flex items-center">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 mr-2"></span>
+                    @allMessages.Count messages
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Messages Area -->
+    <div class="flex-1 overflow-y-auto p-4 space-y-4 bg-muted/5" id="chat-messages-container">
+        @foreach (var item in allMessages)
+        {
+            var isCurrentUser = item.UserName == _userSession.UserId;
+            <div class="flex @(isCurrentUser ? "justify-end" : "justify-start") group">
+                <div class="flex @(isCurrentUser ? "flex-row-reverse" : "flex-row") items-end gap-2 max-w-[80%]">
+                    <!-- Avatar -->
+                    <div class="w-8 h-8 rounded-full overflow-hidden shrink-0 border border-border/50">
+                        <img src="@GetImage64(item.ImageUrl)" alt="@item.UserName" class="w-full h-full object-cover" />
+                    </div>
+                    
+                    <!-- Bubble -->
+                    <div class="flex flex-col @(isCurrentUser ? "items-end" : "items-start")">
+                        <span class="text-[10px] text-muted-foreground mb-1 px-1">@item.UserName • @item.CreatedDate.ToString("HH:mm")</span>
+                        <div class="px-4 py-2 rounded-2xl text-sm shadow-sm transition-all @(isCurrentUser ? "bg-primary text-primary-foreground rounded-tr-none" : "bg-card border text-card-foreground rounded-tl-none")">
+                            @item.Message
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Input Area -->
+    <div class="p-4 border-t bg-card">
+        <div class="flex items-center gap-2">
+            <div class="relative flex-1">
+                <input @bind="message" 
+                       @bind:event="oninput"
+                       @onkeydown="HandleKeyDown"
+                       placeholder="Type your message..." 
+                       class="flex h-11 w-full rounded-full border border-input bg-background px-4 py-3 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
+            </div>
+            <button @onclick="SendMessage" 
+                    disabled="@(string.IsNullOrWhiteSpace(message))"
+                    class="inline-flex items-center justify-center rounded-full text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-11 w-11 shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </button>
+        </div>
     </div>
 </div>
 

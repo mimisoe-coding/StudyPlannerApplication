@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.SignalR.Client;
 using StudyPlannerApplication.Domain.Features.UserManagement.Profile;
 using StudyPlannerApplication.Domain.Hubs;
@@ -121,17 +121,6 @@ public partial class P_Chat
         }
     }
 
-    private ChatBubblePosition ChangePosition(string userId)
-    {
-        if (userId == _userSession.UserId)
-        {
-            return ChatBubblePosition.End;
-        }
-        else
-        {
-            return ChatBubblePosition.Start;
-        }
-    }
 
     private string GetImage64(string image)
     {

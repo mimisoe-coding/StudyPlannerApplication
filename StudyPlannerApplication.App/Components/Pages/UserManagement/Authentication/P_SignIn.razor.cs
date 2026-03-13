@@ -1,4 +1,4 @@
-﻿namespace StudyPlannerApplication.App.Components.Pages.UserManagement.Authentication;
+namespace StudyPlannerApplication.App.Components.Pages.UserManagement.Authentication;
 
 public partial class P_SignIn
 {
@@ -8,14 +8,28 @@ public partial class P_SignIn
     private bool isCPasswordVisible = false;
     private string password = "password";
     private string cPassword = "password";
-    private string passwordIcon => isPasswordVisible ? "bi bi-eye-fill" : "bi bi-eye-slash-fill";
-    private string cPasswordIcon => isCPasswordVisible ? "bi bi-eye-fill" : "bi bi-eye-slash-fill";
+    protected override void OnInitialized()
+    {
+        themeService.OnChange += StateHasChanged;
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
+            await themeService.InitializeAsync();
             StateHasChanged();
         }
+    }
+
+    private async Task ToggleTheme()
+    {
+        await themeService.ToggleThemeAsync();
+    }
+
+    public void Dispose()
+    {
+        themeService.OnChange -= StateHasChanged;
     }
 
     async Task SignIn()
@@ -35,7 +49,7 @@ public partial class P_SignIn
         };
         var customAuthStateProvider = (CustomAuthenticationStateProvider)authStateProvider;
         await customAuthStateProvider.UpdateAuthenticationState(userSessionModel);
-        Navigation.NavigateTo("/dashboard");
+        _nav.NavigateTo("/dashboard");
     }
 
     async Task Register()

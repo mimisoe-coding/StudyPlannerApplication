@@ -1,4 +1,4 @@
-﻿namespace StudyPlannerApplication.App.Components.Pages.Reminder;
+namespace StudyPlannerApplication.App.Components.Pages.Reminder;
 
 public partial class P_Reminder
 {
@@ -19,6 +19,20 @@ public partial class P_Reminder
             _userSession = await customAuthStateProvider.GetUserData();
             await List();
             StateHasChanged();
+        }
+    }
+
+    private HashSet<string> ExpandedSubjects = new();
+
+    private void ToggleSubject(string subjectCode)
+    {
+        if (ExpandedSubjects.Contains(subjectCode))
+        {
+            ExpandedSubjects.Remove(subjectCode);
+        }
+        else
+        {
+            ExpandedSubjects.Add(subjectCode);
         }
     }
 

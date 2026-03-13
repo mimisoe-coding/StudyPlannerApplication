@@ -1,72 +1,76 @@
-﻿@page "/profile"
-@using MudBlazor
+@page "/profile"
 @using StudyPlannerApplication.App.Components.Layout
 @using StudyPlannerApplication.Domain.Features.UserManagement.Profile
 @layout MainLayout
 @rendermode RenderMode.InteractiveServer
 @inject ProfileService _profileService;
 @inject ILogger<P_Profile> _logger; 
-<h3>Profile</h3>
 
-@if (_resModel.Data != null)
-{
-    <div class="card">
-        <div class="card-body">
-            <div class="row align-items-center">
-                <!-- Left Side: Profile Image with Badge -->
-                <div class="col-md-3 position-relative text-center">
-                    @if (_reqModel.ImageUrl is not null)
-                    {
-                        <MudImage Src=@_reqModel.ImageUrl Width="200" Height="200" Style="border-radius: 50%;" />
-                    }
-                    else
-                    {
-                        <MudImage Src=@_imageBase64Str Width="200" Height="200" Style="border-radius: 50%;" />
-                    }
-                    <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles">
-                        <ActivatorContent>
-                            <MudBadge Icon="@Icons.Material.Filled.CameraAlt" Color="Color.Info" Style="position: absolute; bottom: 15px; right: 68px; z-index: 10;" />
-                        </ActivatorContent>
-                    </MudFileUpload>
+<div class="max-w-4xl mx-auto space-y-6">
+    <div class="flex items-center justify-between">
+        <h3 class="text-3xl font-bold tracking-tight">Profile</h3>
+    </div>
+
+    @if (_resModel.Data != null)
+    {
+        <div class="bg-card text-card-foreground rounded-lg border shadow-sm">
+            <div class="p-8">
+                <div class="flex flex-col md:flex-row items-center md:items-start gap-12">
+                    <!-- Profile Image Section -->
+                    <div class="relative group">
+                        <div class="w-48 h-48 rounded-full overflow-hidden border-4 border-background shadow-xl">
+                            @if (_reqModel.ImageUrl is not null)
+                            {
+                                <img src="@_reqModel.ImageUrl" class="w-full h-full object-cover" alt="Profile" />
+                            }
+                            else
+                            {
+                                <img src="@_imageBase64Str" class="w-full h-full object-cover" alt="Profile" />
+                            }
+                        </div>
+                        
+                        <div class="absolute bottom-2 right-2">
+                            <label for="profile-upload" class="flex items-center justify-center w-12 h-12 rounded-full bg-primary text-primary-foreground shadow-lg cursor-pointer hover:bg-primary/90 transition-all transform hover:scale-105 active:scale-95">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                                <InputFile id="profile-upload" OnChange="OnFileChanged" class="hidden" accept=".jpg,.jpeg,.png" />
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- User Details Section -->
+                    <div class="flex-1 space-y-6 w-full">
+                        <div class="grid gap-6">
+                            <div class="grid grid-cols-3 items-center gap-4">
+                                <span class="text-sm font-semibold text-muted-foreground uppercase tracking-wider">User Name</span>
+                                <div class="col-span-2 text-lg font-medium">@_resModel.Data.UserName</div>
+                            </div>
+                            <div class="h-px bg-border"></div>
+                            <div class="grid grid-cols-3 items-center gap-4">
+                                <span class="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Phone</span>
+                                <div class="col-span-2 text-lg font-medium">@_resModel.Data.Phone</div>
+                            </div>
+                            <div class="h-px bg-border"></div>
+                            <div class="grid grid-cols-3 items-center gap-4">
+                                <span class="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Email</span>
+                                <div class="col-span-2 text-lg font-medium">@_resModel.Data.Email</div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-3 pt-4">
+                            <button @onclick="Save" 
+                                    disabled="@disabled"
+                                    class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-10 px-8">
+                                Save Changes
+                            </button>
+                            <button @onclick="Clear" 
+                                    disabled="@disabled"
+                                    class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-10 px-8">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
                 </div>
-
-                <!-- Right Side: User Details -->
-                <div class="col-md-9">
-                    <div class="row pb-2">
-                        <div class="mb-3 row">
-                            <b class="col-md-2">User Name</b>
-                            <div class="col-md-10">
-                                @_resModel.Data.UserName
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row pb-2">
-                        <div class="mb-3 row">
-                            <b class="col-md-2">Phone</b>
-                            <div class="col-md-10">
-                                @_resModel.Data.Phone
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row pb-2">
-                        <div class="mb-3 row">
-                            <b class="col-md-2">Email</b>
-                            <div class="col-md-10">
-                                @_resModel.Data.Email
-                            </div>
-                        </div>
-                    </div>
-                    <button @onclick=Clear class="btn btn-outline-dark btn-sm mb-0 me-2" disabled="@disabled" type="button">Clear</button>
-                    <button class="btn btn-success btn-sm mb-0" type="button" @onclick=Save>Save</button>
-                </div>
-
-
-            </div>
-
-            <div>
-                @* <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="Clear">@_loc["f_Clear"]</button>
-            <button type="submit" class="btn btn-primary" @onclick="Save" disabled="@btnSaveDisabled">@_loc["f_Save"]</button> *@
             </div>
         </div>
-    </div>
-}
+    }
+</div>

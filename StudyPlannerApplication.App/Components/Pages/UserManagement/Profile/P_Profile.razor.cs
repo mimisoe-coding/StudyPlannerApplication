@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace StudyPlannerApplication.App.Components.Pages.UserManagement.Profile;
 
@@ -120,5 +120,9 @@ public partial class P_Profile
         {
             _logger.LogCustomError(ex);
         }
+    }
+    private async Task OnFileChanged(InputFileChangeEventArgs e)
+    {
+        await UploadFiles(e.File);
     }
 }
