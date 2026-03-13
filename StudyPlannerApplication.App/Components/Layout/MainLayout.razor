@@ -6,6 +6,7 @@
 @inject NotificationStateContainer _notificationStateContainer
 @inject ILogger<MainLayout> _logger
 @inject ThemeService themeService
+@inject PageHeaderService HeaderService
 
 <div class="flex h-screen overflow-hidden bg-background">
     <!-- Sidebar -->
@@ -17,8 +18,9 @@
     <div class="flex flex-col flex-1 min-w-0 overflow-hidden">
         <!-- Header -->
         <header class="h-16 flex items-center justify-between px-8 bg-card border-b border-border z-10">
+            <PageTitle>@HeaderService.Title | Study Planner</PageTitle>
             <div class="flex items-center gap-4">
-                <h1 class="text-lg font-semibold text-foreground">@pageTitle</h1>
+                <h1 class="text-lg font-semibold text-foreground">@HeaderService.Title</h1>
             </div>
 
             <div class="flex items-center gap-6">
@@ -95,12 +97,39 @@
     private UserSessionModel _userSession = new();
     private Result<NotificationResponseModel> _notiData = new();
     private bool showNotifications = false;
-    private string pageTitle => GetPageTitle();
 
     protected override async Task OnInitializedAsync()
     {
         _notificationStateContainer.OnChange += StateHasChanged;
         themeService.OnChange += StateHasChanged;
+        HeaderService.OnChange += StateHasChanged;
+        _nav.LocationChanged += OnLocationChanged;
+        
+        // Set initial title
+        UpdateTitle(_nav.Uri);
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        UpdateTitle(e.Location);
+        StateHasChanged();
+    }
+
+    private void UpdateTitle(string uri)
+    {
+        var relativeUri = _nav.ToBaseRelativePath(uri).ToLower();
+        string title = "Study Planner";
+
+        if (relativeUri.Contains("dashboard")) title = "Dashboard";
+        else if (relativeUri.Contains("profile")) title = "Profile";
+        else if (relativeUri.Contains("subject")) title = "Subjects";
+        else if (relativeUri.Contains("course")) title = "Courses";
+        else if (relativeUri.Contains("exam")) title = "Exams";
+        else if (relativeUri.Contains("reminder")) title = "Reminders";
+        else if (relativeUri.Contains("chat")) title = "Group Chat";
+        else if (relativeUri.Contains("settings")) title = "Settings";
+
+        HeaderService.SetHeader(title);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -134,26 +163,14 @@
 
     private void ToggleNotifications() => showNotifications = !showNotifications;
 
-    private string GetPageTitle()
-    {
-        var uri = _nav.Uri.Replace(_nav.BaseUri, "/");
-        if (uri.Contains("dashboard")) return "Dashboard";
-        if (uri.Contains("profile")) return "Profile";
-        if (uri.Contains("subject")) return "Subjects";
-        if (uri.Contains("course")) return "Courses";
-        if (uri.Contains("exam")) return "Exams";
-        if (uri.Contains("reminder")) return "Reminders";
-        if (uri.Contains("chat")) return "Group Chat";
-        if (uri.Contains("settings")) return "Settings";
-        return "Study Planner";
-    }
-
     public void Dispose()
     {
         try
         {
             _notificationStateContainer.OnChange -= StateHasChanged;
             themeService.OnChange -= StateHasChanged;
+            HeaderService.OnChange -= StateHasChanged;
+            _nav.LocationChanged -= OnLocationChanged;
         }
         catch (Exception ex)
         {
