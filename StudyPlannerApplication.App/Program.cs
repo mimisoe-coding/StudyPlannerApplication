@@ -27,7 +27,6 @@ builder.Services.AddCors(options =>
     .AllowAnyMethod()
     .AllowAnyHeader());
 });
-builder.Services.AddMudServices();
 
 #region DbService
 var connectionString = builder.Configuration.GetConnectionString("DbConnection");
@@ -53,6 +52,7 @@ builder.Services.AddScoped<ExamService>();
 builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<ReminderService>();
 builder.Services.AddScoped<ChangePasswordService>();
+builder.Services.AddScoped<ThemeService>();
 builder.Services.AddScoped<LiveChatService>();
 var app = builder.Build();
 
