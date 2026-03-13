@@ -1,34 +1,24 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/" />
-    <link rel="stylesheet" href="bootstrap/bootstrap.min.css" />
-    <link rel="stylesheet" href="app.css" />
+    <link rel="stylesheet" href="css/tailwind.css" />
     <link rel="stylesheet" href="StudyPlannerApplication.App.styles.css" />
-    <link rel="stylesheet" href="_content/MudBlazor/MudBlazor.min.css" />
-    <link rel="stylesheet" href="_content/Radzen.Blazor/css/material-base.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notiflix@3.2.7/src/notiflix.min.css">
-    <link rel="icon" type="image/png" href="favicon.png" />
-    <link href="custom.css" id="app-style" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <script src="js/theme.js"></script>
 
     <HeadOutlet @rendermode="InteractiveServer"/>
 </head>
 
-<body class="body-background">
+<body class="bg-background text-foreground transition-colors duration-300">
     <Routes @rendermode="InteractiveServer" />
-    <script src="_framework/blazor.web.js"></script>
-    <script src="_content/MudBlazor/MudBlazor.min.js"></script>
-    <script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
-    @* <script src="_content/Microsoft.AspNetCore.SignalR.Client/dist/browser/signalr.min.js"></script> *@
-    <script src="js/bootstrap.bundle.min.js"></script>
-    <script src="js/jquery.min.js"></script>
     <script src="js/notiflix-aio-3.2.7.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="custom.js"></script>
+    <script src="_framework/blazor.web.js"></script>
 </body>
 
 </html>

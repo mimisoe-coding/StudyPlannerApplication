@@ -1,4 +1,3 @@
-﻿@using MudBlazor
 @using StudyPlannerApplication.App.StateContainer
 @using StudyPlannerApplication.Domain.Features.Notification
 @inherits LayoutComponentBase
@@ -6,57 +5,99 @@
 @inject NotificationService _notificationService
 @inject NotificationStateContainer _notificationStateContainer
 @inject ILogger<MainLayout> _logger
-<MudThemeProvider />
-<MudPopoverProvider />
-<div class="page">
-    <div class="sidebar">
+@inject ThemeService themeService
+
+<div class="flex h-screen overflow-hidden bg-background">
+    <!-- Sidebar -->
+    <aside class="w-64 flex-shrink-0 hidden md:flex">
         <NavMenu />
-    </div>
+    </aside>
 
-    <main>
-        <div class="top-row px-4">
-            <MudMenu class="m-lg-2">
-                <ActivatorContent>
-                    <MudBadge Content="@_notificationStateContainer.NotificationCount"
-                              Color="Color.Info"
-                              Overlap="true"
-                              Class="ml-2"
-                              @onclick="@OnBadgeClick">
-                        <MudIcon Icon="@Icons.Material.Filled.Notifications" Color="Color.Success" />
-                    </MudBadge>
-                </ActivatorContent>
-                <ChildContent>
-                    @if (_notiData?.Data?.NotiList?.Any() == true)
-                    {
-                        foreach (var noti in _notiData.Data.NotiList)
+    <!-- Main Content Area -->
+    <div class="flex flex-col flex-1 min-w-0 overflow-hidden">
+        <!-- Header -->
+        <header class="h-16 flex items-center justify-between px-8 bg-card border-b border-border z-10">
+            <div class="flex items-center gap-4">
+                <h1 class="text-lg font-semibold text-foreground">@pageTitle</h1>
+            </div>
+
+            <div class="flex items-center gap-6">
+                <!-- Notifications -->
+                <div class="relative group">
+                    <button @onclick="ToggleNotifications" class="p-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground rounded-full transition-colors relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                        @if (_notificationStateContainer.NotificationCount > 0)
                         {
-                            <MudMenuItem>@noti.Message</MudMenuItem>
+                            <span class="absolute top-0 right-0 h-4 w-4 bg-primary text-[10px] font-bold text-primary-foreground flex items-center justify-center rounded-full border-2 border-card">
+                                @_notificationStateContainer.NotificationCount
+                            </span>
                         }
+                    </button>
+
+                    @if (showNotifications)
+                    {
+                        <div class="absolute right-0 mt-2 w-80 bg-card border border-border rounded-lg shadow-lg py-2 z-50">
+                            <div class="px-4 py-2 border-b border-border">
+                                <h3 class="font-semibold text-sm">Notifications</h3>
+                            </div>
+                            <div class="max-h-64 overflow-y-auto">
+                                @if (_notiData?.Data?.NotiList?.Any() == true)
+                                {
+                                    foreach (var noti in _notiData.Data.NotiList)
+                                    {
+                                        <div class="px-4 py-3 hover:bg-accent transition-colors cursor-pointer border-b border-border last:border-0">
+                                            <p class="text-sm">@noti.Message</p>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="px-4 py-3 text-center text-muted-foreground">
+                                        <p class="text-sm">No new notifications</p>
+                                    </div>
+                                }
+                            </div>
+                        </div>
                     }
-                </ChildContent>
-            </MudMenu>
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
+                </div>
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
+                <!-- User Profile -->
+                <div class="flex items-center gap-3 pl-6 border-l border-border">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-sm font-medium">@_userSession.UserName</p>
+                    </div>
+                    <div class="h-9 w-9 bg-primary/10 text-primary flex items-center justify-center rounded-full font-bold">
+                        @(_userSession.UserName?[0].ToString().ToUpper() ?? "?")
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Body -->
+        <main class="flex-1 overflow-y-auto p-8">
+            <div class="max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
+                @Body
+            </div>
+        </main>
+    </div>
 </div>
 
-<div id="blazor-error-ui">
+<div id="blazor-error-ui" class="fixed bottom-0 left-0 right-0 bg-destructive text-destructive-foreground p-4 text-center hidden z-[100]">
     An unhandled error has occurred.
-    <a href="" class="reload">Reload</a>
-    <a class="dismiss">🗙</a>
+    <a href="" class="underline font-bold ml-2">Reload</a>
+    <a class="dismiss absolute right-4 cursor-pointer text-xl">🗙</a>
 </div>
+
 @code {
-    private bool _menuOpen = false;
     private UserSessionModel _userSession = new();
     private Result<NotificationResponseModel> _notiData = new();
+    private bool showNotifications = false;
+    private string pageTitle => GetPageTitle();
 
     protected override async Task OnInitializedAsync()
     {
         _notificationStateContainer.OnChange += StateHasChanged;
+        themeService.OnChange += StateHasChanged;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -65,6 +106,7 @@
         {
             try
             {
+                await themeService.InitializeAsync();
                 var customAuthStateProvider = (CustomAuthenticationStateProvider)authStateProvider;
                 var authState = await customAuthStateProvider.GetAuthenticationStateAsync();
                 if (authState.User.Identity != null && !authState.User.Identity.IsAuthenticated)
@@ -83,23 +125,32 @@
         }
     }
 
+    private void ToggleNotifications() => showNotifications = !showNotifications;
+
+    private string GetPageTitle()
+    {
+        var uri = _nav.Uri.Replace(_nav.BaseUri, "/");
+        if (uri.Contains("dashboard")) return "Dashboard";
+        if (uri.Contains("profile")) return "Profile";
+        if (uri.Contains("subject")) return "Subjects";
+        if (uri.Contains("course")) return "Courses";
+        if (uri.Contains("exam")) return "Exams";
+        if (uri.Contains("reminder")) return "Reminders";
+        if (uri.Contains("chat")) return "Group Chat";
+        return "Study Planner";
+    }
 
     public void Dispose()
     {
         try
         {
             _notificationStateContainer.OnChange -= StateHasChanged;
+            themeService.OnChange -= StateHasChanged;
         }
         catch (Exception ex)
         {
             _logger.LogCustomError(ex);
         }
-    }
-
-    private async Task OnBadgeClick()
-    {
-        await Notification();
-        StateHasChanged();
     }
 
     async Task Notification()
@@ -109,21 +160,9 @@
                 CurrentUserId = _userSession.UserId
             };
         _notiData = await _notificationService.GetAllNotification(reqModel);
-        if (!_notiData.Success)
+        if (_notiData != null && _notiData.Success)
         {
-            await _injectService.ErrorMessage(_notiData.Message);
-            return;
+             _notificationStateContainer.NotificationCount = _notiData.Data.NotiList.Count;
         }
-
-        _notificationStateContainer.NotificationCount = _notiData.Data.NotiList.Count;
-        //     await InvokeAsync(() =>
-        // {
-        //     _notificationStateContainer.NotificationCount = _notiData.Data.NotiList.Count;
-        // });
     }
-
-    private void Create()
-    {
-        StateHasChanged();
-    }
-}
+}
